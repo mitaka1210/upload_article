@@ -3,15 +3,7 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <Grants>1||-9223372036854775808|c|G
-1||10|c|G
-1||10|C|G
-1||10|T|G
-4||-9223372036854775808|c|G
-4||10|c|G
-4||10|C|G
-4||10|T|G</Grants>
-      <IntrospectionStateNumber>751</IntrospectionStateNumber>
+      <IntrospectionStateNumber>755</IntrospectionStateNumber>
       <ServerVersion>16.5</ServerVersion>
       <StartupTime>1731666326</StartupTime>
       <TimeZones>true ACDT
@@ -1408,7 +1400,7 @@ false posixrules
 13212||10|C|G
 13212||-9223372036854775808|U|G
 13212||10|U|G</Grants>
-      <IntrospectionStateNumber>751</IntrospectionStateNumber>
+      <IntrospectionStateNumber>755</IntrospectionStateNumber>
       <ObjectId>5</ObjectId>
       <OwnerName>mitaka</OwnerName>
     </database>
@@ -4827,8 +4819,8 @@ false posixrules
     <schema id="263" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>751</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2024-11-18.08:42:50</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>755</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2024-11-18.13:40:46</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4841,13 +4833,27 @@ false posixrules
       <StoredType>integer|0s</StoredType>
       <OwnerName>mitaka</OwnerName>
     </sequence>
-    <table id="265" parent="263" name="accounts">
+    <sequence id="265" parent="263" name="todos_user_id_seq">
+      <ObjectId>24604</ObjectId>
+      <SequenceIdentity>1</SequenceIdentity>
+      <StartValue>1</StartValue>
+      <StateNumber>754</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <OwnerName>mitaka</OwnerName>
+    </sequence>
+    <table id="266" parent="263" name="accounts">
       <ObjectId>24577</ObjectId>
       <StateNumber>743</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>mitaka</OwnerName>
     </table>
-    <column id="266" parent="265" name="user_id">
+    <table id="267" parent="263" name="todos">
+      <ObjectId>24605</ObjectId>
+      <StateNumber>754</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>mitaka</OwnerName>
+    </table>
+    <column id="268" parent="266" name="user_id">
       <DefaultExpression>nextval(&apos;accounts_user_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -4856,41 +4862,41 @@ false posixrules
       <SequenceId>24576</SequenceId>
       <TypeId>23</TypeId>
     </column>
-    <column id="267" parent="265" name="username">
+    <column id="269" parent="266" name="username">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>743</StateNumber>
       <StoredType>varchar(50)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="268" parent="265" name="password">
+    <column id="270" parent="266" name="password">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>743</StateNumber>
       <StoredType>varchar(50)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="269" parent="265" name="email">
+    <column id="271" parent="266" name="email">
       <NotNull>1</NotNull>
       <Position>4</Position>
       <StateNumber>743</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="270" parent="265" name="created_at">
+    <column id="272" parent="266" name="created_at">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>743</StateNumber>
       <StoredType>timestamp|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="271" parent="265" name="last_login">
+    <column id="273" parent="266" name="last_login">
       <Position>6</Position>
       <StateNumber>743</StateNumber>
       <StoredType>timestamp|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <index id="272" parent="265" name="accounts_pkey">
+    <index id="274" parent="266" name="accounts_pkey">
       <ColNames>user_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24581</ObjectId>
@@ -4899,7 +4905,7 @@ false posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <index id="273" parent="265" name="accounts_username_key">
+    <index id="275" parent="266" name="accounts_username_key">
       <ColNames>username</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24583</ObjectId>
@@ -4910,7 +4916,7 @@ false posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <index id="274" parent="265" name="accounts_email_key">
+    <index id="276" parent="266" name="accounts_email_key">
       <ColNames>email</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24585</ObjectId>
@@ -4921,24 +4927,117 @@ false posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="275" parent="265" name="accounts_pkey">
+    <key id="277" parent="266" name="accounts_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24582</ObjectId>
       <Primary>1</Primary>
       <StateNumber>743</StateNumber>
       <UnderlyingIndexId>24581</UnderlyingIndexId>
     </key>
-    <key id="276" parent="265" name="accounts_username_key">
+    <key id="278" parent="266" name="accounts_username_key">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24584</ObjectId>
       <StateNumber>743</StateNumber>
       <UnderlyingIndexId>24583</UnderlyingIndexId>
     </key>
-    <key id="277" parent="265" name="accounts_email_key">
+    <key id="279" parent="266" name="accounts_email_key">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24586</ObjectId>
       <StateNumber>743</StateNumber>
       <UnderlyingIndexId>24585</UnderlyingIndexId>
+    </key>
+    <column id="280" parent="267" name="user_id">
+      <DefaultExpression>nextval(&apos;todos_user_id_seq&apos;::regclass)</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>754</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <SequenceId>24604</SequenceId>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="281" parent="267" name="username">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>754</StateNumber>
+      <StoredType>varchar(50)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="282" parent="267" name="password">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StateNumber>754</StateNumber>
+      <StoredType>varchar(50)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="283" parent="267" name="email">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StateNumber>754</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="284" parent="267" name="created_at">
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StateNumber>754</StateNumber>
+      <StoredType>timestamp|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <column id="285" parent="267" name="last_login">
+      <Position>6</Position>
+      <StateNumber>754</StateNumber>
+      <StoredType>timestamp|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <index id="286" parent="267" name="todos_pkey">
+      <ColNames>user_id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24609</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>754</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <index id="287" parent="267" name="todos_username_key">
+      <ColNames>username</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24611</ObjectId>
+      <StateNumber>754</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationNames>default</CollationNames>
+      <CollationIds>100</CollationIds>
+      <CollationParentNames>pg_catalog</CollationParentNames>
+    </index>
+    <index id="288" parent="267" name="todos_email_key">
+      <ColNames>email</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24613</ObjectId>
+      <StateNumber>754</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationNames>default</CollationNames>
+      <CollationIds>100</CollationIds>
+      <CollationParentNames>pg_catalog</CollationParentNames>
+    </index>
+    <key id="289" parent="267" name="todos_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24610</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>754</StateNumber>
+      <UnderlyingIndexId>24609</UnderlyingIndexId>
+    </key>
+    <key id="290" parent="267" name="todos_username_key">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24612</ObjectId>
+      <StateNumber>754</StateNumber>
+      <UnderlyingIndexId>24611</UnderlyingIndexId>
+    </key>
+    <key id="291" parent="267" name="todos_email_key">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>24614</ObjectId>
+      <StateNumber>754</StateNumber>
+      <UnderlyingIndexId>24613</UnderlyingIndexId>
     </key>
   </database-model>
 </dataSource>

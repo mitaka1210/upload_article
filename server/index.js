@@ -9,6 +9,10 @@ const multer = require("multer");
 app.use(cors());
 app.use(express.json()); //req.body
 
+//порт
+const PORT = 5000;
+const HOST='192.168.55.5'
+
 //ROUTES//
 //? create a todo
 
@@ -30,6 +34,7 @@ app.post("/todos", async (req, res) => {
 app.get("/todos", async (req, res) => {
   try {
     const allTodos = await pool.query("SELECT * FROM todos");
+    console.log("pesho", allTodos.rows);
     res.json(allTodos.rows);
   } catch (err) {
     console.error(err.message);
@@ -97,6 +102,7 @@ const upload = multer({storage});
 app.use("/uploads", express.static(path.join(__dirname, "upload")));
 
 app.post("/upload", upload.single("file"), async (req, res) => {
+  console.log("pesho UPLOAD",);
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
@@ -236,7 +242,7 @@ app.get("/likesDislikes", async (req, res) => {
     console.error(err.message);
   }
 });
-app.listen(5000, () => {
+app.listen(PORT, () => {
   console.log("server has started on port 5000");
 });
 
