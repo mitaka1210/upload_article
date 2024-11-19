@@ -33,7 +33,7 @@ app.post("/todos", async (req, res) => {
 
 app.get("/todos", async (req, res) => {
   try {
-    const allTodos = await pool.query("SELECT * FROM todos");
+    const allTodos = await pool.query("SELECT * FROM article");
     console.log("pesho", allTodos.rows);
     res.json(allTodos.rows);
   } catch (err) {
@@ -87,36 +87,36 @@ app.delete("/todos/:id", async (req, res) => {
 });
 
 //uploads
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "./upload");
-//   },
-//   filename: function (req, file, cb) {
-//     return cb(null, file.originalname);
-//   }
-// });
-const storage = multer.memoryStorage();
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./upload");
+  },
+  filename: function (req, file, cb) {
+    return cb(null, file.originalname);
+  }
+});
 const path = require("path");
-const upload = multer({storage});
+const memoryStorage = multer.memoryStorage();
+const upload = multer({storage: memoryStorage});
 // Обслужване на статични файлове от директорията 'uploads'
-app.use("/uploads", express.static(path.join(__dirname, "upload")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+
 
 app.post("/upload", upload.single("file"), async (req, res) => {
-  console.log("pesho UPLOAD",);
   if (!req.file) {
     return res.status(400).send("No file uploaded.");
   }
 
-  const fileBuffer = req.file.buffer;
+  const data = req.file.buffer;
   const fileName = req.file.originalname;
-  // const filePath = path.join(req.file.path);
   try {
     // Изпълнение на SQL заявка за актуализиране на последния ред
     const result = await pool.query(`
-      UPDATE todos
-      SET images_path=$1,file_data=$2
-      WHERE todo_id = (SELECT todo_id FROM todos ORDER BY todo_id DESC LIMIT 1)
-    `, [fileName, fileBuffer]);
+      UPDATE article
+      SET data=$1,filename=$2
+      WHERE images_id = (SELECT images_id FROM article ORDER BY images_id DESC LIMIT 1)
+    `, [data, fileName]);
 
     if (result.rowCount === 0) {
       return res.status(404).send("No employee found to update.");
@@ -127,35 +127,44 @@ app.post("/upload", upload.single("file"), async (req, res) => {
     console.error(err.message);
   }
 });
-
+const fs = require('fs');
 app.get("/show-image", async (req, res) => {
   try {
     // Извличане на информацията за последния ред
     const result = await pool.query(`
-      SELECT images_path, file_data
-      FROM todos
-      ORDER BY todo_id DESC
+      SELECT data, filename
+      FROM article
+      ORDER BY images_id DESC
       LIMIT 1
     `);
     if (result.rows.length === 0) {
       return res.status(404).send("No image found.");
     }
-    const fileData = result.rows[0].file_data;
-    const fileName = result.rows[0].images_path;
+    const fileData = result.rows[0].data;
+    const fileName = result.rows[0].filename;
     const fileType = fileName.split(".").pop();
-
     const base64File = fileData.toString("base64");
     const imageUrl = `data:image/${fileType};base64,${base64File}`;
-
-    res.send(`
-      <!doctype html>
-      <html>
-      <body>
-        <h1>Last Uploaded Image</h1>
-        <img src="${imageUrl}" alt="Uploaded Image">
-      </body>
-      </html>
-    `);
+    // Write the Base64 data to a file
+    fs.writeFile('image.png', base64File, 'base64', (err) => {
+      if (err) {
+        console.log('Error saving image:', err);
+      } else {
+        console.log('Image saved as image.png');
+      }
+    });
+    // console.log("pesho", res.json({ image: imageUrl }));
+    res.json({ image: imageUrl })
+    // res.json(todo.rows[0]);
+    // res.send(`
+    //   <!doctype html>
+    //   <html>
+    //   <body>
+    //     <h1>Last Uploaded Image</h1>
+    //     <img src="${imageUrl}" alt="Uploaded Image">
+    //   </body>
+    //   </html>
+    // `);
   } catch (err) {
     console.error(err);
     res.status(500).send("An error occurred while fetching the image.");

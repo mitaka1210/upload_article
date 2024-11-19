@@ -58,23 +58,23 @@ const ListTodos = () => {
         <table className="table mt-5 text-center">
           <thead>
           <tr>
-            <th>Description</th>
-            <th>Edit</th>
+            <th>Header</th>
             <th>Date</th>
             <th>Time</th>
-            <th>Upload</th>
+            <th>Edit</th>
+            <th>Images</th>
             <th>Delete</th>
           </tr>
           </thead>
           <tbody>
           {todosData.data.map((todo, index) => {
             return <tr key={index}>
-              <td>{todo.description.substring(0, 50)}</td>
+              <td>{todo.header_article}</td>
+              <td>{todo.create_article_date}</td>
+              <td>{todo.create_article_time}</td>
               <td>
                 <EditTodo todo={todo}/>
               </td>
-              <td>{todo.date}</td>
-              <td>{todo.currentTime}</td>
               <td>
                 {/*<form method="POST" className="upload-img" action="/upload"*/}
                 {/*      encType="multipart/form-data" type="file" name="'file">*/}

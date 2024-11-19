@@ -10,12 +10,13 @@ export const fetchTodo = createAsyncThunk("fetchTodo", async () => {
     });
 });
 
-const fetchImage = (file, path) => {
-  if (file !== null && path !== null) {
-    const blob = new Blob([new Uint8Array(file.data)], {type: `image/${path.split(".").pop()}`});
-    return URL.createObjectURL(blob);
-  }
-};
+const getImages = createAsyncThunk("fetchTodo", async () => {
+  return fetch(getTodo.GET_IMAGES)
+      .then(response => response.json())
+      .then(json => {
+        return json;
+      });
+});
 
 const todoSlice = createSlice({
   name: "todo",
@@ -40,20 +41,19 @@ const todoSlice = createSlice({
     });
     builder.addCase(fetchTodo.fulfilled, (state, action) => {
       state.isLoading = false;
+      console.log("pesho",action.payload);
       let newArr = [];
       let formatData: string = "";
       state.status = "succeeded";
       for (let i = 0; i < action.payload.length; i++) {
-        let a = (new Date(action.payload[i].date));
-        // let b =  action.payload[i].currentTime;
-        formatData = a.toLocaleDateString();
+        let createArticle = (new Date(action.payload[i].created_at).toDateString());
+        let createTime = (new Date(action.payload[i].time).toLocaleTimeString());
         newArr.push({
-          description: action.payload[i].description,
-          date: formatData,
-          currentTime: action.payload[i].time,
-          header: action.payload[i].header,
-          todoId: action.payload[i].todo_id,
-          images: fetchImage(action.payload[i].file_data, action.payload[i].images_path)
+          create_article_date: createArticle,
+          create_article_time: createTime,
+          header_article: action.payload[i].header_article,
+          images_id: action.payload[i].images_id,
+          images: getImages()
         });
       }
       state.data = newArr;

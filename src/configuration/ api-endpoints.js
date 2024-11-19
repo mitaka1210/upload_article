@@ -4,7 +4,8 @@ const apiEndpoints = {
   POST_COMMENT: "http://localhost:5000/comment",
   LIKE_COMMENT: "http://localhost:5000/api/like",
   DISLIKE_COMMENT: "http://localhost:5000/api/dislike",
-  GET_LIKES_DISLIKES: "http://localhost:5000/likesDislikes"
+  GET_LIKES_DISLIKES: "http://localhost:5000/likesDislikes",
+  GET_IMAGES: "http://localhost:5000/show-image",
 };
 
 export default apiEndpoints;

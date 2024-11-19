@@ -14,6 +14,7 @@ const Card = () => {
   //? properties
   let todosData = [];
   let err = "";
+  let base64Image = "";
   let content;
   const dispatch = useDispatch();
   const status = useSelector((state) => state.todo.status);
@@ -43,11 +44,24 @@ const Card = () => {
     } else if (status === "loading") {
       content = <div>Loading...</div>;
     } else if (status === "succeeded") {
+      onSubmitForm();
     } else if (status === "failed") {
       content = <div>{error}</div>;
     } else {
       console.log("peshoDARTA", status, data);
     }
+  };
+  const onSubmitForm = async e => {
+    // Fetch the Base64 image string from the backend
+    fetch('http://localhost:5000/show-image')
+        .then(response => response.json())
+        .then(data => {
+          console.log("pesho",data);
+          // Set the Base64 string as the source of the image
+          base64Image = data.image;
+          document.getElementById('image').src = base64Image;
+        })
+        .catch(error => console.error('Error fetching image:', error));
   };
   const navigate = useNavigate();
   let redirectPage = (header, content, date, time, images, todoId) => {
@@ -65,30 +79,9 @@ const Card = () => {
   };
 
   return (
-    <div className="card-main">
-      {
-        todosData.data.map((todo: any, index) => {
-          return <div className="container-card" key={index}>
-            <div className="card">
-              <div className="image-wrapper">
-                <img alt="traveller"
-                     src={todo.images === null ? mitaka : todo.images}/>
-              </div>
-              <div className="content">
-                <h2>{todo.header}</h2>
-                <h5>{todo.date}</h5>
-                <h6>{todo.currentTime}</h6>
-                <p>{todo.description.substring(0, 150) + " ..."}</p>
-              </div>
-              <button className="card-read"
-                      onClick={() => redirectPage(todo.header, todo.description, todo.date, todo.currentTime, todo.images, todo.todoId)}>Go
-                to
-              </button>
-            </div>
-          </div>;
-        })
-      }
-    </div>
+      <div className="card-main">
+        <img id="image" alt="Image from Base64" width="300"/>
+      </div>
   );
 };
 
