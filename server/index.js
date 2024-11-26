@@ -265,38 +265,49 @@ app.get("/articles", async (req, res) => {
   try {
     // Извличане на всички статии с техните секции
     const articlesQuery = `
-            SELECT a.id      AS article_id,
-                   a.title   AS article_title,
-                   s.id      AS section_id,
-                   s.title   AS section_title,
-                   s.content AS section_content
+            SELECT a.id       AS article_id,
+                   a.title    AS article_title,
+                   s.id       AS section_id,
+                   s.title    AS section_title,
+                   s.content  AS section_content,
+                   s.position AS section_position
             FROM articles a
                      LEFT JOIN sections s ON a.id = s.article_id
             ORDER BY a.id, s.position;
         `;
     const result = await pool.query(articlesQuery);
-    console.log("pesho result title ", result[0]);
 
     // Групиране на данните
-    const articles = {};
+    let articles = [];
     result.rows.forEach((row) => {
-      if (!articles[row.article_id]) {
-        articles[row.article_id] = {
+      console.log("pesho foreach", row.article_id);
+      console.log("pesho foreach", row.section_id);
+      if (row.article_id != row.section_id) {
+        articles.push({
+          id: row.article_id,
           title: row.article_title,
-          sections: [],
-        };
-      }
-      if (row.section_id) {
-        articles[row.article_id].sections.push({
-          title: row.section_title,
-          content: row.section_content,
+          sections: {
+            position: row.section_position,
+            title: row.section_title,
+            content: row.section_content,
+          },
+        });
+      } else {
+        articles.push({
+          id: row.article_id,
+          title: row.article_title,
+          sections: {
+            position: row.section_position,
+            title: row.section_title,
+            content: row.section_content,
+          },
         });
       }
     });
+    console.log("pesho response title+content1", articles);
 
     // Форматиране като масив
     const response = Object.values(articles);
-    console.log("pesho response title+content", response);
     res.json(response);
   } catch (error) {
     console.error("Error fetching articles:", error);
