@@ -280,8 +280,6 @@ app.get("/articles", async (req, res) => {
     // Групиране на данните
     let articles = [];
     result.rows.forEach((row) => {
-      console.log("pesho foreach", row.article_id);
-      console.log("pesho foreach", row.section_id);
       if (row.article_id != row.section_id) {
         articles.push({
           id: row.article_id,
@@ -304,11 +302,23 @@ app.get("/articles", async (req, res) => {
         });
       }
     });
-    console.log("pesho response title+content1", articles);
+    // Групиране и обединяване
+    const mergedObjects = Object.values(
+      articles.reduce((acc, obj) => {
+        if (!acc[obj.id]) {
+          // Ако обектът не съществува в резултата, добави го
+          acc[obj.id] = { ...obj, sections: [obj.sections] };
+        } else {
+          // Ако вече съществува, добави секцията към масива
+          acc[obj.id].sections.push(obj.sections);
+        }
+        return acc;
+      }, {}),
+    );
 
+    console.log(mergedObjects);
     // Форматиране като масив
-    const response = Object.values(articles);
-    res.json(response);
+    res.json(mergedObjects);
   } catch (error) {
     console.error("Error fetching articles:", error);
     res.status(500).json({ error: "Internal Server Error" });
