@@ -21,7 +21,6 @@ CREATE TABLE sections
     title      VARCHAR(255) NOT NULL,
     content    TEXT,
     position   INT          NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    image_url  VARCHAR(255)
 );
-ALTER TABLE sections
-    ADD COLUMN image_url VARCHAR(255);
