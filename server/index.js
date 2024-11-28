@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
 const cors = require("cors");
 const pool = require("./db");
 const multer = require("multer");
@@ -88,49 +89,50 @@ app.delete("/todos/:id", async (req, res) => {
 });
 
 //uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./upload");
-  },
-  filename: function (req, file, cb) {
-    return cb(null, file.originalname);
-  },
-});
-const path = require("path");
-const memoryStorage = multer.memoryStorage();
-const upload = multer({ storage: memoryStorage });
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "./upload");
+//   },
+//   filename: function (req, file, cb) {
+//     return cb(null, file.originalname);
+//   },
+// });
+// const path = require("path");
+// const memoryStorage = multer.memoryStorage();
+// const upload = multer({ storage: memoryStorage });
 // Обслужване на статични файлове от директорията 'uploads'
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-app.post("/upload", upload.single("file"), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
-  }
-
-  const data = req.file.buffer;
-  const fileName = req.file.originalname;
-  try {
-    // Изпълнение на SQL заявка за актуализиране на последния ред
-    const result = await pool.query(
-      `
-                UPDATE article
-                SET data=$1,
-                    filename=$2
-                WHERE images_id = (SELECT images_id FROM article ORDER BY images_id DESC LIMIT 1)
-            `,
-      [data, fileName],
-    );
-
-    if (result.rowCount === 0) {
-      return res.status(404).send("No employee found to update.");
-    }
-
-    res.send("File successfully uploaded and database updated.");
-  } catch (err) {
-    console.error(err.message);
-  }
-});
+// app.post("/upload", upload.single("file"), async (req, res) => {
+//   if (!req.file) {
+//     return res.status(400).send("No file uploaded.");
+//   }
+//
+//   const data = req.file.buffer;
+//   const fileName = req.file.originalname;
+//   try {
+//     // Изпълнение на SQL заявка за актуализиране на последния ред
+//     const result = await pool.query(
+//       `
+//                 UPDATE article
+//                 SET data=$1,
+//                     filename=$2
+//                 WHERE images_id = (SELECT images_id FROM article ORDER BY images_id DESC LIMIT 1)
+//             `,
+//       [data, fileName],
+//     );
+//
+//     if (result.rowCount === 0) {
+//       return res.status(404).send("No employee found to update.");
+//     }
+//
+//     res.send("File successfully uploaded and database updated.");
+//   } catch (err) {
+//     console.error(err.message);
+//   }
+// });
 const fs = require("fs");
+const { extname } = require("node:path");
 app.get("/show-image", async (req, res) => {
   try {
     // Извличане на информацията за последния ред
@@ -260,6 +262,36 @@ app.get("/likesDislikes", async (req, res) => {
     console.error(err.message);
   }
 });
+//new DB API call
+// Конфигурация на Multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "upload/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
+// POST заявка за добавяне на секция с изображение
+app.post("/sections", upload.single("image"), async (req, res) => {
+  const { article_id, title, content, position } = req.body;
+  const image_url = req.file ? `/upload/${req.file.filename}` : null;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO sections (article_id, title, content, position, image_url)
+             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+      [article_id, title, content, position, image_url],
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
 // API за извличане на статии и секции
 app.get("/articles", async (req, res) => {
   try {

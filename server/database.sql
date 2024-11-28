@@ -23,3 +23,5 @@ CREATE TABLE sections
     position   INT          NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+ALTER TABLE sections
+    ADD COLUMN image_url VARCHAR(255);
