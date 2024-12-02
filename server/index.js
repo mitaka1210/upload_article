@@ -297,13 +297,14 @@ app.get("/articles", async (req, res) => {
   try {
     // Извличане на всички статии с техните секции
     const articlesQuery = `
-            SELECT a.id        AS article_id,
-                   a.title     AS article_title,
-                   s.id        AS section_id,
-                   s.title     AS section_title,
-                   s.content   AS section_content,
-                   s.position  AS section_position,
-                   s.image_url AS section_image_url
+            SELECT a.id         AS article_id,
+                   a.title      AS article_title,
+                   a.created_at AS article_created_at,
+                   s.id         AS section_id,
+                   s.title      AS section_title,
+                   s.content    AS section_content,
+                   s.position   AS section_position,
+                   s.image_url  AS section_image_url
             FROM articles a
                      LEFT JOIN sections s ON a.id = s.article_id
             ORDER BY a.id, s.position;
@@ -314,10 +315,10 @@ app.get("/articles", async (req, res) => {
     let articles = [];
     result.rows.forEach((row) => {
       if (row.article_id != row.section_id) {
-        console.log("pesho", row);
         articles.push({
           id: row.article_id,
           title: row.article_title,
+          createData: row.article_created_at,
           images: row.section_image_url,
           sections: {
             position: row.section_position,
@@ -329,6 +330,7 @@ app.get("/articles", async (req, res) => {
         articles.push({
           id: row.article_id,
           title: row.article_title,
+          createData: row.article_created_at,
           images: row.section_image_url,
           sections: {
             position: row.section_position,

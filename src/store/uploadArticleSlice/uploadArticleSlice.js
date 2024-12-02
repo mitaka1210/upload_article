@@ -41,4 +41,5 @@ const sectionsSlice = createSlice({
     },
 });
 
+
 export default sectionsSlice.reducer;
