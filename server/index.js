@@ -362,15 +362,21 @@ app.get("/articles", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
+// const { id } = req.params;
+// const { description } = req.body;
+// const updateTodo = await pool.query(
+//     "UPDATE todos SET description = $1 WHERE todo_id = $2",
+//     [description, id],
+// );
 // POST заявка за създаване на статия
 app.post("/create-articles", async (req, res) => {
   const { title } = req.body;
-
+  console.log("pesho", req.body);
   try {
+    const { title } = req.body;
     const result = await pool.query(
-      "INSERT INTO articles (title) VALUES ($1) RETURNING *",
-      [title],
+        'INSERT INTO articles (title) VALUES ($1) RETURNING *',
+        [title]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {

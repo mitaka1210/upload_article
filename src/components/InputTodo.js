@@ -85,12 +85,14 @@
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
 import {uploadSection} from "../store/uploadArticleSlice/uploadArticleSlice";
+import {addArticle} from "../store/add-new-article/addNewArticleSlice";
 import "./upload.scss";
 import upload from "../assets/cloud-computing.png";
 
 const SectionUpload = () => {
     const dispatch = useDispatch();
     const [image_name, setImageName] = useState("");
+    const [title, setTitle] = useState("");
     const [form, setForm] = useState({
         article_id: "",
         title: "",
@@ -103,7 +105,9 @@ const SectionUpload = () => {
         const {name, value} = e.target;
         setForm((prev) => ({...prev, [name]: value}));
     };
-
+    const handleInputTitleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        setTitle(e.target.value);
+    };
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setImageName(e.target.files[0].name);
         if (e.target.files && e.target.files[0]) {
@@ -123,12 +127,22 @@ const SectionUpload = () => {
         }
 
         dispatch(uploadSection(formData));
+        dispatch(addArticle(title));
     };
+
+    const addArticleHeader = () => {
+        dispatch(addArticle(title));
+    }
 
     return (
         <div className="upload-form">
+            <div>
+                <input name="section_title" type="text" placeholder="Title ID"
+                       onChange={handleInputTitleChange} required/>
+                <button onClick={addArticleHeader}>add</button>
+            </div>
             <form onSubmit={handleSubmit}>
-                <input name="section_id" type="number" placeholder="Section ID"
+            <input name="section_id" type="number" placeholder="Section ID"
                        onChange={handleInputChange} required/>
                 <input name="article_id" type="number" placeholder="Article ID"
                        onChange={handleInputChange} required/>

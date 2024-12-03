@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/articles";
+const API_URL = "http://localhost:5000/create-articles";
 
 // Async action за добавяне на статия
 export const addArticle = createAsyncThunk(
@@ -12,8 +12,8 @@ export const addArticle = createAsyncThunk(
   },
 );
 
-const articlesSlice = createSlice({
-  name: "articles",
+const articlesSliceAdd = createSlice({
+  name: "articlesHeader",
   initialState: {
     articles: [],
     status: "idle", // idle | loading | succeeded | failed
@@ -36,4 +36,4 @@ const articlesSlice = createSlice({
   },
 });
 
-export default articlesSlice.reducer;
+export default articlesSliceAdd.reducer;

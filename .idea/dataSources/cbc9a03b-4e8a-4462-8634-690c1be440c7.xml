@@ -3,7 +3,7 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <IntrospectionStateNumber>800</IntrospectionStateNumber>
+      <IntrospectionStateNumber>836</IntrospectionStateNumber>
       <ServerVersion>16.5</ServerVersion>
       <StartupTime>1731666326</StartupTime>
       <TimeZones>true ACDT
@@ -1400,7 +1400,7 @@ false posixrules
 13212||10|C|G
 13212||-9223372036854775808|U|G
 13212||10|U|G</Grants>
-      <IntrospectionStateNumber>800</IntrospectionStateNumber>
+      <IntrospectionStateNumber>836</IntrospectionStateNumber>
       <ObjectId>5</ObjectId>
       <OwnerName>mitaka</OwnerName>
     </database>
@@ -4819,8 +4819,8 @@ false posixrules
     <schema id="263" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>800</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2024-11-22.08:36:08</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>836</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2024-12-03.17:43:11</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4877,7 +4877,7 @@ false posixrules
     </table>
     <table id="271" parent="263" name="sections">
       <ObjectId>24665</ObjectId>
-      <StateNumber>799</StateNumber>
+      <StateNumber>821</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>mitaka</OwnerName>
     </table>
@@ -5044,7 +5044,7 @@ false posixrules
     <key id="293" parent="269" name="article_header_key">
       <ObjectId>24647</ObjectId>
       <StateNumber>763</StateNumber>
-      <UnderlyingIndexColNames>header_article</UnderlyingIndexColNames>
+      <UnderlyingIndexId>24646</UnderlyingIndexId>
     </key>
     <column id="294" parent="270" name="id">
       <DefaultExpression>nextval(&apos;articles_id_seq&apos;::regclass)</DefaultExpression>
@@ -5128,7 +5128,13 @@ false posixrules
       <StoredType>timestamp|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <foreign-key id="305" parent="271" name="sections_article_id_fkey">
+    <column id="305" parent="271" name="image_url">
+      <Position>7</Position>
+      <StateNumber>821</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <foreign-key id="306" parent="271" name="sections_article_id_fkey">
       <ColNames>article_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24674</ObjectId>
@@ -5137,7 +5143,7 @@ false posixrules
       <RefKeyColPositions>1</RefKeyColPositions>
       <RefTableId>24657</RefTableId>
     </foreign-key>
-    <index id="306" parent="271" name="sections_pkey">
+    <index id="307" parent="271" name="sections_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24672</ObjectId>
@@ -5146,7 +5152,7 @@ false posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="307" parent="271" name="sections_pkey">
+    <key id="308" parent="271" name="sections_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24673</ObjectId>
       <Primary>1</Primary>

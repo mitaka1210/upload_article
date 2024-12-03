@@ -16,7 +16,7 @@ const ListTodos = () => {
   useEffect(() => {
     getTodos();
   }, [dispatch]);
-  const articlesInfo = useSelector((state) => state.articles.data);
+  const articlesInfo = useSelector((state) => state.articlesSections.data);
 
   //delete todo function
 
