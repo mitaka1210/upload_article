@@ -362,6 +362,23 @@ app.get("/articles", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+// POST заявка за създаване на статия
+app.post("/create-articles", async (req, res) => {
+  const { title } = req.body;
+
+  try {
+    const result = await pool.query(
+      "INSERT INTO articles (title) VALUES ($1) RETURNING *",
+      [title],
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log("server has started on port 5000");
 });

@@ -85,9 +85,12 @@
 import React, {useState} from "react";
 import {useDispatch} from "react-redux";
 import {uploadSection} from "../store/uploadArticleSlice/uploadArticleSlice";
+import "./upload.scss";
+import upload from "../assets/cloud-computing.png";
 
 const SectionUpload = () => {
     const dispatch = useDispatch();
+    const [image_name, setImageName] = useState("");
     const [form, setForm] = useState({
         article_id: "",
         title: "",
@@ -102,6 +105,7 @@ const SectionUpload = () => {
     };
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setImageName(e.target.files[0].name);
         if (e.target.files && e.target.files[0]) {
             setImage(e.target.files[0]);
         }
@@ -122,20 +126,33 @@ const SectionUpload = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input name="section_id" type="number" placeholder="Section ID"
-                   onChange={handleInputChange} required/>
-            <input name="article_id" type="number" placeholder="Article ID"
-                   onChange={handleInputChange} required/>
-            <input name="title" type="text" placeholder="Title"
-                   onChange={handleInputChange} required/>
-            <textarea name="content" placeholder="Content"
-                      onChange={handleInputChange}></textarea>
-            <input name="position" type="number" placeholder="Position"
-                   onChange={handleInputChange} required/>
-            <input type="file" onChange={handleImageChange}/>
-            <button type="submit">Upload Section</button>
-        </form>
+        <div className="upload-form">
+            <form onSubmit={handleSubmit}>
+                <input name="section_id" type="number" placeholder="Section ID"
+                       onChange={handleInputChange} required/>
+                <input name="article_id" type="number" placeholder="Article ID"
+                       onChange={handleInputChange} required/>
+                <input name="title" type="text" placeholder="Title"
+                       onChange={handleInputChange} required/>
+                <input name="position" type="number" placeholder="Position"
+                       onChange={handleInputChange} required/>
+                <textarea className="text-area-form" name="content"
+                          placeholder="Content"
+                          onChange={handleInputChange}></textarea>
+                {/*?<input type="file" onChange={handleImageChange}/>*/}
+                {/*upload button*/}
+                <div className="file file--uploading">
+                    <input id="input-file" onChange={handleImageChange}
+                           type="file"/>
+                    <label htmlFor="input-file">
+                        <img src={upload} alt="upload"/>
+                        <p>Uploading</p>
+                    </label>
+                    <p>{image_name}</p>
+                </div>
+                <button type="submit">Upload Section</button>
+            </form>
+        </div>
     );
 };
 
