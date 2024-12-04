@@ -1,93 +1,116 @@
-import React, { Fragment, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { updateSection } from "../store/editSections/editSectionsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { fetchArticles } from "../store/getArticleData/getArticlesDataSlice";
 
-const EditTodo = ({ todo }) => {
-  const [description, setDescription] = useState(todo.description);
+const EditTodo = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const articlesInfo = useSelector((state) => state.articlesSections.data);
+  const info = useSelector((state) => state.articlesSections.status);
+  const [section, setSection] = useState([]);
+  let sections = {};
+  let content = "";
+  let error = "";
+  useEffect(() => {
+    articlesStatus();
+    console.log("pesho", info);
+  }, [3]);
+  const [formData, setFormData] = useState({
+    id: "",
+    title: "",
+    image_url: "",
+    sections: "",
+  });
+  const articlesStatus = () => {
+    if (info === "idle") {
+      dispatch(fetchArticles());
+    } else if (info === "loading") {
+      console.log("pesho", info);
 
-  //edit description function
-
-  const updateDescription = async e => {
-    e.preventDefault();
-    try {
-      const body = { description };
-      const response = await fetch(
-        `http://localhost:5000/todos/${todo.todo_id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body)
+      content = <div>Loading...</div>;
+    } else if (info === "succeeded") {
+      let sectionId = Number(id);
+      for (const sectionIdKey in articlesInfo) {
+        if (Number(sectionIdKey) + 1 === sectionId) {
+          sections = articlesInfo[sectionIdKey];
+          setSection(sections.section);
+          setFormData(sections);
         }
-      );
-
-      window.location = "/";
-    } catch (err) {
-      console.error(err.message);
+      }
+    } else if (info === "failed") {
+      content = <div>{error}</div>;
+    } else {
     }
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateSection(formData));
   };
 
   return (
-    <Fragment>
-      <button
-        type="button"
-        className="btn btn-warning"
-        data-toggle="modal"
-        data-target={`#id${todo.todo_id}`}
-      >
-        Edit
-      </button>
-
-      {/* 
-        id = id10
-      */}
-      <div
-        className="modal"
-        id={`id${todo.todo_id}`}
-        onClick={() => setDescription(todo.description)}
-      >
-        <div className="modal-dialog">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h4 className="modal-title">Edit Todo</h4>
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                onClick={() => setDescription(todo.description)}
-              >
-                &times;
-              </button>
-            </div>
-
-            <div className="modal-body">
-              <input
-                type="text"
-                className="form-control"
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-              />
-            </div>
-
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-warning"
-                data-dismiss="modal"
-                onClick={e => updateDescription(e)}
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger"
-                data-dismiss="modal"
-                onClick={() => setDescription(todo.description)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
+    <>
+      {info.isLoading ? (
+        <div>
+          <h1>Loading........{error}</h1>
         </div>
-      </div>
-    </Fragment>
+      ) : (
+        <div>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              name="id"
+              value={formData.id}
+              onChange={handleChange}
+              placeholder="Section ID"
+              required
+            />
+            <input
+              type="text"
+              name="title"
+              value={formData.header_article}
+              onChange={handleChange}
+              placeholder="Title"
+              required
+            />
+            {section.map((section, index) => {
+              return (
+                <div key={index}>
+                  <input
+                    type="text"
+                    name="position"
+                    value={section.position}
+                    onChange={handleChange}
+                    placeholder="Position"
+                    required
+                  />
+                  <textarea
+                    name="content"
+                    value={section.content}
+                    onChange={handleChange}
+                    placeholder="Content"
+                  />
+                </div>
+              );
+            })}
+            <input
+              type="text"
+              name="image_url"
+              value={formData.images_id}
+              onChange={handleChange}
+              placeholder="Image URL"
+            />
+            <button type="submit">Update Section</button>
+          </form>
+        </div>
+      )}
+    </>
   );
 };
 

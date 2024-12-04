@@ -5,6 +5,7 @@ import likesSlice from "../likesSlice/likesSlice";
 import sectionsSlice from "../uploadArticleSlice/uploadArticleSlice";
 import articlesSlice from "../getArticleData/getArticlesDataSlice";
 import articlesSliceAdd from "../add-new-article/addNewArticleSlice";
+import editSectionsSlice from "../editSections/editSectionsSlice";
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     likes: likesSlice,
     uploadArticle: sectionsSlice,
     articlesHeader: articlesSliceAdd,
+    editSection: editSectionsSlice,
   },
 });
 

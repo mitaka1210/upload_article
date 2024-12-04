@@ -132,40 +132,54 @@ const SectionUpload = () => {
 
     const addArticleHeader = () => {
         dispatch(addArticle(title));
-    }
+    };
 
     return (
-        <div className="upload-form">
-            <div>
-                <input name="section_title" type="text" placeholder="Title ID"
-                       onChange={handleInputTitleChange} required/>
-                <button onClick={addArticleHeader}>add</button>
-            </div>
-            <form onSubmit={handleSubmit}>
-            <input name="section_id" type="number" placeholder="Section ID"
-                       onChange={handleInputChange} required/>
-                <input name="article_id" type="number" placeholder="Article ID"
-                       onChange={handleInputChange} required/>
-                <input name="title" type="text" placeholder="Title"
-                       onChange={handleInputChange} required/>
-                <input name="position" type="number" placeholder="Position"
-                       onChange={handleInputChange} required/>
-                <textarea className="text-area-form" name="content"
-                          placeholder="Content"
-                          onChange={handleInputChange}></textarea>
-                {/*?<input type="file" onChange={handleImageChange}/>*/}
-                {/*upload button*/}
-                <div className="file file--uploading">
-                    <input id="input-file" onChange={handleImageChange}
-                           type="file"/>
-                    <label htmlFor="input-file">
-                        <img src={upload} alt="upload"/>
-                        <p>Uploading</p>
-                    </label>
-                    <p>{image_name}</p>
+        <div className="flex-horizontal-container-raw justify-content-center">
+            <div className="upload-form text-align-center">
+                <h2>Article Header</h2>
+                <div className="flex-vertical-container-raw">
+                    <input name="section_title" className="margin-20"
+                           type="text"
+                           placeholder="Title ID"
+                           onChange={handleInputTitleChange} required/>
+                    <button className="border-color-green shadowed-element"
+                            onClick={addArticleHeader}>add
+                    </button>
                 </div>
-                <button type="submit">Upload Section</button>
-            </form>
+                <hr/>
+                <form onSubmit={handleSubmit}
+                      className="flex-vertical-container-raw flex-item">
+                    <input name="section_id" className="margin-10" type="number"
+                           placeholder="Section ID"
+                           onChange={handleInputChange} required/>
+                    <input name="article_id" className="margin-10" type="number"
+                           placeholder="Article ID"
+                           onChange={handleInputChange} required/>
+                    <input name="title" type="text" className="margin-10"
+                           placeholder="Title"
+                           onChange={handleInputChange} required/>
+                    <input name="position" type="number" className="margin-10"
+                           placeholder="Position"
+                           onChange={handleInputChange} required/>
+                    <textarea className="text-area-form margin-10"
+                              name="content"
+                              placeholder="Content"
+                              onChange={handleInputChange}></textarea>
+                    {/*?<input type="file" onChange={handleImageChange}/>*/}
+                    {/*upload button*/}
+                    <div className="file file--uploading">
+                        <input id="input-file" onChange={handleImageChange}
+                               type="file"/>
+                        <label htmlFor="input-file">
+                            <img src={upload} alt="upload"/>
+                            <p>Uploading</p>
+                        </label>
+                        <p>{image_name}</p>
+                    </div>
+                    <button type="submit">Upload Section</button>
+                </form>
+            </div>
         </div>
     );
 };

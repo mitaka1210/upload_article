@@ -1,8 +1,9 @@
 import React from "react";
-import "./App.css";
+import "./reusable.scss";
 import { Route, Routes } from "react-router-dom"; //components
 import Read from "./components/Read";
 import Home from "./components/Home";
+import EditTodo from "./components/EditTodo";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/upload" element={<Home />} name="Home" />
         <Route path="/read" element={<Read />} name="Read" />
+        <Route path="/update-section/:id" element={<EditTodo />} />
       </Routes>
     </div>
   );

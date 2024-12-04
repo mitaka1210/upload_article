@@ -31,7 +31,6 @@ const articlesSlice = createSlice({
     });
     builder.addCase(fetchArticles.fulfilled, (state, action) => {
       state.isLoading = false;
-      console.log("pesho", action.payload);
       let articlesArr = [];
       state.status = "succeeded";
       for (let i = 0; i < action.payload.length; i++) {

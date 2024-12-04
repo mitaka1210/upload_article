@@ -14,123 +14,6 @@ const PORT = 5000;
 const HOST = "192.168.55.5";
 
 //ROUTES//
-//? create a todo
-
-app.post("/todos", async (req, res) => {
-  console.log("new todo", req.body);
-  try {
-    const { description, date, time, header } = req.body;
-    const query =
-      "INSERT INTO todos (description,date,time,header) VALUES($1, $2, $3, $4) RETURNING *";
-    const newTodo = await pool.query(query, [description, date, time, header]);
-    res.status(201).send("Данните са успешно добавени в базата.");
-    res.json(newTodo.rows);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//? get all todos
-
-app.get("/todos", async (req, res) => {
-  try {
-    const allTodos = await pool.query("SELECT * FROM article");
-    console.log("pesho", allTodos.rows);
-    res.json(allTodos.rows);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//? get a specific todo
-
-app.get("/todos/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const todo = await pool.query("SELECT * FROM todos WHERE todo_id = $1", [
-      id,
-    ]);
-    res.json(todo.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//? update a todo
-
-app.put("/todos/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { description } = req.body;
-    const updateTodo = await pool.query(
-      "UPDATE todos SET description = $1 WHERE todo_id = $2",
-      [description, id],
-    );
-
-    res.json("Todo was updated!");
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//? delete a todo
-
-app.delete("/todos/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deleteTodo = await pool.query(
-      "DELETE FROM todos WHERE todo_id = $1",
-      [id],
-    );
-    res.json("Todo was deleted!");
-  } catch (err) {
-    console.log(err.message);
-  }
-});
-
-//uploads
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, "./upload");
-//   },
-//   filename: function (req, file, cb) {
-//     return cb(null, file.originalname);
-//   },
-// });
-// const path = require("path");
-// const memoryStorage = multer.memoryStorage();
-// const upload = multer({ storage: memoryStorage });
-// Обслужване на статични файлове от директорията 'uploads'
-// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// app.post("/upload", upload.single("file"), async (req, res) => {
-//   if (!req.file) {
-//     return res.status(400).send("No file uploaded.");
-//   }
-//
-//   const data = req.file.buffer;
-//   const fileName = req.file.originalname;
-//   try {
-//     // Изпълнение на SQL заявка за актуализиране на последния ред
-//     const result = await pool.query(
-//       `
-//                 UPDATE article
-//                 SET data=$1,
-//                     filename=$2
-//                 WHERE images_id = (SELECT images_id FROM article ORDER BY images_id DESC LIMIT 1)
-//             `,
-//       [data, fileName],
-//     );
-//
-//     if (result.rowCount === 0) {
-//       return res.status(404).send("No employee found to update.");
-//     }
-//
-//     res.send("File successfully uploaded and database updated.");
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// });
 const fs = require("fs");
 const { extname } = require("node:path");
 app.get("/show-image", async (req, res) => {
@@ -362,12 +245,6 @@ app.get("/articles", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-// const { id } = req.params;
-// const { description } = req.body;
-// const updateTodo = await pool.query(
-//     "UPDATE todos SET description = $1 WHERE todo_id = $2",
-//     [description, id],
-// );
 // POST заявка за създаване на статия
 app.post("/create-articles", async (req, res) => {
   const { title } = req.body;
@@ -375,13 +252,54 @@ app.post("/create-articles", async (req, res) => {
   try {
     const { title } = req.body;
     const result = await pool.query(
-        'INSERT INTO articles (title) VALUES ($1) RETURNING *',
-        [title]
+      "INSERT INTO articles (title) VALUES ($1) RETURNING *",
+      [title],
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+// PUT endpoint to update a section
+app.put("/sections/:id", async (req, res) => {
+  const sectionId = parseInt(req.params.id, 10);
+  const { article_id, title, content, position, image_url } = req.body;
+
+  if (!title || !position) {
+    return res
+      .status(400)
+      .json({ error: "Title and position are required fields." });
+  }
+
+  try {
+    const query = `
+            UPDATE sections
+            SET article_id = COALESCE($1, article_id),
+                title      = COALESCE($2, title),
+                content    = COALESCE($3, content),
+                position   = COALESCE($4, position),
+                image_url  = COALESCE($5, image_url),
+                created_at = CURRENT_TIMESTAMP
+            WHERE id = $6 RETURNING *;
+        `;
+
+    const values = [article_id, title, content, position, image_url, sectionId];
+
+    const result = await pool.query(query, values);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Section not found." });
+    }
+
+    res.json({
+      message: "Section updated successfully.",
+      section: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Error updating section:", error);
+    res.status(500).json({ error: "Internal server error." });
   }
 });
 
