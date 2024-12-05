@@ -13,22 +13,28 @@ const EditTodo = () => {
   let sections = {};
   let content = "";
   let error = "";
+
   useEffect(() => {
     articlesStatus();
-    console.log("pesho", info);
-  }, [3]);
+  }, [id]); // Задължително да използваш [id], за да се извиква при промяна на ID.
+
   const [formData, setFormData] = useState({
     id: "",
     title: "",
     image_url: "",
-    sections: "",
+    section: [
+      {
+        position: "",
+        content: "",
+        title: "",
+      },
+    ],
   });
+
   const articlesStatus = () => {
     if (info === "idle") {
       dispatch(fetchArticles());
     } else if (info === "loading") {
-      console.log("pesho", info);
-
       content = <div>Loading...</div>;
     } else if (info === "succeeded") {
       let sectionId = Number(id);
@@ -41,12 +47,30 @@ const EditTodo = () => {
       }
     } else if (info === "failed") {
       content = <div>{error}</div>;
-    } else {
     }
   };
+
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, dataset } = e.target;
+
+    if (name.startsWith("section[")) {
+      const sectionIndex = parseInt(name.split("[")[1].split("]")[0]);
+      const sectionName = name.split(".")[1]; // пример: section[0].position
+
+      setFormData((prev) => {
+        const updatedSections = [...prev.section];
+        updatedSections[sectionIndex] = {
+          ...updatedSections[sectionIndex],
+          [sectionName]: value,
+        };
+        return { ...prev, section: updatedSections };
+      });
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -56,17 +80,15 @@ const EditTodo = () => {
 
   return (
     <>
-      {info.isLoading ? (
-        <div>
-          <h1>Loading........{error}</h1>
-        </div>
+      {info === "loading" ? (
+        <div>Loading...</div>
       ) : (
         <div>
           <form onSubmit={handleSubmit}>
             <input
               type="text"
               name="id"
-              value={formData.id}
+              value={formData.id || ""}
               onChange={handleChange}
               placeholder="Section ID"
               required
@@ -74,25 +96,25 @@ const EditTodo = () => {
             <input
               type="text"
               name="title"
-              value={formData.header_article}
+              value={formData.header_article || ""}
               onChange={handleChange}
               placeholder="Title"
               required
             />
-            {section.map((section, index) => {
+            {formData.section.map((section, index) => {
               return (
                 <div key={index}>
                   <input
                     type="text"
-                    name="position"
-                    value={section.position}
+                    name={`section[${index}].position`}
+                    value={section.position || ""}
                     onChange={handleChange}
                     placeholder="Position"
                     required
                   />
                   <textarea
-                    name="content"
-                    value={section.content}
+                    name={`section[${index}].content`}
+                    value={section.content || ""}
                     onChange={handleChange}
                     placeholder="Content"
                   />
@@ -102,7 +124,7 @@ const EditTodo = () => {
             <input
               type="text"
               name="image_url"
-              value={formData.images_id}
+              value={formData.images_id || ""}
               onChange={handleChange}
               placeholder="Image URL"
             />

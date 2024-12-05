@@ -236,8 +236,43 @@ app.get("/articles", async (req, res) => {
         return acc;
       }, {}),
     );
-
-    console.log(mergedObjects);
+    // Обединяване на еднаквите postions за всяка секция ако има такива
+    //! от това
+    // { position: 1, title: '1', content: '1' },
+    // { position: 1, title: 'asdas', content: 'dsfsdqrq' },
+    // {
+    //   position: 1,
+    //       title: 'Gosho testa',
+    //     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget eros ut augue varius imperdiet eget dapibus dui. Nulla eu risus at augue semper faucibus. Morbi non odio commodo, imperdiet justo sed, vulputate lorem. In porta cursus mollis. Nulla facilisis sem ut ligula ullamcorper, at euismod nunc congue. Curabitur semper est lectus, nec gravida mauris dictum sed. Nullam vel metus quis lorem tristique euismod. Vivamus et arcu tincidunt, sagittis elit eu, molestie mauris. Nulla orci nulla, pulvinar non lacus in, sollicitudin ullamcorper leo.'
+    // },
+    //! получваме това
+    // {
+    //   "position": 1,
+    //     "items": [
+    //   { "title": "1", "content": "1" },
+    //   { "title": "asdas", "content": "dsfsdqrq" },
+    //   {
+    //     "title": "Gosho testa",
+    //     "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget eros ut augue varius imperdiet eget dapibus dui. Nulla eu risus at augue semper faucibus. Morbi non odio commodo, imperdiet justo sed, vulputate lorem. In porta cursus mollis. Nulla facilisis sem ut ligula ullamcorper, at euismod nunc congue. Curabitur semper est lectus, nec gravida mauris dictum sed. Nullam vel metus quis lorem tristique euismod. Vivamus et arcu tincidunt, sagittis elit eu, molestie mauris. Nulla orci nulla, pulvinar non lacus in, sollicitudin ullamcorper leo."
+    //   }
+    // ]
+    // },
+    //? чрез този метод combinePositions
+    const combinePositions = Object.values(
+      articles.reduce((acc, obj) => {
+        if (!acc[obj.position]) {
+          // Ако обектът не съществува в резултата, добави го с празен масив `items`
+          acc[obj.position] = { position: obj.position, items: [] };
+        }
+        // Добави текущия обект към масива `items`
+        acc[obj.position].items.push({
+          title: obj.title,
+          content: obj.content,
+        });
+        return acc;
+      }, {}),
+    );
+    console.log("lslfsdf", mergedObjects[0].sections);
     // Форматиране като масив
     res.json(mergedObjects);
   } catch (error) {
