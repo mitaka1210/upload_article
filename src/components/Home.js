@@ -1,14 +1,14 @@
-import React from "react";
-import Card from "./Card";
-import InputTodo from "./InputTodo";
-import ListTodos from "../ListTodos/ListTodos";
+import React from 'react';
+import Card from './Card';
+import InputTodo from './InputTodo';
+import ListTodos from '../ListTodos/ListTodos';
 
 const Home = () => {
   return (
     <div>
-      <InputTodo/>
-      <ListTodos/>
-      <Card/>
+      <InputTodo />
+      <ListTodos />
+      <Card />
     </div>
   );
 };

@@ -1,61 +1,66 @@
-import React, {useEffect} from "react";
-import "./socialShare.scss";
-import fb from "../assets/facebook.svg";
-import X from "../assets/twitter.svg";
+import React, { useEffect } from 'react';
+import './socialShare.scss';
+import fb from '../assets/facebook.svg';
+import X from '../assets/twitter.svg';
 
-const SocialShare = ({url, title, description, images}) => {
+const SocialShare = ({ url, title, description, images }) => {
   useEffect(() => {
     // Инициализиране на Facebook SDK
     window.fbAsyncInit = function () {
       window.FB.init({
-        appId: "1181098826301746", // Заменете с вашия Facebook App ID
+        appId: '1181098826301746', // Заменете с вашия Facebook App ID
         xfbml: true,
-        version: "v12.0"
+        version: 'v12.0',
       });
     };
 
     // Зареждане на Facebook SDK
     (function (d, s, id) {
-      var js, fjs = d.getElementsByTagName(s)[0];
+      var js,
+        fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) {
         return;
       }
       js = d.createElement(s);
       js.id = id;
-      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      js.src = 'https://connect.facebook.net/en_US/sdk.js';
       fjs.parentNode.insertBefore(js, fjs);
-    }(document, "script", "facebook-jssdk"));
+    })(document, 'script', 'facebook-jssdk');
   }, []);
 
   const shareOnFacebook = () => {
-    window.FB.ui({
-      method: "share",
-      href: url,
-      quote: `${images}-${title} - ${description}`,
-    }, function (response) {
-      if (response && !response.error_message) {
-        alert("Posting completed.");
-      } else {
-        alert("Error while posting.");
+    window.FB.ui(
+      {
+        method: 'share',
+        href: url,
+        quote: `${images}-${title} - ${description}`,
+      },
+      function (response) {
+        if (response && !response.error_message) {
+          alert('Posting completed.');
+        } else {
+          alert('Error while posting.');
+        }
       }
-    });
+    );
   };
 
   const shareOnTwitter = () => {
     const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`;
-    window.open(twitterUrl, "_blank");
+    window.open(twitterUrl, '_blank');
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(`${url}?title=${title}`)
+    navigator.clipboard
+      .writeText(`${url}?title=${title}`)
       .then(() => {
         setTimeout(() => {
-          alert("Link copied to clipboard.");
+          alert('Link copied to clipboard.');
         }, 2000);
       })
-      .catch(err => {
-        alert("Failed to copy the link.");
-        console.error("Could not copy text: ", err);
+      .catch((err) => {
+        alert('Failed to copy the link.');
+        console.error('Could not copy text: ', err);
       });
   };
 
@@ -64,10 +69,10 @@ const SocialShare = ({url, title, description, images}) => {
       Сподели в:
       <div className="social-icons">
         <div onClick={shareOnFacebook}>
-          <img className="facebook" src={fb} alt="facebook"/>
+          <img className="facebook" src={fb} alt="facebook" />
         </div>
         <div onClick={shareOnTwitter}>
-          <img className="facebook" src={X} alt="X"/>
+          <img className="facebook" src={X} alt="X" />
         </div>
 
         <a href="#" title="twitter" onClick={shareOnTwitter}>

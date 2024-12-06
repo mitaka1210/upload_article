@@ -6,7 +6,6 @@ $card-background-color: #fff;
 $text-color: #111;
 $card-transition: 0.5s ease-in-out;
 
-
 .card-main {
   display: flex;
   flex-flow: row wrap;
@@ -80,6 +79,4 @@ $card-transition: 0.5s ease-in-out;
   .card-read {
     display: none;
   }
-
 }
-

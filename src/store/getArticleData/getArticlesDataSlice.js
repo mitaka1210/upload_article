@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-export const fetchArticles = createAsyncThunk("getArticles", async () => {
-  return fetch("http://localhost:5000/articles")
+export const fetchArticles = createAsyncThunk('getArticles', async () => {
+  return fetch('http://localhost:5000/articles')
     .then((response) => response.json())
     .then((json) => {
       return json;
@@ -9,12 +9,12 @@ export const fetchArticles = createAsyncThunk("getArticles", async () => {
 });
 
 const articlesSlice = createSlice({
-  name: "articles",
+  name: 'articles',
   initialState: {
     isLoading: false,
     data: [],
     error: false,
-    status: "idle",
+    status: 'idle',
   },
   reducers: {
     getAll(state, action) {
@@ -26,19 +26,19 @@ const articlesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchArticles.pending, (state, action) => {
-      state.status = "loading";
+      state.status = 'loading';
       state.isLoading = true;
     });
     builder.addCase(fetchArticles.fulfilled, (state, action) => {
       state.isLoading = false;
       let articlesArr = [];
-      state.status = "succeeded";
+      state.status = 'succeeded';
       for (let i = 0; i < action.payload.length; i++) {
         let createArticle = new Date(
-          action.payload[i].createData,
+          action.payload[i].createData
         ).toDateString();
         let createTime = new Date(
-          action.payload[i].createData,
+          action.payload[i].createData
         ).toLocaleTimeString();
         articlesArr.push({
           create_article_date: createArticle,
@@ -52,7 +52,7 @@ const articlesSlice = createSlice({
       state.data = articlesArr;
     });
     builder.addCase(fetchArticles.rejected, (state, action) => {
-      state.status = "failed";
+      state.status = 'failed';
       state.error = true;
       state.error = action.error.message;
     });

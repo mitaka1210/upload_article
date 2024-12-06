@@ -161,7 +161,7 @@
 }
 
 .flex-grow-80 {
-  flex-grow: 0.80 !important;
+  flex-grow: 0.8 !important;
 }
 
 .flex-grow-85 {
@@ -173,7 +173,7 @@
 }
 
 .flex-grow-90 {
-  flex-grow: 0.90 !important;
+  flex-grow: 0.9 !important;
 }
 
 .flex-grow-95 {
@@ -636,15 +636,15 @@
 }
 
 .opacity-4 {
-  opacity: .4;
+  opacity: 0.4;
 }
 
 .opacity-5 {
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .opacity-6 {
-  opacity: .6;
+  opacity: 0.6;
 }
 
 .logo {
@@ -657,7 +657,10 @@
 }
 
 .shadowed-element {
-  box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024, 0 1px 10px #0000001f !important;
+  box-shadow:
+    0 2px 4px -1px #0003,
+    0 4px 5px #00000024,
+    0 1px 10px #0000001f !important;
 }
 
 .round-behavior {
@@ -673,7 +676,6 @@
 .acceptance-input-style {
   border-radius: 4px;
   /* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
-
 }
 
 //exit button
@@ -682,7 +684,6 @@
   border: none;
   bottom: 5px;
 }
-
 
 //border-color-gray
 .border-color-gray {
@@ -704,7 +705,6 @@
   font-size: 24px;
   font-weight: 500;
 }
-
 
 //add green color
 .add-color-green {
@@ -728,7 +728,6 @@
   text-transform: uppercase;
 }
 
-
 //styling line
 
 .add-style-for-line {
@@ -738,7 +737,6 @@
   //position: relative;
   //top: 15px;
 }
-
 
 // remove bottom margin
 
@@ -750,7 +748,6 @@
 .first-letter:first-letter {
   text-transform: uppercase !important;
 }
-
 
 // close icon hasMovingService TRUE
 
@@ -805,7 +802,6 @@
     position: absolute;
     top: 650px;
   }
-
 }
 
 .mat-mdc-dialog-container {
@@ -816,7 +812,6 @@
   background: none !important;
 }
 
-
 // div who we use for make swipe top to bottom and
 .hide-div-css-for-swipe {
   height: 24px;
@@ -825,7 +820,6 @@
   z-index: 999;
 }
 
-
 //bgr for dialog
 .rejection-shipment {
   background-color: white;
@@ -833,12 +827,10 @@
   border-radius: 6px;
 }
 
-
 //when dont write email open mat-error tag and show message
 .error-text {
   color: red !important;
 }
-
 
 //remove border
 .remove-border {
@@ -863,13 +855,11 @@
   color: green !important;
 }
 
-
 //add height for google map
 .add-map-height {
   display: block;
   height: calc(100vh - 18vh);
 }
-
 
 //add height for google map and after that button
 .add-map-height-after-button {
@@ -894,7 +884,6 @@
 .border-color-orange {
   border: 1px solid orange;
 }
-
 
 //border-orange
 .border-color-green {

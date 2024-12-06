@@ -1,11 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import todoSlice from "../todoSlice/todoSlice";
-import commentsReducer from "../commentForm/commentSlice";
-import likesSlice from "../likesSlice/likesSlice";
-import sectionsSlice from "../uploadArticleSlice/uploadArticleSlice";
-import articlesSlice from "../getArticleData/getArticlesDataSlice";
-import articlesSliceAdd from "../add-new-article/addNewArticleSlice";
-import editSectionsSlice from "../editSections/editSectionsSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import todoSlice from '../todoSlice/todoSlice';
+import commentsReducer from '../commentForm/commentSlice';
+import likesSlice from '../likesSlice/likesSlice';
+import sectionsSlice from '../uploadArticleSlice/uploadArticleSlice';
+import articlesSlice from '../getArticleData/getArticlesDataSlice';
+import articlesSliceAdd from '../add-new-article/addNewArticleSlice';
+import editSectionsSlice from '../editSections/editSectionsSlice';
 
 const store = configureStore({
   reducer: {

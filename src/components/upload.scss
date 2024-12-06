@@ -6,7 +6,7 @@
 }
 
 .file > input[type='file'] {
-  display: none
+  display: none;
 }
 
 .file > label {
@@ -129,8 +129,6 @@
   width: calc(500px + 100px / 2);
 
   & form {
-
-
     &input {
       padding: 5px;
       margin: 15px;

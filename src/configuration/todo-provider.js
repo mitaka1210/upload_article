@@ -1,5 +1,3 @@
 import getTodo from './ api-endpoints';
 
-export  async function allTodoList () {
-
-}
+export async function allTodoList() {}
