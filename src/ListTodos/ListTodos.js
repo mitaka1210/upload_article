@@ -1,20 +1,20 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import getTodo from "../configuration/ api-endpoints";
-import "./list.scss";
-import { fetchArticles } from "../store/getArticleData/getArticlesDataSlice";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import './list.scss';
+import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
+import { useNavigate } from 'react-router-dom';
 
 const ListTodos = () => {
   //? properties
-  let err = "";
-  let content = "";
+  let err = '';
+  // eslint-disable-next-line no-unused-vars
+  let content = '';
   const dispatch = useDispatch();
   const status = useSelector((state) => state.todo.status);
   const error = useSelector((state) => state.todo.error);
   useEffect(() => {
     getTodos();
-  }, [dispatch]);
+  }, [1]);
   const articlesInfo = useSelector((state) => state.articlesSections.data);
   const navigate = useNavigate();
 
@@ -24,23 +24,24 @@ const ListTodos = () => {
 
   //delete todo function
 
-  const deleteTodo = async (id) => {
-    try {
-      const deleteTodo = await fetch(`${getTodo.DELETE_ALL_TODOS}/${id}`, {
-        method: "DELETE",
-      });
-    } catch (err) {}
+  const deleteTodo = async () => {
+    // TODO
+    // try {
+    //   const deleteTodo = await fetch(`${getTodo.DELETE_ALL_TODOS}/${id}`, {
+    //     method: 'DELETE',
+    //   });
+    // } catch (err) {}
   };
 
   const getTodos = () => {
-    if (status === "idle") {
+    if (status === 'idle') {
       dispatch(fetchArticles());
-    } else if (status === "loading") {
+    } else if (status === 'loading') {
       content = <div>Loading...</div>;
-    } else if (status === "succeeded") {
-    } else if (status === "failed") {
+    } else if (status === 'succeeded') {
+      /* empty */
+    } else if (status === 'failed') {
       content = <div>{error}</div>;
-    } else {
     }
   };
 

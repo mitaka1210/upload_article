@@ -1,30 +1,31 @@
-const express = require("express");
-const app = express();
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const pool = require("./db");
-const multer = require("multer");
+import pool from "./db.js";
 
+import multer from "multer";
+
+import express from "express";
+
+import cors from "cors";
+
+import { extname } from "node:path";
+//ROUTES//
+import fs from "fs";
+
+const app = express();
 //middleware
 app.use(cors());
 app.use(express.json()); //req.body
 
 //порт
 const PORT = 5000;
-const HOST = "192.168.55.5";
-
-//ROUTES//
-const fs = require("fs");
-const { extname } = require("node:path");
 app.get("/show-image", async (req, res) => {
   try {
     // Извличане на информацията за последния ред
     const result = await pool.query(`
-            SELECT data, filename
-            FROM article
-            ORDER BY images_id DESC
-            LIMIT 1
-        `);
+        SELECT data, filename
+        FROM article
+        ORDER BY images_id DESC
+        LIMIT 1
+    `);
     if (result.rows.length === 0) {
       return res.status(404).send("No image found.");
     }
@@ -60,20 +61,7 @@ app.get("/show-image", async (req, res) => {
 });
 
 //add comment
-app.post("/comments", async (req, res) => {
-  const { email, comment } = req.body;
-  console.log("pesho", req.body);
-  try {
-    const query =
-      "INSERT INTO comments (email, comment) VALUES ($1, $2) RETURNING *";
-    const newComment = await pool.query(query, [email, comment]);
-    res.json(newComment.rows);
-    res.status(201).send("Данните са успешно добавени в базата.");
-  } catch (error) {
-    console.error("Error saving comment", error);
-    res.status(500).send("Internal Server Error");
-  }
-});
+
 //like
 app.post("/api/like", async (req, res) => {
   const { likes, results } = req.body;
@@ -165,8 +153,8 @@ app.post("/sections", upload.single("image"), async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO sections (article_id, title, content, position, image_url)
-             VALUES ($1, $2, $3, $4, $5)
-             RETURNING *`,
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING *`,
       [article_id, title, content, position, image_url],
     );
 
@@ -182,18 +170,18 @@ app.get("/articles", async (req, res) => {
   try {
     // Извличане на всички статии с техните секции
     const articlesQuery = `
-            SELECT a.id         AS article_id,
-                   a.title      AS article_title,
-                   a.created_at AS article_created_at,
-                   s.id         AS section_id,
-                   s.title      AS section_title,
-                   s.content    AS section_content,
-                   s.position   AS section_position,
-                   s.image_url  AS section_image_url
-            FROM articles a
-                     LEFT JOIN sections s ON a.id = s.article_id
-            ORDER BY a.id, s.position;
-        `;
+        SELECT a.id         AS article_id,
+               a.title      AS article_title,
+               a.created_at AS article_created_at,
+               s.id         AS section_id,
+               s.title      AS section_title,
+               s.content    AS section_content,
+               s.position   AS section_position,
+               s.image_url  AS section_image_url
+        FROM articles a
+                 LEFT JOIN sections s ON a.id = s.article_id
+        ORDER BY a.id, s.position;
+    `;
     const result = await pool.query(articlesQuery);
 
     // Групиране на данните
@@ -238,46 +226,6 @@ app.get("/articles", async (req, res) => {
         return acc;
       }, {}),
     );
-    // Обединяване на еднаквите postions за всяка секция ако има такива
-    //! от това
-    // { position: 1, title: '1', content: '1' },
-    // { position: 1, title: 'asdas', content: 'dsfsdqrq' },
-    // {
-    //   position: 1,
-    //       title: 'Gosho testa',
-    //     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget eros ut augue varius imperdiet eget dapibus dui. Nulla eu risus at augue semper faucibus. Morbi non odio commodo, imperdiet justo sed, vulputate lorem. In porta cursus mollis. Nulla facilisis sem ut ligula ullamcorper, at euismod nunc congue. Curabitur semper est lectus, nec gravida mauris dictum sed. Nullam vel metus quis lorem tristique euismod. Vivamus et arcu tincidunt, sagittis elit eu, molestie mauris. Nulla orci nulla, pulvinar non lacus in, sollicitudin ullamcorper leo.'
-    // },
-    //! получваме това
-    // {
-    //   "position": 1,
-    //     "items": [
-    //   { "title": "1", "content": "1" },
-    //   { "title": "asdas", "content": "dsfsdqrq" },
-    //   {
-    //     "title": "Gosho testa",
-    //     "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget eros ut augue varius imperdiet eget dapibus dui. Nulla eu risus at augue semper faucibus. Morbi non odio commodo, imperdiet justo sed, vulputate lorem. In porta cursus mollis. Nulla facilisis sem ut ligula ullamcorper, at euismod nunc congue. Curabitur semper est lectus, nec gravida mauris dictum sed. Nullam vel metus quis lorem tristique euismod. Vivamus et arcu tincidunt, sagittis elit eu, molestie mauris. Nulla orci nulla, pulvinar non lacus in, sollicitudin ullamcorper leo."
-    //   }
-    // ]
-    // },
-    //? чрез този метод combinePositions
-    const combinePositions = Object.values(
-      articles.reduce((acc, obj) => {
-        if (!acc[obj.sections.position]) {
-          // Ако обектът не съществува в резултата, добави го с празен масив `items`
-          acc[obj.sections.position] = {
-            position: obj.sections.position,
-            items: [],
-          };
-        }
-        // Добави текущия обект към масива `items`
-        acc[obj.sections.position].items.push({
-          title: obj.title,
-          position: obj.sections.position,
-          content: obj.sections.content,
-        });
-        return acc;
-      }, {}),
-    );
     // Форматиране като масив
     res.json(mergedObjects);
   } catch (error) {
@@ -287,7 +235,6 @@ app.get("/articles", async (req, res) => {
 });
 // POST заявка за създаване на статия
 app.post("/create-articles", async (req, res) => {
-  const { title } = req.body;
   try {
     const { title } = req.body;
     const result = await pool.query(
@@ -318,11 +265,11 @@ app.put("/sections/:id", async (req, res) => {
 
     // Актуализираме основната статия
     const articleQuery = `
-            UPDATE articles
-            SET title = COALESCE($1, title)
-            WHERE id = $2
-            RETURNING *;
-        `;
+        UPDATE articles
+        SET title = COALESCE($1, title)
+        WHERE id = $2
+        RETURNING *;
+    `;
     const articleValues = [title, article_id];
     const articleResult = await pool.query(articleQuery, articleValues);
 
@@ -332,10 +279,10 @@ app.put("/sections/:id", async (req, res) => {
 
     // Извличаме съществуващите секции за тази статия
     const currentSectionsQuery = `
-            SELECT id, title, content, position, image_url
-            FROM sections
-            WHERE article_id = $1;
-        `;
+        SELECT id, title, content, position, image_url
+        FROM sections
+        WHERE article_id = $1;
+    `;
     const currentSectionsResult = await pool.query(currentSectionsQuery, [
       article_id,
     ]);
@@ -360,13 +307,13 @@ app.put("/sections/:id", async (req, res) => {
         console.log(`Updating section with position ${sec.position}`);
 
         const sectionQuery = `
-                    UPDATE sections
-                    SET title     = $1,
-                        content   = $2,
-                        image_url = $3
-                    WHERE article_id = $4
-                      AND position = $5
-                `;
+            UPDATE sections
+            SET title     = $1,
+                content   = $2,
+                image_url = $3
+            WHERE article_id = $4
+              AND position = $5
+        `;
         const sectionValues = [
           sec.title,
           sec.content,

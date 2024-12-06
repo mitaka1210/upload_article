@@ -22,8 +22,9 @@ app.use(express.json()); // Parses incoming JSON requests and puts the parsed da
 app.post("/todos", async (req, res) => {
   console.log("new todo", req.body);
   try {
-    const {description, date, time, header} = req.body;
-    const query = "INSERT INTO todos (description,date,time,header) VALUES($1, $2, $3, $4) RETURNING *";
+    const { description, date, time, header } = req.body;
+    const query =
+      "INSERT INTO todos (description,date,time,header) VALUES($1, $2, $3, $4) RETURNING *";
     const newTodo = await pool.query(query, [description, date, time, header]);
     res.status(201).send("Данните са успешно добавени в базата.");
     res.json(newTodo.rows);
@@ -52,8 +53,10 @@ app.get("/todos", async (req, res) => {
  */
 app.get("/todos/:id", async (req, res) => {
   try {
-    const {id} = req.params;
-    const todo = await pool.query("SELECT * FROM todos WHERE todo_id = $1", [id]);
+    const { id } = req.params;
+    const todo = await pool.query("SELECT * FROM todos WHERE todo_id = $1", [
+      id,
+    ]);
     res.json(todo.rows[0]);
   } catch (err) {
     console.error(err.message);
@@ -68,11 +71,11 @@ app.get("/todos/:id", async (req, res) => {
  */
 app.put("/todos/:id", async (req, res) => {
   try {
-    const {id} = req.params;
-    const {description} = req.body;
+    const { id } = req.params;
+    const { description } = req.body;
     const updateTodo = await pool.query(
       "UPDATE todos SET description = $1 WHERE todo_id = $2",
-      [description, id]
+      [description, id],
     );
     res.json("Todo was updated!");
   } catch (err) {
@@ -87,8 +90,11 @@ app.put("/todos/:id", async (req, res) => {
  */
 app.delete("/todos/:id", async (req, res) => {
   try {
-    const {id} = req.params;
-    const deleteTodo = await pool.query("DELETE FROM todos WHERE todo_id = $1", [id]);
+    const { id } = req.params;
+    const deleteTodo = await pool.query(
+      "DELETE FROM todos WHERE todo_id = $1",
+      [id],
+    );
     res.json("Todo was deleted!");
   } catch (err) {
     console.log(err.message);

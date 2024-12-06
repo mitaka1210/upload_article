@@ -1,7 +1,6 @@
 .read {
   margin: 5em;
 
-
   & .read-back-btn {
     text-align: end;
     width: 25%;
@@ -17,8 +16,6 @@
 }
 
 .article-data {
-
-
   & img {
     width: 500px;
     height: auto;
@@ -35,7 +32,6 @@
     width: 50%;
   }
 }
-
 
 //!Card Start
 article {
@@ -54,7 +50,9 @@ article {
   border-radius: 8px;
   overflow: hidden;
   padding-bottom: 10px;
-  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Add transition for smooth effect */
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease; /* Add transition for smooth effect */
 }
 
 article:hover {
@@ -113,7 +111,7 @@ article:hover {
 }
 
 .read-more-btn:hover {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: black;
   border-radius: 30px;
 }

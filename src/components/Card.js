@@ -1,18 +1,18 @@
-import React, { useEffect } from "react";
-import "./card.scss";
-import dataM from "../services/listTodosData";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import getTodo from "../configuration/ api-endpoints";
-import { fetchTodo } from "../store/todoSlice/todoSlice";
+import React, { useEffect } from 'react';
+import './card.scss';
+import dataM from '../services/listTodosData';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import getTodo from '../configuration/ api-endpoints';
+import { fetchTodo } from '../store/todoSlice/todoSlice';
 
 const Card = () => {
   let arr = [];
   arr = dataM;
   //? properties
   let todosData = [];
-  let err = "";
-  let base64Image = "";
+  let err = '';
+  let base64Image = '';
   let content;
   const dispatch = useDispatch();
   const status = useSelector((state) => state.todo.status);
@@ -27,38 +27,38 @@ const Card = () => {
   //delete todo function
 
   const deleteTodo = async (id) => {
-    console.log("pesho");
+    console.log('pesho');
     try {
       const deleteTodo = await fetch(`${getTodo.DELETE_ALL_TODOS}/${id}`, {
-        method: "DELETE",
+        method: 'DELETE',
       });
     } catch (err) {
-      console.error("err", err);
+      console.error('err', err);
     }
   };
   const getTodos = () => {
-    if (status === "idle") {
+    if (status === 'idle') {
       dispatch(fetchTodo());
-    } else if (status === "loading") {
+    } else if (status === 'loading') {
       content = <div>Loading...</div>;
-    } else if (status === "succeeded") {
+    } else if (status === 'succeeded') {
       onSubmitForm();
-    } else if (status === "failed") {
+    } else if (status === 'failed') {
       content = <div>{error}</div>;
     } else {
-      console.log("peshoDARTA", status, data);
+      console.log('peshoDARTA', status, data);
     }
   };
   const onSubmitForm = async (e) => {
     // Fetch the Base64 image string from the backend
-    fetch("http://localhost:5000/show-image")
+    fetch('http://localhost:5000/show-image')
       .then((response) => response.json())
       .then((data) => {
         // Set the Base64 string as the source of the image
         base64Image = data.image;
-        document.getElementById("image").src = base64Image;
+        document.getElementById('image').src = base64Image;
       })
-      .catch((error) => console.error("Error fetching image:", error));
+      .catch((error) => console.error('Error fetching image:', error));
   };
   const navigate = useNavigate();
   let redirectPage = (header, content, date, time, images, todoId) => {
@@ -71,7 +71,7 @@ const Card = () => {
         todoId: todoId,
         images: images,
       },
-      search: "/12412412",
+      search: '/12412412',
     });
   };
 
