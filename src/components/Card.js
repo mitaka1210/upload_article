@@ -1,12 +1,10 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import "./card.scss";
 import dataM from "../services/listTodosData";
-import {useNavigate} from "react-router-dom";
-import {useDispatch, useSelector} from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import getTodo from "../configuration/ api-endpoints";
-import {fetchTodo} from "../store/todoSlice/todoSlice";
-import mitaka from "../assets/tetiana-grypachevska-O-dWPPAOgEU-unsplash.jpg";
-
+import { fetchTodo } from "../store/todoSlice/todoSlice";
 
 const Card = () => {
   let arr = [];
@@ -28,11 +26,11 @@ const Card = () => {
 
   //delete todo function
 
-  const deleteTodo = async id => {
-    console.log("pesho",);
+  const deleteTodo = async (id) => {
+    console.log("pesho");
     try {
       const deleteTodo = await fetch(`${getTodo.DELETE_ALL_TODOS}/${id}`, {
-        method: "DELETE"
+        method: "DELETE",
       });
     } catch (err) {
       console.error("err", err);
@@ -51,17 +49,16 @@ const Card = () => {
       console.log("peshoDARTA", status, data);
     }
   };
-  const onSubmitForm = async e => {
+  const onSubmitForm = async (e) => {
     // Fetch the Base64 image string from the backend
-    fetch('http://localhost:5000/show-image')
-        .then(response => response.json())
-        .then(data => {
-          console.log("pesho",data);
-          // Set the Base64 string as the source of the image
-          base64Image = data.image;
-          document.getElementById('image').src = base64Image;
-        })
-        .catch(error => console.error('Error fetching image:', error));
+    fetch("http://localhost:5000/show-image")
+      .then((response) => response.json())
+      .then((data) => {
+        // Set the Base64 string as the source of the image
+        base64Image = data.image;
+        document.getElementById("image").src = base64Image;
+      })
+      .catch((error) => console.error("Error fetching image:", error));
   };
   const navigate = useNavigate();
   let redirectPage = (header, content, date, time, images, todoId) => {
@@ -72,16 +69,16 @@ const Card = () => {
         date: date,
         time: time,
         todoId: todoId,
-        images: images
+        images: images,
       },
-      search: "/12412412"
+      search: "/12412412",
     });
   };
 
   return (
-      <div className="card-main">
-        <img id="image" alt="Image from Base64" width="300"/>
-      </div>
+    <div className="card-main">
+      <img id="image" alt="Image from Base64" width="300" />
+    </div>
   );
 };
 

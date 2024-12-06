@@ -1,9 +1,9 @@
 const express = require("express");
 const app = express();
+const bodyParser = require("body-parser");
 const cors = require("cors");
 const pool = require("./db");
 const multer = require("multer");
-
 
 //middleware
 app.use(cors());
@@ -11,132 +11,20 @@ app.use(express.json()); //req.body
 
 //порт
 const PORT = 5000;
-const HOST='192.168.55.5'
+const HOST = "192.168.55.5";
 
 //ROUTES//
-//? create a todo
-
-app.post("/todos", async (req, res) => {
-  console.log("new todo", req.body);
-  try {
-    const {description, date, time, header} = req.body;
-    const query = "INSERT INTO todos (description,date,time,header) VALUES($1, $2, $3, $4) RETURNING *";
-    const newTodo = await pool.query(query, [description, date, time, header]);
-    res.status(201).send("Данните са успешно добавени в базата.");
-    res.json(newTodo.rows);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//? get all todos
-
-app.get("/todos", async (req, res) => {
-  try {
-    const allTodos = await pool.query("SELECT * FROM article");
-    console.log("pesho", allTodos.rows);
-    res.json(allTodos.rows);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//? get a specific todo
-
-app.get("/todos/:id", async (req, res) => {
-  try {
-    const {id} = req.params;
-    const todo = await pool.query("SELECT * FROM todos WHERE todo_id = $1", [
-      id
-    ]);
-    res.json(todo.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//? update a todo
-
-app.put("/todos/:id", async (req, res) => {
-  try {
-    const {id} = req.params;
-    const {description} = req.body;
-    const updateTodo = await pool.query(
-      "UPDATE todos SET description = $1 WHERE todo_id = $2",
-      [description, id]
-    );
-
-    res.json("Todo was updated!");
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-//? delete a todo
-
-app.delete("/todos/:id", async (req, res) => {
-  try {
-    const {id} = req.params;
-    const deleteTodo = await pool.query("DELETE FROM todos WHERE todo_id = $1", [
-      id
-    ]);
-    res.json("Todo was deleted!");
-  } catch (err) {
-    console.log(err.message);
-  }
-});
-
-//uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./upload");
-  },
-  filename: function (req, file, cb) {
-    return cb(null, file.originalname);
-  }
-});
-const path = require("path");
-const memoryStorage = multer.memoryStorage();
-const upload = multer({storage: memoryStorage});
-// Обслужване на статични файлове от директорията 'uploads'
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-
-
-app.post("/upload", upload.single("file"), async (req, res) => {
-  if (!req.file) {
-    return res.status(400).send("No file uploaded.");
-  }
-
-  const data = req.file.buffer;
-  const fileName = req.file.originalname;
-  try {
-    // Изпълнение на SQL заявка за актуализиране на последния ред
-    const result = await pool.query(`
-      UPDATE article
-      SET data=$1,filename=$2
-      WHERE images_id = (SELECT images_id FROM article ORDER BY images_id DESC LIMIT 1)
-    `, [data, fileName]);
-
-    if (result.rowCount === 0) {
-      return res.status(404).send("No employee found to update.");
-    }
-
-    res.send("File successfully uploaded and database updated.");
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-const fs = require('fs');
+const fs = require("fs");
+const { extname } = require("node:path");
 app.get("/show-image", async (req, res) => {
   try {
     // Извличане на информацията за последния ред
     const result = await pool.query(`
-      SELECT data, filename
-      FROM article
-      ORDER BY images_id DESC
-      LIMIT 1
-    `);
+            SELECT data, filename
+            FROM article
+            ORDER BY images_id DESC
+            LIMIT 1
+        `);
     if (result.rows.length === 0) {
       return res.status(404).send("No image found.");
     }
@@ -146,15 +34,15 @@ app.get("/show-image", async (req, res) => {
     const base64File = fileData.toString("base64");
     const imageUrl = `data:image/${fileType};base64,${base64File}`;
     // Write the Base64 data to a file
-    fs.writeFile('image.png', base64File, 'base64', (err) => {
+    fs.writeFile("image.png", base64File, "base64", (err) => {
       if (err) {
-        console.log('Error saving image:', err);
+        console.log("Error saving image:", err);
       } else {
-        console.log('Image saved as image.png');
+        console.log("Image saved as image.png");
       }
     });
     // console.log("pesho", res.json({ image: imageUrl }));
-    res.json({ image: imageUrl })
+    res.json({ image: imageUrl });
     // res.json(todo.rows[0]);
     // res.send(`
     //   <!doctype html>
@@ -173,10 +61,11 @@ app.get("/show-image", async (req, res) => {
 
 //add comment
 app.post("/comments", async (req, res) => {
-  const {email, comment} = req.body;
+  const { email, comment } = req.body;
   console.log("pesho", req.body);
   try {
-    const query = "INSERT INTO comments (email, comment) VALUES ($1, $2) RETURNING *";
+    const query =
+      "INSERT INTO comments (email, comment) VALUES ($1, $2) RETURNING *";
     const newComment = await pool.query(query, [email, comment]);
     res.json(newComment.rows);
     res.status(201).send("Данните са успешно добавени в базата.");
@@ -187,11 +76,14 @@ app.post("/comments", async (req, res) => {
 });
 //like
 app.post("/api/like", async (req, res) => {
-  const {likes, results} = req.body;
+  const { likes, results } = req.body;
   console.log("pesho", req.body);
   try {
     transferTodosToArticles();
-    await pool.query("UPDATE articles SET likes = $1 + 1 WHERE id = $2", [results.likes, results.todoId]);
+    await pool.query("UPDATE articles SET likes = $1 + 1 WHERE id = $2", [
+      results.likes,
+      results.todoId,
+    ]);
     res.status(200).send("Liked");
   } catch (error) {
     console.error(error);
@@ -200,11 +92,14 @@ app.post("/api/like", async (req, res) => {
 });
 //dislike
 app.post("/api/dislike", async (req, res) => {
-  const {dislikes, results} = req.body;
+  const { dislikes, results } = req.body;
   console.log("pesho", req.body);
   try {
     transferTodosToArticles();
-    await pool.query("UPDATE articles SET dislikes = $1 + 1 WHERE id = $2", [dislikes, results.todoId]);
+    await pool.query("UPDATE articles SET dislikes = $1 + 1 WHERE id = $2", [
+      dislikes,
+      results.todoId,
+    ]);
     res.status(200).send("Disliked");
   } catch (error) {
     console.error(error);
@@ -231,7 +126,7 @@ const transferTodosToArticles = async () => {
       for (const todo of todos.rows) {
         await pool.query(
           "INSERT INTO articles (id) VALUES ($1)",
-          [todo.todo_id] // Предполага се, че структурата на `articles` включва `title`, `content`, и `date_published`
+          [todo.todo_id], // Предполага се, че структурата на `articles` включва `title`, `content`, и `date_published`
         );
       }
     }
@@ -251,8 +146,254 @@ app.get("/likesDislikes", async (req, res) => {
     console.error(err.message);
   }
 });
+//new DB API call
+// Конфигурация на Multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "upload/");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
+// POST заявка за добавяне на секция с изображение
+app.post("/sections", upload.single("image"), async (req, res) => {
+  const { article_id, title, content, position } = req.body;
+  const image_url = req.file ? `/upload/${req.file.filename}` : null;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO sections (article_id, title, content, position, image_url)
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING *`,
+      [article_id, title, content, position, image_url],
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// API за извличане на статии и секции
+app.get("/articles", async (req, res) => {
+  try {
+    // Извличане на всички статии с техните секции
+    const articlesQuery = `
+            SELECT a.id         AS article_id,
+                   a.title      AS article_title,
+                   a.created_at AS article_created_at,
+                   s.id         AS section_id,
+                   s.title      AS section_title,
+                   s.content    AS section_content,
+                   s.position   AS section_position,
+                   s.image_url  AS section_image_url
+            FROM articles a
+                     LEFT JOIN sections s ON a.id = s.article_id
+            ORDER BY a.id, s.position;
+        `;
+    const result = await pool.query(articlesQuery);
+
+    // Групиране на данните
+    let articles = [];
+    result.rows.forEach((row) => {
+      if (row.article_id != row.section_id) {
+        articles.push({
+          id: row.article_id,
+          title: row.article_title,
+          createData: row.article_created_at,
+          images: row.section_image_url,
+          sections: {
+            position: row.section_position,
+            title: row.section_title,
+            content: row.section_content,
+          },
+        });
+      } else {
+        articles.push({
+          id: row.article_id,
+          title: row.article_title,
+          createData: row.article_created_at,
+          images: row.section_image_url,
+          sections: {
+            position: row.section_position,
+            title: row.section_title,
+            content: row.section_content,
+          },
+        });
+      }
+    });
+    // Групиране и обединяване
+    const mergedObjects = Object.values(
+      articles.reduce((acc, obj) => {
+        if (!acc[obj.id]) {
+          // Ако обектът не съществува в резултата, добави го
+          acc[obj.id] = { ...obj, sections: [obj.sections] };
+        } else {
+          // Ако вече съществува, добави секцията към масива
+          acc[obj.id].sections.push(obj.sections);
+        }
+        return acc;
+      }, {}),
+    );
+    // Обединяване на еднаквите postions за всяка секция ако има такива
+    //! от това
+    // { position: 1, title: '1', content: '1' },
+    // { position: 1, title: 'asdas', content: 'dsfsdqrq' },
+    // {
+    //   position: 1,
+    //       title: 'Gosho testa',
+    //     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget eros ut augue varius imperdiet eget dapibus dui. Nulla eu risus at augue semper faucibus. Morbi non odio commodo, imperdiet justo sed, vulputate lorem. In porta cursus mollis. Nulla facilisis sem ut ligula ullamcorper, at euismod nunc congue. Curabitur semper est lectus, nec gravida mauris dictum sed. Nullam vel metus quis lorem tristique euismod. Vivamus et arcu tincidunt, sagittis elit eu, molestie mauris. Nulla orci nulla, pulvinar non lacus in, sollicitudin ullamcorper leo.'
+    // },
+    //! получваме това
+    // {
+    //   "position": 1,
+    //     "items": [
+    //   { "title": "1", "content": "1" },
+    //   { "title": "asdas", "content": "dsfsdqrq" },
+    //   {
+    //     "title": "Gosho testa",
+    //     "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec eget eros ut augue varius imperdiet eget dapibus dui. Nulla eu risus at augue semper faucibus. Morbi non odio commodo, imperdiet justo sed, vulputate lorem. In porta cursus mollis. Nulla facilisis sem ut ligula ullamcorper, at euismod nunc congue. Curabitur semper est lectus, nec gravida mauris dictum sed. Nullam vel metus quis lorem tristique euismod. Vivamus et arcu tincidunt, sagittis elit eu, molestie mauris. Nulla orci nulla, pulvinar non lacus in, sollicitudin ullamcorper leo."
+    //   }
+    // ]
+    // },
+    //? чрез този метод combinePositions
+    const combinePositions = Object.values(
+      articles.reduce((acc, obj) => {
+        if (!acc[obj.sections.position]) {
+          // Ако обектът не съществува в резултата, добави го с празен масив `items`
+          acc[obj.sections.position] = {
+            position: obj.sections.position,
+            items: [],
+          };
+        }
+        // Добави текущия обект към масива `items`
+        acc[obj.sections.position].items.push({
+          title: obj.title,
+          position: obj.sections.position,
+          content: obj.sections.content,
+        });
+        return acc;
+      }, {}),
+    );
+    // Форматиране като масив
+    res.json(mergedObjects);
+  } catch (error) {
+    console.error("Error fetching articles:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+// POST заявка за създаване на статия
+app.post("/create-articles", async (req, res) => {
+  const { title } = req.body;
+  try {
+    const { title } = req.body;
+    const result = await pool.query(
+      "INSERT INTO articles (title) VALUES ($1) RETURNING *",
+      [title],
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.put("/sections/:id", async (req, res) => {
+  const article_id = parseInt(req.params.id, 10); // ID на статията
+  const { title, section } = req.body;
+
+  // Проверка дали секциите са предоставени
+  if (!section || !Array.isArray(section)) {
+    return res.status(400).json({
+      error: "Section array is required.",
+    });
+  }
+
+  try {
+    // Започваме транзакция
+    await pool.query("BEGIN");
+
+    // Актуализираме основната статия
+    const articleQuery = `
+            UPDATE articles
+            SET title = COALESCE($1, title)
+            WHERE id = $2
+            RETURNING *;
+        `;
+    const articleValues = [title, article_id];
+    const articleResult = await pool.query(articleQuery, articleValues);
+
+    if (articleResult.rows.length === 0) {
+      throw new Error("Article not found.");
+    }
+
+    // Извличаме съществуващите секции за тази статия
+    const currentSectionsQuery = `
+            SELECT id, title, content, position, image_url
+            FROM sections
+            WHERE article_id = $1;
+        `;
+    const currentSectionsResult = await pool.query(currentSectionsQuery, [
+      article_id,
+    ]);
+
+    // Създаване на map за текущите секции по position
+    const currentSectionsMap = currentSectionsResult.rows.reduce((acc, sec) => {
+      acc[sec.position] = sec;
+      return acc;
+    }, {});
+
+    // Обхождаме новите секции и актуализираме само при разлики
+    for (const sec of section) {
+      const existingSec = currentSectionsMap[sec.position];
+
+      // Проверка за разлика (това сравнява съдържанието, заглавието и изображението)
+      if (
+        !existingSec ||
+        existingSec.title !== sec.title ||
+        existingSec.content !== sec.content ||
+        existingSec.image_url !== sec.image_url
+      ) {
+        console.log(`Updating section with position ${sec.position}`);
+
+        const sectionQuery = `
+                    UPDATE sections
+                    SET title     = $1,
+                        content   = $2,
+                        image_url = $3
+                    WHERE article_id = $4
+                      AND position = $5
+                `;
+        const sectionValues = [
+          sec.title,
+          sec.content,
+          sec.image_url || null, // image_url е nullable
+          article_id,
+          sec.position,
+        ];
+
+        await pool.query(sectionQuery, sectionValues);
+      }
+    }
+
+    // Комитваме транзакцията
+    await pool.query("COMMIT");
+
+    res.json({
+      message: "Article and sections updated successfully.",
+    });
+  } catch (error) {
+    console.error("Error updating article or sections:", error);
+
+    // Ролбек при грешка
+    await pool.query("ROLLBACK");
+    res.status(500).json({ error: "Internal server error." });
+  }
+});
+
 app.listen(PORT, () => {
   console.log("server has started on port 5000");
 });
-
-
