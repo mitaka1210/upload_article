@@ -60,7 +60,6 @@ const ListTodos = () => {
               <th>Date</th>
               <th>Time</th>
               <th>Edit</th>
-              <th>Images</th>
               <th>Delete</th>
             </tr>
           </thead>
@@ -68,7 +67,7 @@ const ListTodos = () => {
             {articlesInfo.map((section, index) => {
               return (
                 <tr key={index}>
-                  <td>{section.header_article}</td>
+                  <td>{section.title}</td>
                   <td>{section.create_article_date}</td>
                   <td>{section.create_article_time}</td>
                   <td>

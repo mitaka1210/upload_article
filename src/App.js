@@ -9,7 +9,7 @@ function App() {
   return (
     <div>
       <Routes>
-        <Route path="/upload" element={<Home />} name="Home" />
+        <Route path="/" element={<Home />} name="Home" />
         <Route path="/read" element={<Read />} name="Read" />
         <Route path="/update-section/:id" element={<EditTodo />} />
       </Routes>

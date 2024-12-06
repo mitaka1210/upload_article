@@ -22,7 +22,8 @@ app.get("/show-image", async (req, res) => {
     const result = await pool.query(`
             SELECT data, filename
             FROM article
-            ORDER BY images_id DESC LIMIT 1
+            ORDER BY images_id DESC
+            LIMIT 1
         `);
     if (result.rows.length === 0) {
       return res.status(404).send("No image found.");
@@ -164,7 +165,8 @@ app.post("/sections", upload.single("image"), async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO sections (article_id, title, content, position, image_url)
-             VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING *`,
       [article_id, title, content, position, image_url],
     );
 
@@ -260,19 +262,22 @@ app.get("/articles", async (req, res) => {
     //? чрез този метод combinePositions
     const combinePositions = Object.values(
       articles.reduce((acc, obj) => {
-        if (!acc[obj.position]) {
+        if (!acc[obj.sections.position]) {
           // Ако обектът не съществува в резултата, добави го с празен масив `items`
-          acc[obj.position] = { position: obj.position, items: [] };
+          acc[obj.sections.position] = {
+            position: obj.sections.position,
+            items: [],
+          };
         }
         // Добави текущия обект към масива `items`
-        acc[obj.position].items.push({
+        acc[obj.sections.position].items.push({
           title: obj.title,
-          content: obj.content,
+          position: obj.sections.position,
+          content: obj.sections.content,
         });
         return acc;
       }, {}),
     );
-    console.log("lslfsdf", mergedObjects[0].sections);
     // Форматиране като масив
     res.json(mergedObjects);
   } catch (error) {
@@ -283,7 +288,6 @@ app.get("/articles", async (req, res) => {
 // POST заявка за създаване на статия
 app.post("/create-articles", async (req, res) => {
   const { title } = req.body;
-  console.log("pesho", req.body);
   try {
     const { title } = req.body;
     const result = await pool.query(
@@ -297,43 +301,95 @@ app.post("/create-articles", async (req, res) => {
   }
 });
 
-// PUT endpoint to update a section
 app.put("/sections/:id", async (req, res) => {
-  const sectionId = parseInt(req.params.id, 10);
-  const { article_id, title, content, position, image_url } = req.body;
+  const article_id = parseInt(req.params.id, 10); // ID на статията
+  const { title, section } = req.body;
 
-  if (!title || !position) {
-    return res
-      .status(400)
-      .json({ error: "Title and position are required fields." });
+  // Проверка дали секциите са предоставени
+  if (!section || !Array.isArray(section)) {
+    return res.status(400).json({
+      error: "Section array is required.",
+    });
   }
 
   try {
-    const query = `
-            UPDATE sections
-            SET article_id = COALESCE($1, article_id),
-                title      = COALESCE($2, title),
-                content    = COALESCE($3, content),
-                position   = COALESCE($4, position),
-                image_url  = COALESCE($5, image_url),
-                created_at = CURRENT_TIMESTAMP
-            WHERE id = $6 RETURNING *;
+    // Започваме транзакция
+    await pool.query("BEGIN");
+
+    // Актуализираме основната статия
+    const articleQuery = `
+            UPDATE articles
+            SET title = COALESCE($1, title)
+            WHERE id = $2
+            RETURNING *;
         `;
+    const articleValues = [title, article_id];
+    const articleResult = await pool.query(articleQuery, articleValues);
 
-    const values = [article_id, title, content, position, image_url, sectionId];
-
-    const result = await pool.query(query, values);
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Section not found." });
+    if (articleResult.rows.length === 0) {
+      throw new Error("Article not found.");
     }
 
+    // Извличаме съществуващите секции за тази статия
+    const currentSectionsQuery = `
+            SELECT id, title, content, position, image_url
+            FROM sections
+            WHERE article_id = $1;
+        `;
+    const currentSectionsResult = await pool.query(currentSectionsQuery, [
+      article_id,
+    ]);
+
+    // Създаване на map за текущите секции по position
+    const currentSectionsMap = currentSectionsResult.rows.reduce((acc, sec) => {
+      acc[sec.position] = sec;
+      return acc;
+    }, {});
+
+    // Обхождаме новите секции и актуализираме само при разлики
+    for (const sec of section) {
+      const existingSec = currentSectionsMap[sec.position];
+
+      // Проверка за разлика (това сравнява съдържанието, заглавието и изображението)
+      if (
+        !existingSec ||
+        existingSec.title !== sec.title ||
+        existingSec.content !== sec.content ||
+        existingSec.image_url !== sec.image_url
+      ) {
+        console.log(`Updating section with position ${sec.position}`);
+
+        const sectionQuery = `
+                    UPDATE sections
+                    SET title     = $1,
+                        content   = $2,
+                        image_url = $3
+                    WHERE article_id = $4
+                      AND position = $5
+                `;
+        const sectionValues = [
+          sec.title,
+          sec.content,
+          sec.image_url || null, // image_url е nullable
+          article_id,
+          sec.position,
+        ];
+
+        await pool.query(sectionQuery, sectionValues);
+      }
+    }
+
+    // Комитваме транзакцията
+    await pool.query("COMMIT");
+
     res.json({
-      message: "Section updated successfully.",
-      section: result.rows[0],
+      message: "Article and sections updated successfully.",
     });
   } catch (error) {
-    console.error("Error updating section:", error);
+    console.error("Error updating article or sections:", error);
+
+    // Ролбек при грешка
+    await pool.query("ROLLBACK");
     res.status(500).json({ error: "Internal server error." });
   }
 });

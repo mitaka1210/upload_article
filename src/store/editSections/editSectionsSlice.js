@@ -3,9 +3,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 // Асинхронна функция за актуализиране на секция
 export const updateSection = createAsyncThunk(
   "sections/updateSection",
-  async ({ id, ...data }, { rejectWithValue }) => {
+  async ({ ...data }, { rejectWithValue }) => {
+    let id = data.id;
     try {
-      const response = await fetch(`http://localhost:3000/sections/${id}`, {
+      const response = await fetch(`http://localhost:5000/sections/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
