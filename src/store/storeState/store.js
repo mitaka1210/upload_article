@@ -8,15 +8,15 @@ import articlesSliceAdd from '../add-new-article/addNewArticleSlice';
 import editSectionsSlice from '../editSections/editSectionsSlice';
 
 const store = configureStore({
-  reducer: {
-    todo: todoSlice,
-    articlesSections: articlesSlice,
-    comments: commentsReducer,
-    likes: likesSlice,
-    uploadArticle: sectionsSlice,
-    articlesHeader: articlesSliceAdd,
-    editSection: editSectionsSlice,
-  },
+ reducer: {
+  todo: todoSlice,
+  articlesSections: articlesSlice,
+  comments: commentsReducer,
+  likes: likesSlice,
+  uploadArticle: sectionsSlice,
+  articlesHeader: articlesSliceAdd,
+  editSection: editSectionsSlice,
+ },
 });
 
 export default store;
