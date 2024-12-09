@@ -15,7 +15,7 @@ export const addArticle = createAsyncThunk(
 const articlesSliceAdd = createSlice({
   name: 'articlesHeader',
   initialState: {
-    articles: [],
+    articles: {},
     status: 'idle', // idle | loading | succeeded | failed
     error: null,
   },
@@ -27,7 +27,7 @@ const articlesSliceAdd = createSlice({
       })
       .addCase(addArticle.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.articles.push(action.payload);
+        state.articles = { ...action.payload };
       })
       .addCase(addArticle.rejected, (state, action) => {
         state.status = 'failed';

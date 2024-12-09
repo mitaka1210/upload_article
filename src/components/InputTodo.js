@@ -1,187 +1,120 @@
-// import React, {Fragment, useEffect, useState} from "react";
-// import {useDispatch, useSelector} from "react-redux";
-// import {add, fetchTodo} from "../store/todoSlice/todoSlice";
-// import Upload from "./Upload";
-//
-// const InputTodo = () => {
-//   const dispatch = useDispatch();
-//   const [description, setDescription] = useState("");
-//   const [header, setHeader] = useState("");
-//   // const [artists, setArtists] = useState(todoL);
-//   const products = useSelector((state) => state.todo.data);
-//   const date = new Date();
-//   const time = new Date().toLocaleTimeString();
-//   // TODO need to add useEffect hook here
-//   const onSubmitForm = async e => {
-//     e.preventDefault();
-//     try {
-//       const body = {description, date, time, header};
-//       const response = await fetch("http://localhost:5000/todos", {
-//         method: "POST",
-//         headers: {"Content-Type": "application/json"},
-//         body: JSON.stringify(body)
-//       });
-//       // window.location = "/";
-//
-//       resetInput(e);
-//       dispatch(fetchTodo());
-//     } catch (err) {
-//       console.error(err.message);
-//     }
-//   };
-//   useEffect(() => {
-//     // dispatch(fetchTodo())
-//   }, [products, dispatch]);
-//
-//   const addTodo = (description, header, file) => {
-//     if (description.trim() && header.trim()) {
-//       dispatch(add({
-//         username: header,
-//         header: "",
-//         time: new Date().toLocaleTimeString(),
-//         email: "",
-//         date: date.toDateString(),
-//         phone: "",
-//         description: description,
-//         file: file
-//       }));
-//     }
-//   };
-//
-//   const resetInput = (event) => {
-//     event.preventDefault();
-//     setDescription("");
-//     // allTodoList();
-//   };
-//   const [file, setFile] = useState();
-//
-//   return (
-//     <Fragment>
-//       <h1 className="text-center mt-5">Pern Todo List</h1>
-//       <form className="d-flex mt-5 flex-column" onSubmit={onSubmitForm}>
-//         <input
-//           type="text"
-//           className="form-control"
-//           value={header}
-//           placeholder="Заглавие"
-//           onChange={e => setHeader(e.target.value)}
-//         />
-//
-//         <input
-//           type="text"
-//           className="form-control"
-//           value={description}
-//           placeholder="текст"
-//           onChange={e => setDescription(e.target.value)}
-//         />
-//         <Upload/>
-//         <button className="btn btn-success" onClick={() => addTodo(description, header, file)}>Add</button>
-//       </form>
-//     </Fragment>
-//   );
-// };
-//
-// export default InputTodo;
-import React, {useState} from "react";
-import {useDispatch} from "react-redux";
-import {uploadSection} from "../store/uploadArticleSlice/uploadArticleSlice";
-import {addArticle} from "../store/add-new-article/addNewArticleSlice";
-import "./upload.scss";
-import upload from "../assets/cloud-computing.png";
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addArticle } from '../store/add-new-article/addNewArticleSlice';
+import './upload.scss';
+import { uploadSection } from '../store/uploadArticleSlice/uploadArticleSlice';
+import upload from '../assets/cloud-computing.png';
 
 const SectionUpload = () => {
-    const dispatch = useDispatch();
-    const [image_name, setImageName] = useState("");
-    const [title, setTitle] = useState("");
-    const [form, setForm] = useState({
-        article_id: "",
-        title: "",
-        content: "",
-        position: "",
-    });
-    const [image, setImage] = useState(null);
+ const dispatch = useDispatch();
+ const [image_name, setImageName] = useState('');
+ const [headerName, setHeaderName] = useState(true);
+ const [image, setImage] = useState(null);
+ const [title, setTitle] = useState('');
+ const newArticleId = useSelector((state) => state.articlesHeader.articles.id);
+ const [form, setForm] = useState({
+  article_id: '',
+  title: '',
+  content: '',
+  position: '',
+  image: '',
+ });
+ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const { name, value } = e.target;
+  setForm((prev) => ({ ...prev, [name]: value }));
+ };
+ const handleInputTitleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  setTitle(e.target.value);
+ };
+ const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setImageName(e.target.files[0].name);
+  if (e.target.files && e.target.files[0]) {
+   setImage(e.target.files[0]);
+  }
+ };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
-        setForm((prev) => ({...prev, [name]: value}));
-    };
-    const handleInputTitleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setTitle(e.target.value);
-    };
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setImageName(e.target.files[0].name);
-        if (e.target.files && e.target.files[0]) {
-            setImage(e.target.files[0]);
-        }
-    };
+ const handleSubmit = (e: React.FormEvent) => {
+  e.preventDefault();
+  form.article_id = newArticleId;
+  form.image = image;
+  dispatch(uploadSection(form));
+  // dispatch(addArticle(title));
+ };
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append("article_id", form.article_id);
-        formData.append("title", form.title);
-        formData.append("content", form.content);
-        formData.append("position", form.position);
-        if (image) {
-            formData.append("image", image);
-        }
+ const addArticleHeader = async () => {
+  try {
+   // След това извикай `addArticle`
+   await dispatch(addArticle(title));
+   // Ако всичко е наред, смени стойността на `headerName` на `false`
+   setHeaderName(false);
+  } catch (error) {
+   console.error('Error:', error);
+  }
+ };
 
-        dispatch(uploadSection(formData));
-        dispatch(addArticle(title));
-    };
-
-    const addArticleHeader = () => {
-        dispatch(addArticle(title));
-    };
-
-    return (
-        <div className="flex-horizontal-container-raw justify-content-center">
-            <div className="upload-form text-align-center">
-                <h2>Article Header</h2>
-                <div className="flex-vertical-container-raw">
-                    <input name="section_title" className="margin-20"
-                           type="text"
-                           placeholder="Title ID"
-                           onChange={handleInputTitleChange} required/>
-                    <button className="border-color-green shadowed-element"
-                            onClick={addArticleHeader}>add
-                    </button>
-                </div>
-                <hr/>
-                <form onSubmit={handleSubmit}
-                      className="flex-vertical-container-raw flex-item">
-                    <input name="section_id" className="margin-10" type="number"
-                           placeholder="Section ID"
-                           onChange={handleInputChange} required/>
-                    <input name="article_id" className="margin-10" type="number"
-                           placeholder="Article ID"
-                           onChange={handleInputChange} required/>
-                    <input name="title" type="text" className="margin-10"
-                           placeholder="Title"
-                           onChange={handleInputChange} required/>
-                    <input name="position" type="number" className="margin-10"
-                           placeholder="Position"
-                           onChange={handleInputChange} required/>
-                    <textarea className="text-area-form margin-10"
-                              name="content"
-                              placeholder="Content"
-                              onChange={handleInputChange}></textarea>
-                    {/*?<input type="file" onChange={handleImageChange}/>*/}
-                    {/*upload button*/}
-                    <div className="file file--uploading">
-                        <input id="input-file" onChange={handleImageChange}
-                               type="file"/>
-                        <label htmlFor="input-file">
-                            <img src={upload} alt="upload"/>
-                            <p>Uploading</p>
-                        </label>
-                        <p>{image_name}</p>
-                    </div>
-                    <button type="submit">Upload Section</button>
-                </form>
-            </div>
-        </div>
-    );
+ return (
+  <div className="flex-horizontal-container-raw justify-content-center">
+   <div className="container">
+    <h2>Създаване на статия</h2>
+    <hr className="line-after-header" />
+    <div className="text">
+     <img src="https://i.postimg.cc/1zgS8WTF/user.png" alt="icon"
+          height="20" />
+     <input name="section_title" className="margin-20"
+            type="text"
+            placeholder="Заглавие на статията"
+            onChange={handleInputTitleChange} required />
+    </div>
+    <button className="submit upload"
+            onClick={addArticleHeader}>Запази заглавието на статията
+    </button>
+    <form onSubmit={handleSubmit}
+          className="flex-vertical-container-raw flex-item align-items-center">
+     <input name="article_id" className="margin-10" type="number"
+            style={{ display: 'none' }}
+            placeholder="Article ID"
+            onChange={handleInputChange}
+            value={newArticleId > 0 ? newArticleId : ''} required />
+     <div className="text">
+      <img src="https://i.postimg.cc/1zgS8WTF/user.png" alt="icon"
+           height="20"
+           className={headerName ? 'disabled-input' : ''} />
+      <input name="title" disabled={headerName}
+             type="text"
+             className={headerName ? 'disabled-input margin-10' : ''}
+             placeholder="Заглавие на секцията"
+             onChange={handleInputChange} required />
+     </div>
+     <div className="text">
+      <img src="https://i.postimg.cc/DZBPRgvC/email.png" alt="icon"
+           height="12" className={headerName ? 'disabled-input' : ''} />
+      <input name="position" type="number"
+             className={headerName ? 'disabled-input margin-10' : ''}
+             placeholder="Позиция на секцията"
+             onChange={handleInputChange} required />
+     </div>
+     <div>
+        <textarea className={headerName ? 'disabled-input text' +
+         ' text-area-form margin-10' : 'text text-area-form margin-10'}
+                  name="content"
+                  placeholder="Съдържание на секцията"
+                  onChange={handleInputChange}></textarea>
+     </div>
+     {/*upload button*/}
+     <div className="file file--uploading">
+      <input id="input-file" onChange={handleImageChange}
+             type="file" />
+      <label htmlFor="input-file" className="input-file">
+       <img src={upload} alt="upload" />
+       <p>Качване на снимка към статия</p>
+      </label>
+      <p className="upload-image-name">{image_name}</p>
+     </div>
+     <button className="submit upload">Запиши новата статия</button>
+    </form>
+   </div>
+  </div>
+ );
 };
 
 export default SectionUpload;

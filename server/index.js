@@ -21,11 +21,11 @@ app.get("/show-image", async (req, res) => {
   try {
     // Извличане на информацията за последния ред
     const result = await pool.query(`
-        SELECT data, filename
-        FROM article
-        ORDER BY images_id DESC
-        LIMIT 1
-    `);
+      SELECT data, filename
+      FROM article
+      ORDER BY images_id DESC
+      LIMIT 1
+  `);
     if (result.rows.length === 0) {
       return res.status(404).send("No image found.");
     }
@@ -153,8 +153,8 @@ app.post("/sections", upload.single("image"), async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO sections (article_id, title, content, position, image_url)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING *`,
+    VALUES ($1, $2, $3, $4, $5)
+    RETURNING *`,
       [article_id, title, content, position, image_url],
     );
 
@@ -170,18 +170,18 @@ app.get("/articles", async (req, res) => {
   try {
     // Извличане на всички статии с техните секции
     const articlesQuery = `
-        SELECT a.id         AS article_id,
-               a.title      AS article_title,
-               a.created_at AS article_created_at,
-               s.id         AS section_id,
-               s.title      AS section_title,
-               s.content    AS section_content,
-               s.position   AS section_position,
-               s.image_url  AS section_image_url
-        FROM articles a
-                 LEFT JOIN sections s ON a.id = s.article_id
-        ORDER BY a.id, s.position;
-    `;
+      SELECT a.id         AS article_id,
+             a.title      AS article_title,
+             a.created_at AS article_created_at,
+             s.id         AS section_id,
+             s.title      AS section_title,
+             s.content    AS section_content,
+             s.position   AS section_position,
+             s.image_url  AS section_image_url
+      FROM articles a
+               LEFT JOIN sections s ON a.id = s.article_id
+      ORDER BY a.id, s.position;
+  `;
     const result = await pool.query(articlesQuery);
 
     // Групиране на данните
@@ -248,9 +248,11 @@ app.post("/create-articles", async (req, res) => {
   }
 });
 
-app.put("/sections/:id", async (req, res) => {
+app.post("/sections/:id", upload.single("image"), async (req, res) => {
   const article_id = parseInt(req.params.id, 10); // ID на статията
   const { title, section } = req.body;
+  const image_url = req.file ? `/upload/${req.file.originalname}` : null;
+  console.log("pesho", image_url);
 
   // Проверка дали секциите са предоставени
   if (!section || !Array.isArray(section)) {
@@ -265,11 +267,11 @@ app.put("/sections/:id", async (req, res) => {
 
     // Актуализираме основната статия
     const articleQuery = `
-        UPDATE articles
-        SET title = COALESCE($1, title)
-        WHERE id = $2
-        RETURNING *;
-    `;
+      UPDATE articles
+      SET title = COALESCE($1, title)
+      WHERE id = $2
+      RETURNING *;
+  `;
     const articleValues = [title, article_id];
     const articleResult = await pool.query(articleQuery, articleValues);
 
@@ -279,10 +281,10 @@ app.put("/sections/:id", async (req, res) => {
 
     // Извличаме съществуващите секции за тази статия
     const currentSectionsQuery = `
-        SELECT id, title, content, position, image_url
-        FROM sections
-        WHERE article_id = $1;
-    `;
+      SELECT id, title, content, position, image_url
+      FROM sections
+      WHERE article_id = $1;
+  `;
     const currentSectionsResult = await pool.query(currentSectionsQuery, [
       article_id,
     ]);
@@ -296,33 +298,33 @@ app.put("/sections/:id", async (req, res) => {
     // Обхождаме новите секции и актуализираме само при разлики
     for (const sec of section) {
       const existingSec = currentSectionsMap[sec.position];
-
+      console.log("pesho existingSec", existingSec);
       // Проверка за разлика (това сравнява съдържанието, заглавието и изображението)
       if (
-        !existingSec ||
         existingSec.title !== sec.title ||
         existingSec.content !== sec.content ||
-        existingSec.image_url !== sec.image_url
+        existingSec.image_url !== image_url
       ) {
         console.log(`Updating section with position ${sec.position}`);
 
         const sectionQuery = `
-            UPDATE sections
-            SET title     = $1,
-                content   = $2,
-                image_url = $3
-            WHERE article_id = $4
-              AND position = $5
-        `;
+        UPDATE sections
+        SET title     = $1,
+            content   = $2,
+            image_url = $3
+        WHERE article_id = $4
+          AND position = $5
+    `;
         const sectionValues = [
           sec.title,
           sec.content,
-          sec.image_url || null, // image_url е nullable
+          image_url, // image_url е nullable
           article_id,
           sec.position,
         ];
-
         await pool.query(sectionQuery, sectionValues);
+      } else {
+        console.log("pesho", "No changes detected.");
       }
     }
 

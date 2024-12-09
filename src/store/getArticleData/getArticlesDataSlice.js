@@ -42,7 +42,7 @@ const articlesSlice = createSlice({
         ).toLocaleTimeString();
         articlesArr.push({
           create_article_date: createArticle,
-          create_article_time: createTime,
+          create_article_time: createTime + 2,
           id: action.payload[i].id,
           title: action.payload[i].title,
           images_id: action.payload[i].images,
