@@ -21,11 +21,11 @@ app.get("/show-image", async (req, res) => {
   try {
     // Извличане на информацията за последния ред
     const result = await pool.query(`
-      SELECT data, filename
-      FROM article
-      ORDER BY images_id DESC
-      LIMIT 1
-  `);
+            SELECT data, filename
+            FROM article
+            ORDER BY images_id DESC
+            LIMIT 1
+        `);
     if (result.rows.length === 0) {
       return res.status(404).send("No image found.");
     }
@@ -62,78 +62,49 @@ app.get("/show-image", async (req, res) => {
 
 //add comment
 
-//like
-app.post("/api/like", async (req, res) => {
-  const { likes, results } = req.body;
-  console.log("pesho", req.body);
-  try {
-    transferTodosToArticles();
-    await pool.query("UPDATE articles SET likes = $1 + 1 WHERE id = $2", [
-      results.likes,
-      results.todoId,
-    ]);
-    res.status(200).send("Liked");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server error");
-  }
-});
-//dislike
-app.post("/api/dislike", async (req, res) => {
-  const { dislikes, results } = req.body;
-  console.log("pesho", req.body);
-  try {
-    transferTodosToArticles();
-    await pool.query("UPDATE articles SET dislikes = $1 + 1 WHERE id = $2", [
-      dislikes,
-      results.todoId,
-    ]);
-    res.status(200).send("Disliked");
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Server error");
-  }
-});
-const transferTodosToArticles = async () => {
-  try {
-    // Стъпка 1: Извличане на всички записи от `todos`
-    const todos = await pool.query("SELECT * FROM todos");
-    const article = await pool.query("SELECT * FROM articles");
-    console.log("pesho", todos.rows.length);
+//?like
+// app.post("/api/like", async (req, res) => {
+//   const { likes, results } = req.body;
+//   console.log("pesho", req.body);
+//   try {
+//     transferTodosToArticles();
+//     await pool.query("UPDATE articles SET likes = $1 + 1 WHERE id = $2", [
+//       results.likes,
+//       results.todoId,
+//     ]);
+//     res.status(200).send("Liked");
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Server error");
+//   }
+// });
+//?dislike
+// app.post("/api/dislike", async (req, res) => {
+//   const { dislikes, results } = req.body;
+//   console.log("pesho", req.body);
+//   try {
+//     transferTodosToArticles();
+//     await pool.query("UPDATE articles SET dislikes = $1 + 1 WHERE id = $2", [
+//       dislikes,
+//       results.todoId,
+//     ]);
+//     res.status(200).send("Disliked");
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Server error");
+//   }
+// });
 
-    // Стъпка 2 и 3: Вмъкване на данни в `articles`
-    if (todos.rows.length !== article.rows.length) {
-      // Начало на транзакция
-      await pool.query("BEGIN");
+//? get all likeDislike
 
-      // Изчистване на таблицата
-      await pool.query(`TRUNCATE TABLE ${"articles"} RESTART IDENTITY`);
-
-      // Завършване на транзакцията
-      await pool.query("COMMIT");
-      for (const todo of todos.rows) {
-        await pool.query(
-          "INSERT INTO articles (id) VALUES ($1)",
-          [todo.todo_id], // Предполага се, че структурата на `articles` включва `title`, `content`, и `date_published`
-        );
-      }
-    }
-    console.log("Data transferred successfully.");
-  } catch (err) {
-    console.error("Error transferring data", err);
-    throw err;
-  }
-};
-//? get all todos
-
-app.get("/likesDislikes", async (req, res) => {
-  try {
-    const allArticles = await pool.query("SELECT * FROM articles");
-    res.json(allArticles.rows);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
+// app.get("/likesDislikes", async (req, res) => {
+//   try {
+//     const allArticles = await pool.query("SELECT * FROM articles");
+//     res.json(allArticles.rows);
+//   } catch (err) {
+//     console.error(err.message);
+//   }
+// });
 //new DB API call
 // Конфигурация на Multer
 const storage = multer.diskStorage({
@@ -153,8 +124,8 @@ app.post("/sections", upload.single("image"), async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO sections (article_id, title, content, position, image_url)
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING *`,
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING *`,
       [article_id, title, content, position, image_url],
     );
 
@@ -170,18 +141,18 @@ app.get("/articles", async (req, res) => {
   try {
     // Извличане на всички статии с техните секции
     const articlesQuery = `
-      SELECT a.id         AS article_id,
-             a.title      AS article_title,
-             a.created_at AS article_created_at,
-             s.id         AS section_id,
-             s.title      AS section_title,
-             s.content    AS section_content,
-             s.position   AS section_position,
-             s.image_url  AS section_image_url
-      FROM articles a
-               LEFT JOIN sections s ON a.id = s.article_id
-      ORDER BY a.id, s.position;
-  `;
+            SELECT a.id         AS article_id,
+                   a.title      AS article_title,
+                   a.created_at AS article_created_at,
+                   s.id         AS section_id,
+                   s.title      AS section_title,
+                   s.content    AS section_content,
+                   s.position   AS section_position,
+                   s.image_url  AS section_image_url
+            FROM articles a
+                     LEFT JOIN sections s ON a.id = s.article_id
+            ORDER BY a.id, s.position;
+        `;
     const result = await pool.query(articlesQuery);
 
     // Групиране на данните
@@ -267,11 +238,11 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
 
     // Актуализираме основната статия
     const articleQuery = `
-      UPDATE articles
-      SET title = COALESCE($1, title)
-      WHERE id = $2
-      RETURNING *;
-  `;
+            UPDATE articles
+            SET title = COALESCE($1, title)
+            WHERE id = $2
+            RETURNING *;
+        `;
     const articleValues = [title, article_id];
     const articleResult = await pool.query(articleQuery, articleValues);
 
@@ -281,10 +252,10 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
 
     // Извличаме съществуващите секции за тази статия
     const currentSectionsQuery = `
-      SELECT id, title, content, position, image_url
-      FROM sections
-      WHERE article_id = $1;
-  `;
+            SELECT id, title, content, position, image_url
+            FROM sections
+            WHERE article_id = $1;
+        `;
     const currentSectionsResult = await pool.query(currentSectionsQuery, [
       article_id,
     ]);
@@ -298,7 +269,6 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
     // Обхождаме новите секции и актуализираме само при разлики
     for (const sec of section) {
       const existingSec = currentSectionsMap[sec.position];
-      console.log("pesho existingSec", existingSec);
       // Проверка за разлика (това сравнява съдържанието, заглавието и изображението)
       if (
         existingSec.title !== sec.title ||
@@ -308,13 +278,13 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
         console.log(`Updating section with position ${sec.position}`);
 
         const sectionQuery = `
-        UPDATE sections
-        SET title     = $1,
-            content   = $2,
-            image_url = $3
-        WHERE article_id = $4
-          AND position = $5
-    `;
+                    UPDATE sections
+                    SET title     = $1,
+                        content   = $2,
+                        image_url = $3
+                    WHERE article_id = $4
+                      AND position = $5
+                `;
         const sectionValues = [
           sec.title,
           sec.content,
@@ -324,7 +294,6 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
         ];
         await pool.query(sectionQuery, sectionValues);
       } else {
-        console.log("pesho", "No changes detected.");
       }
     }
 
@@ -340,6 +309,49 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
     // Ролбек при грешка
     await pool.query("ROLLBACK");
     res.status(500).json({ error: "Internal server error." });
+  }
+});
+
+// DELETE article by ID
+app.delete("/articles/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Изтриване на статия
+    const deleteArticle = await pool.query(
+      "DELETE FROM articles WHERE id = $1",
+      [id],
+    );
+
+    if (deleteArticle.rowCount === 0) {
+      return res.status(404).json({ message: "Article not found" });
+    }
+
+    res.status(200).json({ message: "Article deleted successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+// DELETE section by ID
+app.delete("/sections/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Изтриване на секция
+    const deleteSection = await pool.query(
+      "DELETE FROM sections WHERE id = $1",
+      [id],
+    );
+
+    if (deleteSection.rowCount === 0) {
+      return res.status(404).json({ message: "Section not found" });
+    }
+
+    res.status(200).json({ message: "Section deleted successfully" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
