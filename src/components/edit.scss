@@ -137,3 +137,13 @@ button:hover {
   @extend .upload-image-name;
   left: 36em;
 }
+
+.delete_section {
+  display: flex;
+  justify-content: center;
+
+  & img {
+    width: 56px;
+    height: auto;
+  }
+}
