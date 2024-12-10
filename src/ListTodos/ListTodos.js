@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import './list.scss';
 import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import { useNavigate } from 'react-router-dom';
+import { deleteArticle } from '../store/deleteArticle/deleteArticleSlice';
 
 const ListTodos = () => {
  //? properties
@@ -10,8 +11,8 @@ const ListTodos = () => {
  // eslint-disable-next-line no-unused-vars
  let content = '';
  const dispatch = useDispatch();
- const status = useSelector((state) => state.todo.status);
- const error = useSelector((state) => state.todo.error);
+ const status = useSelector((state) => state.articlesSections.status);
+ const error = useSelector((state) => state.articlesSections.error);
  useEffect(() => {
   getTodos();
  }, [1]);
@@ -22,15 +23,18 @@ const ListTodos = () => {
   navigate(`/update-section/${section.id}`);
  };
 
- //delete todo function
-
- const deleteTodo = async () => {
-  // TODO
-  // try {
-  //   const deleteTodo = await fetch(`${getTodo.DELETE_ALL_TODOS}/${id}`, {
-  //     method: 'DELETE',
-  //   });
-  // } catch (err) {}
+ //delete article function
+ const deleteTodo = async (id) => {
+  try {
+   // Първо изчакай `updateSection`
+   await dispatch(deleteArticle(id)).unwrap();
+   // След това извикай `fetchArticles`
+   await dispatch(fetchArticles()).unwrap();
+   // Ако всичко е наред, пренасочи към началната страница
+   navigate('/');
+  } catch (error) {
+   console.error('Error:', error);
+  }
  };
 
  const getTodos = () => {
@@ -72,15 +76,12 @@ const ListTodos = () => {
          <td>{section.create_article_date}</td>
          <td>{section.create_article_time}</td>
          <td>
-          <button
-           onClick={() => editSection(section)}
-           className="custom-btn btn-5"
-          >
+          <button onClick={() => editSection(section)} className="custom-btn btn-5">
            <span>Edit</span>
           </button>
          </td>
          <td className="flex-horizontal-container-raw justify-content-center">
-          <button onClick={() => deleteTodo(1)} className="btn first">
+          <button onClick={() => deleteTodo(section.id)} className="btn first">
            Delete
           </button>
          </td>
