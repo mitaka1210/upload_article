@@ -11,7 +11,6 @@ import {
 } from "../store/deleteArticleSection/deleteArticleSectionSlice";
 
 const EditTodo = () => {
-    console.log("pesho12312312");
     const {id} = useParams();
     const dispatch = useDispatch();
     const articlesInfo = useSelector((state) => state.articlesSections.data);
@@ -51,13 +50,14 @@ const EditTodo = () => {
             content = <div>Loading...</div>;
         } else if (info === "succeeded") {
             let sectionId = Number(id);
-            for (const sectionIdKey in articlesInfo) {
-                if (Number(sectionIdKey) + 1 === sectionId) {
-                    sections = articlesInfo[sectionIdKey];
+            articlesInfo.forEach((section, index) => {
+                let parsedSectionIdKey = section.id;
+                if (parsedSectionIdKey === sectionId) {
+                    sections = section;
                     setSection(sections.section);
                     setFormData(sections);
                 }
-            }
+            });
         } else if (info === "failed") {
             content = <div>{error}</div>;
         }
@@ -108,7 +108,6 @@ const EditTodo = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("pesho", image);
         const copy = structuredClone({
             ...formData,
             image: image,
