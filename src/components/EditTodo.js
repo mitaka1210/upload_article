@@ -58,7 +58,7 @@ const EditTodo = () => {
                     setSection(sections.section);
                     setFormData(sections);
                 }
-            }
+            });
         } else if (info === "failed") {
             content = <div>{error}</div>;
         }
