@@ -51,13 +51,14 @@ const EditTodo = () => {
             content = <div>Loading...</div>;
         } else if (info === "succeeded") {
             let sectionId = Number(id);
-            for (const sectionIdKey in articlesInfo) {
-                if (Number(sectionIdKey) + 1 === sectionId) {
-                    sections = articlesInfo[sectionIdKey];
+            articlesInfo.forEach((section, index) => {
+                let parsedSectionIdKey = section.id;
+                if (parsedSectionIdKey === sectionId) {
+                    sections = section;
                     setSection(sections.section);
                     setFormData(sections);
                 }
-            }
+            });
         } else if (info === "failed") {
             content = <div>{error}</div>;
         }
