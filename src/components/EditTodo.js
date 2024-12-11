@@ -51,10 +51,10 @@ const EditTodo = () => {
             content = <div>Loading...</div>;
         } else if (info === "succeeded") {
             let sectionId = Number(id);
-            for (const sectionIdKey in articlesInfo) {
-                let currentSection = Number(sectionIdKey) + 1;
-                if ((currentSection + 1) === sectionId) {
-                    sections = articlesInfo[sectionIdKey];
+            articlesInfo.forEach((section, index) => {
+                let parsedSectionIdKey = section.id;
+                if (parsedSectionIdKey === sectionId) {
+                    sections = section;
                     setSection(sections.section);
                     setFormData(sections);
                 }
@@ -207,8 +207,7 @@ const EditTodo = () => {
                             </label>
                             <p className="upload-image-name-edit">{image_name}</p>
                         </div>
-                        <button className="edit-section" onClick={handleSubmit}
-                                type="submit">
+                        <button onClick={handleSubmit} type="submit">
                             Update Section
                         </button>
                     </form>
