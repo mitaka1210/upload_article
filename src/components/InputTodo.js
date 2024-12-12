@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {addArticle} from "../store/add-new-article/addNewArticleSlice";
 import "./upload.scss";
-import {uploadSection} from "../store/uploadArticleSlice/uploadArticleSlice";
 import upload from "../assets/cloud-computing.png";
 import InfoDiv from "./moreInfo";
 import {fetchArticles} from "../store/getArticleData/getArticlesDataSlice";
+import {addArticle} from "../store/add-new-article/addNewArticleSlice";
+import {uploadSection} from "../store/uploadArticleSlice/uploadArticleSlice";
 
 const SectionUpload = () => {
     const dispatch = useDispatch();
@@ -13,13 +13,16 @@ const SectionUpload = () => {
     const [headerName, setHeaderName] = useState(true);
     const [image, setImage] = useState(null);
     const [title, setTitle] = useState("");
-    const newArticleId = useSelector((state) => state.articlesHeader.articles.id);
+    const [sameArticleId, setSameArticleId] = useState(0);
+    let newArticleId = useSelector((state) => state.articlesHeader.articles.id);
+    const getAllArticles = useSelector((state) => state.articlesSections.data);
     const [form, setForm] = useState({
         article_id: "",
         title: "",
         content: "",
         position: "",
         image: "",
+        status: false,
     });
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
@@ -37,18 +40,44 @@ const SectionUpload = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        form.article_id = newArticleId;
-        form.image = image;
-        await dispatch(uploadSection(form)).unwrap();
-        await dispatch(fetchArticles()).unwrap();
+
+        // Задаване на стойности в `form`
+        const updatedForm = {
+            ...form,
+            article_id: newArticleId !== undefined ? newArticleId : sameArticleId,
+            image,
+        };
+
+        try {
+            // Изпращане на формата
+            await dispatch(uploadSection(updatedForm)).unwrap();
+            setHeaderName(true);
+            // Презареждане на данните
+            await dispatch(fetchArticles()).unwrap();
+        } catch (error) {
+            console.error("Error submitting form:", error);
+        }
     };
 
     const addArticleHeader = async () => {
+        const sameTitle = getAllArticles.filter((article) => article.title === title);
         try {
-            // След това извикай `addArticle`
-            await dispatch(addArticle(title));
-            // Ако всичко е наред, смени стойността на `headerName` на `false`
-            setHeaderName(false);
+            if (sameTitle.length > 0) {
+                form.title = sameTitle[0].title;
+                setSameArticleId(sameTitle[0].id);
+                setHeaderName(false);
+                console.log("pesho", form);
+// Нулиране на полетата след успешен submit
+                setForm((prev) => ({
+                    ...prev,
+                    content: "",
+                    position: "",
+                    image: "",
+                }));
+            } else {
+                await dispatch(addArticle(title));
+                setHeaderName(false);
+            }
         } catch (error) {
             console.error("Error:", error);
         }
@@ -79,7 +108,7 @@ const SectionUpload = () => {
                            placeholder="Article ID"
                            onChange={handleInputChange}
                            value={newArticleId > 0 ? newArticleId : ""}
-                           required/>
+                    />
                     <div className="text">
                         <img src="https://i.postimg.cc/1zgS8WTF/user.png"
                              alt="icon"
@@ -98,6 +127,7 @@ const SectionUpload = () => {
                              className={headerName ? "disabled-input" : ""}/>
                         <input name="position" type="number"
                                className={headerName ? "disabled-input margin-10" : ""}
+                               value={form.position}
                                placeholder="Позиция на секцията"
                                onChange={handleInputChange} required/>
                     </div>
@@ -118,7 +148,7 @@ const SectionUpload = () => {
                         </label>
                         <p className="upload-image-name">{image_name}</p>
                     </div>
-                    <button className="submit upload">Запиши новата статия
+                    <button className="submit upload">Публикуване на статията
                     </button>
                 </form>
             </div>

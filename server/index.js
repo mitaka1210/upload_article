@@ -144,6 +144,7 @@ app.get("/articles", async (req, res) => {
             SELECT a.id         AS article_id,
                    a.title      AS article_title,
                    a.created_at AS article_created_at,
+                   a.status     AS status,
                    s.id         AS section_id,
                    s.title      AS section_title,
                    s.content    AS section_content,
@@ -161,6 +162,7 @@ app.get("/articles", async (req, res) => {
       if (row.article_id != row.section_id) {
         articles.push({
           id: row.article_id,
+          status: row.status,
           title: row.article_title,
           createData: row.article_created_at,
           images: row.section_image_url,
@@ -174,6 +176,7 @@ app.get("/articles", async (req, res) => {
         articles.push({
           id: row.article_id,
           title: row.article_title,
+          status: row.status,
           createData: row.article_created_at,
           images: row.section_image_url,
           sections: {
@@ -221,10 +224,8 @@ app.post("/create-articles", async (req, res) => {
 
 app.post("/sections/:id", upload.single("image"), async (req, res) => {
   const article_id = parseInt(req.params.id, 10); // ID на статията
-  const { title, section } = req.body;
+  const { title, section, status } = req.body;
   const image_url = req.file ? `/upload/${req.file.originalname}` : null;
-  console.log("pesho", image_url);
-
   // Проверка дали секциите са предоставени
   if (!section || !Array.isArray(section)) {
     return res.status(400).json({
@@ -239,11 +240,12 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
     // Актуализираме основната статия
     const articleQuery = `
             UPDATE articles
-            SET title = COALESCE($1, title)
-            WHERE id = $2
+            SET title  = COALESCE($1, title),
+                status = COALESCE($2, status)
+            WHERE id = $3
             RETURNING *;
         `;
-    const articleValues = [title, article_id];
+    const articleValues = [title, status, article_id];
     const articleResult = await pool.query(articleQuery, articleValues);
 
     if (articleResult.rows.length === 0) {
@@ -293,7 +295,6 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
           sec.position,
         ];
         await pool.query(sectionQuery, sectionValues);
-      } else {
       }
     }
 

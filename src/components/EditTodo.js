@@ -11,12 +11,12 @@ import {
 } from "../store/deleteArticleSection/deleteArticleSectionSlice";
 
 const EditTodo = () => {
-    console.log("pesho12312312");
     const {id} = useParams();
     const dispatch = useDispatch();
     const articlesInfo = useSelector((state) => state.articlesSections.data);
     const info = useSelector((state) => state.articlesSections.status);
     const [image_name, setImageName] = useState("");
+    const [showArticle, setShowArticle] = useState(true);
     const [image, setImage] = useState(null);
     const [, setSection] = useState([]);
     const navigate = useNavigate();
@@ -35,6 +35,7 @@ const EditTodo = () => {
         article_id: id,
         title: "",
         image: "",
+        status: false,
         section: [
             {
                 position: 0,
@@ -57,6 +58,7 @@ const EditTodo = () => {
                     sections = section;
                     setSection(sections.section);
                     setFormData(sections);
+                    setShowArticle(sections.status);
                 }
             });
         } else if (info === "failed") {
@@ -106,13 +108,16 @@ const EditTodo = () => {
             console.error("Error:", error);
         }
     };
-
+    const checkBoxValue = (e) => {
+        if (showArticle) setShowArticle(false);
+        else setShowArticle(true);
+    };
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log("pesho", image);
         const copy = structuredClone({
             ...formData,
             image: image,
+            status: showArticle
         });
 
         try {
@@ -135,6 +140,27 @@ const EditTodo = () => {
                 <div>Loading...</div>
             ) : (
                 <div className="edit-form-bgr">
+                    <div
+                        className="flex-vertical-container align-items-center">
+                        <h2 className={showArticle ? "add-color-green" +
+                            " remove-margin-bottom" : "add-color-orange remove-margin-bottom"}>{showArticle ? "Статия е" +
+                            " побликувана" : "Статията не" +
+                            " е побликувана"}</h2>
+                        <div className="show-article">
+                            <input type="checkbox" id="check"
+                                   checked={showArticle}
+                                   onChange={(e) => {
+                                       const isChecked = e.target.checked;
+                                       console.log("Checkbox is checked:", isChecked);
+                                       checkBoxValue(isChecked); // Извикайте функцията си с новата стойност
+                                   }}
+                            />
+                            <label htmlFor="check">
+                                <div id="plug"></div>
+                                <div id="flugHead"></div>
+                            </label>
+                        </div>
+                    </div>
                     <form className="signup" autoComplete="off"
                           onSubmit={handleSubmit}>
                         <h3 className="center-header text-align-center">Редактиране
