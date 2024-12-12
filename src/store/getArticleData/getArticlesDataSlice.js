@@ -48,6 +48,7 @@ const articlesSlice = createSlice({
     });
     articlesArr.push({
      create_article_date: createArticle,
+     status: action.payload[i].status,
      create_article_time: createTime,
      id: action.payload[i].id,
      title: action.payload[i].title,

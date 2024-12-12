@@ -21,6 +21,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-flow: column;
 }
 
 button,
@@ -145,5 +146,114 @@ h2 span {
   & img {
     width: 56px;
     height: auto;
+  }
+}
+
+
+//checkbox
+.show-article {
+  transform: rotate(270deg);
+  position: absolute;
+  z-index: 9;
+  top: 1em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-flow: row;
+  left: 34em
+}
+
+#check {
+  display: none;
+}
+
+#check + label {
+  position: relative;
+  display: inline-block;
+  width: 25px;
+  height: 20px;
+  transition: all .5s;
+}
+
+#check + label::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 20px;
+  background-color: black;
+  left: calc(50% - 2.5px);
+  transition: all .5s;
+}
+
+#check + label > #flugHead {
+  position: absolute;
+  width: 25px;
+  height: 20px;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid black;
+  top: 100%;
+  left: -1px;
+  background-color: white;
+}
+
+#check + label > #flugHead::before {
+  content: "";
+  display: inline-block;
+  box-shadow: 3px 13px 0 0 black, 17px 13px 0 0 black;
+  width: 5px;
+  height: 60%;
+  transition: all .3s .3s;
+  z-index: -1;
+  position: absolute;
+  top: 8px;
+}
+
+#check:checked + label > #flugHead::before {
+  transform: translateY(-100%);
+}
+
+#check:checked + label,
+#check:checked + label::after {
+  animation: flugedIn .5s ease-in-out;
+  height: 100px;
+}
+
+#plug {
+  width: 30px;
+  height: 25px;
+  position: absolute;
+  top: 110px;
+  border: 1px solid black;
+  border-radius: 5px;
+  left: -3px;
+}
+
+.add-color-orange {
+  color: coral;
+  position: absolute;
+  align-items: center;
+}
+
+.add-color-green {
+  color: green;
+  position: absolute;
+  align-items: center;
+}
+
+#plug::before {
+  content: "";
+  width: calc(100% - 4px);
+  height: 50%;
+  position: absolute;
+  background-color: inherit;
+}
+
+@keyframes flugedIn {
+  from {
+    height: 20px;
+  }
+
+  to {
+    height: 100px;
   }
 }
