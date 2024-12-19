@@ -57,10 +57,8 @@ const articlesSlice = createSlice({
     });
    }
    //? return last created article first
-   articlesArr.sort((a, b) => {
-    return new Date(`${b.create_article_date} ${b.create_article_time}`) - new Date(`${a.create_article_date} ${a.create_article_time}`);
-   });
-   state.data = articlesArr;
+   //return articlesArr.reverse();
+   state.data = articlesArr.reverse();
   });
   builder.addCase(fetchArticles.rejected, (state, action) => {
    state.status = 'failed';
