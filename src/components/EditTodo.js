@@ -24,7 +24,7 @@ const EditTodo = () => {
 
  useEffect(() => {
   articlesStatus();
- }, [id]); // Задължително да използваш [id], за да се извиква при промяна
+ }, [id, info]); // Задължително да използваш [id], за да се извиква при промяна
  // на ID.
 
  const [formData, setFormData] = useState({
@@ -191,7 +191,7 @@ const EditTodo = () => {
           <textarea name={`section[${index}].content`} value={section.content || ''} onChange={handleChange} placeholder="Content" className="add-textarea-height padding-20" />
           <br />
           <br />
-          <div className="delete_section" onClick={() => deleteSectionFromArticle(index + 1)}>
+          <div className="delete_section" onClick={() => deleteSectionFromArticle(section.position)}>
            <img src={deleteSectionImg} alt="delete" />
           </div>
          </div>
