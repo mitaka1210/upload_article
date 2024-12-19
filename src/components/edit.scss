@@ -1,3 +1,7 @@
+@import './upload.scss';
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+
 .center-header {
   margin: 0 auto;
 }
@@ -6,9 +10,6 @@
   height: 300px;
   resize: none;
 }
-
-@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
-
 
 .edit-form-bgr {
   //background-color: #4b111b;
@@ -22,12 +23,18 @@
   align-items: center;
   justify-content: center;
   flex-flow: column;
-}
 
-button,
-input {
-  border: none;
-  outline: none;
+  & button {
+    border: none;
+    outline: none;
+  }
+
+  & input {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 2px solid red;
+  }
 }
 
 /****************
@@ -47,30 +54,25 @@ input {
   0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
-h1 {
-  text-align: center;
-  color: #a4243b;
-}
+.edit-header {
+  & h2 {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: lighter;
+    margin-bottom: 40px;
 
-h2 {
-  text-align: center;
-  font-size: 1.2rem;
-  font-weight: lighter;
-
-  margin-bottom: 40px;
-}
-
-h2 span {
-  text-decoration: underline;
-  cursor: pointer;
-  color: #a4243b;
+    & span {
+      text-decoration: underline;
+      cursor: pointer;
+      color: #a4243b;
+    }
+  }
 }
 
 /*  Field */
 .signup__field {
   display: flex;
   flex-direction: column;
-  width: 100%;
   position: relative;
   margin-bottom: 50px;
 }
@@ -133,7 +135,6 @@ h2 span {
   background: #4b111b;
 }
 
-@import './upload.scss';
 .upload-image-name-edit {
   @extend .upload-image-name;
   left: 36em;
@@ -246,6 +247,77 @@ h2 span {
   height: 50%;
   position: absolute;
   background-color: inherit;
+}
+
+// upload
+
+#input-file-edit {
+  /* Style the file input itself */
+  display: block;
+  margin: 0 auto;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 400px;
+  font-size: 16px;
+  border: none;
+  border-radius: 45px;
+  transition: all 0.3s ease 0s;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  /* Add more styles as needed */
+}
+
+#input-file-edit::file-selector-button {
+  /* Style the "Choose File" button */
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border: none;
+  border-radius: 45px;
+  transition: all 0.3s ease 0s;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+#input-file-edit::file-selector-button:hover {
+  /* Style the button on hover (optional) */
+  background-color: #0056b3;
+  box-shadow: 0px 15px 20px rgba(46, 141, 229, 0.4);
+  transform: translateY(-7px);
+}
+
+
+.gundal {
+  height: 100%;
+  justify-content: center;
+  margin-top: 6%;
+}
+
+.edit-send-button {
+  display: block;
+  width: 250px;
+  height: 45px;
+  margin: 8% auto 20px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-weight: 500;
+  color: #ffffff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 45px;
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease 0s;
+  cursor: pointer;
+  outline: none;
+}
+
+.edit-send-button:hover {
+  background-color: #0056b3;
+  box-shadow: 0px 15px 20px rgba(46, 141, 229, 0.4);
+  color: #fff;
+  transform: translateY(-7px);
 }
 
 @keyframes flugedIn {

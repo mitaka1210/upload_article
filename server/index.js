@@ -1,14 +1,13 @@
 import pool from "./db.js";
 
 import multer from "multer";
-
+import path from "path";
 import express from "express";
 
 import cors from "cors";
-
 import { extname } from "node:path";
 //ROUTES//
-import fs from "fs";
+import { fileURLToPath } from "url";
 
 const app = express();
 //middleware
@@ -17,48 +16,6 @@ app.use(express.json()); //req.body
 
 //порт
 const PORT = 5000;
-app.get("/show-image", async (req, res) => {
-  try {
-    // Извличане на информацията за последния ред
-    const result = await pool.query(`
-            SELECT data, filename
-            FROM article
-            ORDER BY images_id DESC
-            LIMIT 1
-        `);
-    if (result.rows.length === 0) {
-      return res.status(404).send("No image found.");
-    }
-    const fileData = result.rows[0].data;
-    const fileName = result.rows[0].filename;
-    const fileType = fileName.split(".").pop();
-    const base64File = fileData.toString("base64");
-    const imageUrl = `data:image/${fileType};base64,${base64File}`;
-    // Write the Base64 data to a file
-    fs.writeFile("image.png", base64File, "base64", (err) => {
-      if (err) {
-        console.log("Error saving image:", err);
-      } else {
-        console.log("Image saved as image.png");
-      }
-    });
-    // console.log("pesho", res.json({ image: imageUrl }));
-    res.json({ image: imageUrl });
-    // res.json(todo.rows[0]);
-    // res.send(`
-    //   <!doctype html>
-    //   <html>
-    //   <body>
-    //     <h1>Last Uploaded Image</h1>
-    //     <img src="${imageUrl}" alt="Uploaded Image">
-    //   </body>
-    //   </html>
-    // `);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("An error occurred while fetching the image.");
-  }
-});
 
 //add comment
 
@@ -107,9 +64,13 @@ app.get("/show-image", async (req, res) => {
 // });
 //new DB API call
 // Конфигурация на Multer
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const storagePath = path.join(__dirname, "../../", "uploads"); // Примерно
+// разположение на папката извън проекта
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "upload/");
+    cb(null, storagePath);
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + extname(file.originalname));
