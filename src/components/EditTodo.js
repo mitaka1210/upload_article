@@ -12,9 +12,9 @@ const EditTodo = () => {
  const dispatch = useDispatch();
  const articlesInfo = useSelector((state) => state.articlesSections.data);
  const info = useSelector((state) => state.articlesSections.status);
- const [image_name, setImageName] = useState('');
- const [showArticle, setShowArticle] = useState(true);
- const [image, setImage] = useState(null);
+ const [setImageName] = useState('');
+ const [showArticle, setShowArticle] = useState(false);
+ const [image] = useState(null);
  const [, setSection] = useState([]);
  const navigate = useNavigate();
  let sections = {};
@@ -49,9 +49,8 @@ const EditTodo = () => {
    content = <div>Loading...</div>;
   } else if (info === 'succeeded') {
    let sectionId = Number(id);
-   articlesInfo.forEach((section, index) => {
-    let parsedSectionIdKey = section.id;
-    if (parsedSectionIdKey === sectionId) {
+   articlesInfo.forEach((section) => {
+    if (section.id === sectionId) {
      sections = section;
      setSection(sections.section);
      setFormData(sections);
@@ -106,7 +105,7 @@ const EditTodo = () => {
    console.error('Error:', error);
   }
  };
- const checkBoxValue = (e) => {
+ const checkBoxValue = () => {
   if (showArticle) setShowArticle(false);
   else setShowArticle(true);
  };
@@ -165,7 +164,7 @@ const EditTodo = () => {
        </label>
       </div>
      </div>
-     <form className="signup gundal" id="myForm" autoComplete="off" onSubmit={handleSubmit}>
+     <form className="signup edit-form-styles" id="myForm" autoComplete="off" onSubmit={handleSubmit}>
       <h3 className="center-header text-align-center">Редактиране на статия:</h3>
       <div className="text-align-center">
        <p>{formData.title}</p>

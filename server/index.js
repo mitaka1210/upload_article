@@ -85,8 +85,8 @@ app.post("/sections", upload.single("image"), async (req, res) => {
   try {
     const result = await pool.query(
       `INSERT INTO sections (article_id, title, content, position, image_url)
-             VALUES ($1, $2, $3, $4, $5)
-             RETURNING *`,
+          VALUES ($1, $2, $3, $4, $5)
+          RETURNING *`,
       [article_id, title, content, position, image_url],
     );
 
@@ -102,19 +102,19 @@ app.get("/articles", async (req, res) => {
   try {
     // Извличане на всички статии с техните секции
     const articlesQuery = `
-            SELECT a.id         AS article_id,
-                   a.title      AS article_title,
-                   a.created_at AS article_created_at,
-                   a.status     AS status,
-                   s.id         AS section_id,
-                   s.title      AS section_title,
-                   s.content    AS section_content,
-                   s.position   AS section_position,
-                   s.image_url  AS section_image_url
-            FROM articles a
-                     LEFT JOIN sections s ON a.id = s.article_id
-            ORDER BY a.id, s.position;
-        `;
+          SELECT a.id         AS article_id,
+                 a.title      AS article_title,
+                 a.created_at AS article_created_at,
+                 a.status     AS status,
+                 s.id         AS section_id,
+                 s.title      AS section_title,
+                 s.content    AS section_content,
+                 s.position   AS section_position,
+                 s.image_url  AS section_image_url
+          FROM articles a
+                   LEFT JOIN sections s ON a.id = s.article_id
+          ORDER BY a.id, s.position;
+	 `;
     const result = await pool.query(articlesQuery);
 
     // Групиране на данните
@@ -200,12 +200,12 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
 
     // Актуализираме основната статия
     const articleQuery = `
-            UPDATE articles
-            SET title  = COALESCE($1, title),
-                status = COALESCE($2, status)
-            WHERE id = $3
-            RETURNING *;
-        `;
+          UPDATE articles
+          SET title  = COALESCE($1, title),
+              status = COALESCE($2, status)
+          WHERE id = $3
+          RETURNING *;
+	 `;
     const articleValues = [title, status, article_id];
     const articleResult = await pool.query(articleQuery, articleValues);
 
@@ -215,10 +215,10 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
 
     // Извличаме съществуващите секции за тази статия
     const currentSectionsQuery = `
-            SELECT id, title, content, position, image_url
-            FROM sections
-            WHERE article_id = $1;
-        `;
+          SELECT id, title, content, position, image_url
+          FROM sections
+          WHERE article_id = $1;
+	 `;
     const currentSectionsResult = await pool.query(currentSectionsQuery, [
       article_id,
     ]);
@@ -241,13 +241,13 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
         console.log(`Updating section with position ${sec.position}`);
 
         const sectionQuery = `
-                    UPDATE sections
-                    SET title     = $1,
-                        content   = $2,
-                        image_url = $3
-                    WHERE article_id = $4
-                      AND position = $5
-                `;
+                UPDATE sections
+                SET title     = $1,
+                    content   = $2,
+                    image_url = $3
+                WHERE article_id = $4
+                  AND position = $5
+		  `;
         const sectionValues = [
           sec.title,
           sec.content,
@@ -297,12 +297,13 @@ app.delete("/articles/:id", async (req, res) => {
 });
 // DELETE section by ID
 app.delete("/sections/:id", async (req, res) => {
-  const { id } = req.params;
+  const id = req.params.id;
+  console.log("pesho", id);
 
   try {
     // Изтриване на секция
     const deleteSection = await pool.query(
-      "DELETE FROM sections WHERE id = $1",
+      "DELETE FROM sections WHERE position = $1",
       [id],
     );
 
