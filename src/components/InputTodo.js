@@ -86,7 +86,7 @@ const SectionUpload = () => {
     return (
         <div className="flex-horizontal-container-raw justify-content-center">
             <div className="container">
-                <h2>Създаване на статия</h2>
+                <h1>Създаване на статия</h1>
                 <hr className="line-after-header"/>
                 <h5>Как работи качването</h5>
                 <InfoDiv/>

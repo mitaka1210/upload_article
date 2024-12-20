@@ -2,7 +2,7 @@
   position: absolute;
   background-color: white;
   border: 1px solid black;
-  padding: 60px;
+  padding: 80px;
   z-index: 1000; /* High z-index value to ensure it stands out */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
   display: flex;
@@ -14,6 +14,9 @@
 }
 
 .more-info-icon {
+  background: none !important;
+  border: none;
+
   & img {
     background: white;
     border: none;
