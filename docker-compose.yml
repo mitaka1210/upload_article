@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=192.168.55.5
+      - DB_PORT=5434
+      - DB_USER=mitaka
+      - DB_PASSWORD=mitaka
+      - DB_NAME=postgres
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    restart: always
+    networks:
+      default:
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    restart: always
+    networks:
+      default:
+networks:
+  default:
+    external:
+      name: docker_network
