@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json()); //req.body
 
 //порт
-const PORT = 5000;
+const PORT = 3400;
 
 //add comment
 

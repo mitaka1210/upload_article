@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const fetchArticles = createAsyncThunk('getArticles', async () => {
- return fetch('http://localhost:5000/articles')
+ return fetch(`${process.env.REACT_APP_API_URL}/articles`)
   .then((response) => response.json())
   .then((json) => {
    return json;
