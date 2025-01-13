@@ -8,6 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Инсталираме зависимостите
+RUN npm i -g nodemon
 RUN npm install
 
 # Копираме всичките файлове на сървъра
@@ -17,4 +18,4 @@ COPY . .
 EXPOSE 5000
 
 # Стартиране на сървъра с nodemon
-CMD ["npx", "nodemon", "index.js"]
+CMD ["nodemon", "index.js"]

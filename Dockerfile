@@ -17,6 +17,6 @@ FROM nginx:alpine
 COPY --from=build /app/build /usr/share/nginx/html
 
 # Излагане на Nginx порта
-EXPOSE 80
+EXPOSE 3500
 
 CMD ["nginx", "-g", "daemon off;"]
