@@ -9,13 +9,14 @@ COPY package*.json ./
 
 # Инсталираме зависимостите
 RUN npm i -g nodemon
-RUN npm install
+RUN npm install --force
 
 # Копираме всичките файлове на сървъра
 COPY . .
 
 # Излагане на порта за Express сървъра
-EXPOSE 5000
-
+EXPOSE 3400
+# Set NODE_ENV
+ENV NODE_ENV=production
 # Стартиране на сървъра с nodemon
-CMD ["nodemon", "index.js"]
+CMD ["npm", "run", "start"]

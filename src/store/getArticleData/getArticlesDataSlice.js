@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const fetchArticles = createAsyncThunk('getArticles', async () => {
- return fetch(`${process.env.REACT_APP_API_URL}/articles`)
+ const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/articles`;
+ console.log('Fetching from:', url); // Debug: Проверете стойността на URL
+ return fetch(`${url}`)
   .then((response) => response.json())
   .then((json) => {
    return json;

@@ -3,6 +3,7 @@ import pool from "./db.js";
 import multer from "multer";
 import path from "path";
 import express from "express";
+import rateLimit from "express-rate-limit";
 
 import cors from "cors";
 import { extname } from "node:path";
@@ -10,8 +11,24 @@ import { extname } from "node:path";
 import { fileURLToPath } from "url";
 
 const app = express();
-//middleware
-app.use(cors());
+// Настройка на CORS
+const allowedOrigins = [
+  "http://192.168.55.47:3333", // Адрес 1
+  "https://upload.d-dimitrov.eu", // Адрес 2
+  process.env.ALLOWED_ORIGIN || "http://localhost:3333", // Локален фронтенд
+];
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true); // Разрешено
+      } else {
+        callback(new Error("Not allowed by CORS")); // Забранено
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+  }),
+);
 app.use(express.json()); //req.body
 
 //порт
@@ -76,10 +93,25 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + extname(file.originalname));
   },
 });
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
+    if (!allowedTypes.includes(file.mimetype)) {
+      return cb(new Error("Невалиден тип файл"));
+    }
+    cb(null, true);
+  },
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB лимит
+  },
+});
 // POST заявка за добавяне на секция с изображение
-app.post("/sections", upload.single("image"), async (req, res) => {
+app.post("/api/sections", upload.single("image"), async (req, res) => {
   const { article_id, title, content, position } = req.body;
+  if (!article_id || !title || !content) {
+    return res.status(400).json({ error: "Липсват задължителни полета" });
+  }
   const image_url = req.file ? `/upload/${req.file.filename}` : null;
 
   try {
@@ -96,9 +128,15 @@ app.post("/sections", upload.single("image"), async (req, res) => {
     res.status(500).json({ error: "Database error" });
   }
 });
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 минути
+  max: 100, // лимит на заявките
+});
+
+app.use(limiter);
 
 // API за извличане на статии и секции
-app.get("/articles", async (req, res) => {
+app.get("/api/articles", async (req, res) => {
   try {
     // Извличане на всички статии с техните секции
     const articlesQuery = `
@@ -169,7 +207,7 @@ app.get("/articles", async (req, res) => {
   }
 });
 // POST заявка за създаване на статия
-app.post("/create-articles", async (req, res) => {
+app.post("/api/create-articles", async (req, res) => {
   try {
     const { title } = req.body;
     const result = await pool.query(
@@ -183,7 +221,7 @@ app.post("/create-articles", async (req, res) => {
   }
 });
 
-app.post("/sections/:id", upload.single("image"), async (req, res) => {
+app.post("/api/sections/:id", upload.single("image"), async (req, res) => {
   const article_id = parseInt(req.params.id, 10); // ID на статията
   const { title, section, status } = req.body;
   const image_url = req.file ? `/upload/${req.file.originalname}` : null;
@@ -275,7 +313,7 @@ app.post("/sections/:id", upload.single("image"), async (req, res) => {
 });
 
 // DELETE article by ID
-app.delete("/articles/:id", async (req, res) => {
+app.delete("/api/articles/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -296,10 +334,8 @@ app.delete("/articles/:id", async (req, res) => {
   }
 });
 // DELETE section by ID
-app.delete("/sections/:id", async (req, res) => {
+app.delete("/api/sections/:id", async (req, res) => {
   const id = req.params.id;
-  console.log("pesho", id);
-
   try {
     // Изтриване на секция
     const deleteSection = await pool.query(
@@ -317,7 +353,18 @@ app.delete("/sections/:id", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+// Добавен е глобален error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({
+    error: "Възникна грешка!",
+    message:
+      process.env.NODE_ENV === "development"
+        ? err.message
+        : "Internal Server Error",
+  });
+});
 
 app.listen(PORT, () => {
-  console.log("server has started on port 5000");
+  console.log("server has started on port 3400");
 });
