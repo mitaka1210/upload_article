@@ -1,4 +1,4 @@
-export const config = {
+const config = {
   port: process.env.PORT || 3400,
   db: {
     host: process.env.DB_HOST,
@@ -13,3 +13,5 @@ export const config = {
     "https://upload.d-dimitrov.eu",
   ],
 };
+
+export default config;
