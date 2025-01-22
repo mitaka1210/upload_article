@@ -1,0 +1,20 @@
+import express from "express";
+import pool from "../../config/db.js";
+
+const router = express.Router();
+
+// POST create article
+router.post("/create-articles", async (req, res) => {
+  try {
+    const { title } = req.body;
+    const result = await pool.query(
+      "INSERT INTO articles (title) VALUES ($1) RETURNING *",
+      [title],
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+export default router;

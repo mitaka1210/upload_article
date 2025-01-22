@@ -2,7 +2,8 @@
 node_modules
 
 # Ignore JetBrains IDE files
-.idea/
+.idea/*
+.idea
 .idea/dataSources/*
 
 # Ignore macOS specific files

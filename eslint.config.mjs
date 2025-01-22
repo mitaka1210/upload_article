@@ -6,7 +6,14 @@ import pluginPrettier from 'eslint-plugin-prettier';
 /** @type {import('eslint').Linter.Config[]} */
 export default [
   { files: ["**/*.{js,mjs,cjs,jsx}"] },
-  { languageOptions: { globals: globals.browser } },
+  {
+    languageOptions: {
+      globals: {
+        ...globals.browser, // За браузърната среда
+        ...globals.node, // За Node.js средата
+      },
+    },
+  },
   pluginJs.configs.recommended,
   pluginReact.configs.flat.recommended,
   {
