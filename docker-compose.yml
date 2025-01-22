@@ -11,6 +11,8 @@ services:
       - DB_USER=mitaka
       - DB_PASSWORD=mitaka
       - DB_NAME=postgres
+      - ALLOWED_ORIGIN=https://upload.d-dimitrov.eu  # Add this
+      - NODE_ENV=production  # Add this
     volumes:
       - ./server:/app
       - /app/node_modules
