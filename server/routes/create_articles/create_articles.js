@@ -4,7 +4,7 @@ import pool from "../../config/db.js";
 const router = express.Router();
 
 // POST create article
-router.post("/create-articles", async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const { title } = req.body;
     const result = await pool.query(

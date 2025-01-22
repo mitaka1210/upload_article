@@ -72,9 +72,9 @@ const ListTodos = () => {
       {articlesInfo.map((section, index) => {
        return (
         <tr key={index}>
-         <td>{section.title}</td>
-         <td>{section.create_article_date}</td>
-         <td>{section.create_article_time}</td>
+         <td style={{ position: 'relative', top: '25px' }}>{section.title}</td>
+         <td style={{ position: 'relative', top: '25px' }}>{section.create_article_date}</td>
+         <td style={{ position: 'relative', top: '25px' }}>{section.create_article_time}</td>
          <td>
           <button onClick={() => editSection(section)} className="custom-btn btn-5">
            <span>Edit</span>
