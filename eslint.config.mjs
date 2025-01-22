@@ -1,7 +1,7 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import pluginReact from "eslint-plugin-react";
-import pluginPrettier from "eslint-plugin-prettier";
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import pluginReact from 'eslint-plugin-react';
+import pluginPrettier from 'eslint-plugin-prettier';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -20,6 +20,10 @@ export default [
     // Добавяне на Prettier
     plugins: {
       prettier: pluginPrettier,
+    },
+    env: {
+      browser: true, // Ако сте във фронтенд
+      node: true, // За Node.js
     },
     rules: {
       // Приложете Prettier като ESLint правило
