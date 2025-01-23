@@ -344,10 +344,10 @@ app.use(express.json());
 
 // Routes
 app.use("/api/articles", articlesGetAllRouter);
-app.use("/api/articles", articlesAddNewSectionRouter);
-app.use("/api/articles", articlesCreateArticlesRouter);
-app.use("/api/articles", articlesDeleteByIdRouter);
-app.use("/api/section", sectionDeleteByIdRouter);
+app.use("/api/create/section", articlesAddNewSectionRouter);
+app.use("/api/create-articles", articlesCreateArticlesRouter);
+app.use("/api/delete/articles", articlesDeleteByIdRouter);
+app.use("/api/delete/section", sectionDeleteByIdRouter);
 app.use("/api/sections", sectionUpdateByIdRouter);
 app.use("/api/all-like-dislike", sectionUpdateByIdRouter);
 app.use("/api/like", likeRouter);
