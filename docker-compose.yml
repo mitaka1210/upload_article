@@ -17,9 +17,6 @@ services:
       - ./server:/app
       - /app/node_modules
     restart: always
-    networks:
-      default:
-
   frontend:
     build:
       context: .
@@ -27,8 +24,6 @@ services:
     depends_on:
       - backend
     restart: always
-    networks:
-      default:
 networks:
   default:
     external:
