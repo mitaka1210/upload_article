@@ -1,45 +1,46 @@
-import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/create/section`;
 
 // Async thunk за качване на секция с изображение
-export const uploadSection = createAsyncThunk(
-    "sections/upload",
-    async (data: FormData, {rejectWithValue}) => {
-        try {
-            const response = await axios.post("http://localhost:5000/sections", data, {
-                headers: {"Content-Type": "multipart/form-data"},
-            });
-            return response.data;
-        } catch (error) {
-            return rejectWithValue(error.response.data || "Error uploading section");
-        }
-    }
+export const uploadSection = createAsyncThunk (
+   'sections/upload',
+   async (data: FormData, { rejectWithValue }) => {
+	 try {
+	    const response = await axios.post (`${url}`, data, {
+		  headers: { 'Content-Type': 'multipart/form-data' },
+	    });
+	    return response.data;
+	 } catch (error) {
+	    return rejectWithValue (error.response.data || 'Error uploading section');
+	 }
+   },
 );
 
-const sectionsSlice = createSlice({
-    name: "uploadArticle",
-    initialState: {
-        sections: [],
-        loading: false,
-        error: null,
-    },
-    reducers: {},
-    extraReducers: (builder) => {
-        builder
-            .addCase(uploadSection.pending, (state) => {
-                state.loading = true;
-                state.error = null;
-            })
-            .addCase(uploadSection.fulfilled, (state, action) => {
-                state.loading = false;
-                state.sections.push(action.payload);
-            })
-            .addCase(uploadSection.rejected, (state, action) => {
-                state.loading = false;
-                state.error = action.payload;
-            });
-    },
+const sectionsSlice = createSlice ({
+   name: 'uploadArticle',
+   initialState: {
+	 sections: [],
+	 loading: false,
+	 error: null,
+   },
+   reducers: {},
+   extraReducers: (builder) => {
+	 builder
+	    .addCase (uploadSection.pending, (state) => {
+		  state.loading = true;
+		  state.error = null;
+	    })
+	    .addCase (uploadSection.fulfilled, (state, action) => {
+		  state.loading = false;
+		  state.sections.push (action.payload);
+	    })
+	    .addCase (uploadSection.rejected, (state, action) => {
+		  state.loading = false;
+		  state.error = action.payload;
+	    });
+   },
 });
-
 
 export default sectionsSlice.reducer;

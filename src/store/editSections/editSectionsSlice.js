@@ -4,8 +4,10 @@ import axios from 'axios';
 // Асинхронна функция за актуализиране на секция
 // Async thunk за качване на секция с изображение
 export const updateSection = createAsyncThunk('sections/updateSection', async (data, { rejectWithValue }) => {
+ const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/sections`;
+
  try {
-  const response = await axios.post(`http://localhost:5000/sections/${data.id}`, data, {
+  const response = await axios.post(`${url}/${data.id}`, data, {
    headers: { 'Content-Type': 'multipart/form-data' },
   });
   return response.data;

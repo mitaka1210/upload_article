@@ -3,15 +3,7 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <Grants>1||-9223372036854775808|c|G
-1||10|c|G
-1||10|C|G
-1||10|T|G
-4||-9223372036854775808|c|G
-4||10|c|G
-4||10|C|G
-4||10|T|G</Grants>
-      <IntrospectionStateNumber>1289</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1302</IntrospectionStateNumber>
       <ServerVersion>16.5</ServerVersion>
       <StartupTime>1736841559</StartupTime>
       <TimeZones>true ACDT
@@ -1408,7 +1400,7 @@ false posixrules
 13212||10|C|G
 13212||-9223372036854775808|U|G
 13212||10|U|G</Grants>
-      <IntrospectionStateNumber>1289</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1302</IntrospectionStateNumber>
       <ObjectId>5</ObjectId>
       <OwnerName>mitaka</OwnerName>
     </database>
@@ -4827,8 +4819,8 @@ false posixrules
     <schema id="263" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>1289</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2025-01-21.09:34:21</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>1302</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2025-01-22.15:28:08</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4845,7 +4837,7 @@ false posixrules
       <ObjectId>24656</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
-      <StateNumber>1058</StateNumber>
+      <StateNumber>1295</StateNumber>
       <StoredType>integer|0s</StoredType>
       <OwnerName>mitaka</OwnerName>
     </sequence>
@@ -4853,7 +4845,7 @@ false posixrules
       <ObjectId>24664</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
-      <StateNumber>1058</StateNumber>
+      <StateNumber>1301</StateNumber>
       <StoredType>integer|0s</StoredType>
       <OwnerName>mitaka</OwnerName>
     </sequence>
@@ -4865,13 +4857,13 @@ false posixrules
     </table>
     <table id="268" parent="263" name="articles">
       <ObjectId>24657</ObjectId>
-      <StateNumber>1219</StateNumber>
+      <StateNumber>1292</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>mitaka</OwnerName>
     </table>
     <table id="269" parent="263" name="sections">
       <ObjectId>24665</ObjectId>
-      <StateNumber>1058</StateNumber>
+      <StateNumber>1292</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>mitaka</OwnerName>
     </table>
@@ -5003,7 +4995,7 @@ false posixrules
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24662</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>1058</StateNumber>
+      <StateNumber>1292</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
@@ -5077,7 +5069,7 @@ false posixrules
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24672</ObjectId>
       <Primary>1</Primary>
-      <StateNumber>1058</StateNumber>
+      <StateNumber>1292</StateNumber>
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>

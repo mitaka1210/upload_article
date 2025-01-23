@@ -3,11 +3,12 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { deleteArticle } from '../deleteArticle/deleteArticleSlice';
 
-const API_URL = 'http://localhost:5000/sections';
 // Async action за изтриване
 export const deleteSection = createAsyncThunk('sections/deleteSection', async (sectionId, { rejectWithValue }) => {
+ const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/sections`;
+
  try {
-  const response = await axios.delete(`${API_URL}/${sectionId}`);
+  const response = await axios.delete(`${url}/${sectionId}`);
   return { id: sectionId };
  } catch (err) {
   return rejectWithValue(err.response.data);

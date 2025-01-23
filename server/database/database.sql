@@ -24,3 +24,6 @@ CREATE TABLE sections
     created_at TIMESTAMP DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'Europe/Sofia'),
     image_url  VARCHAR(255)
 );
+
+ALTER SEQUENCE articles_id_seq RESTART WITH 1;
+ALTER SEQUENCE sections_id_seq RESTART WITH 1;
