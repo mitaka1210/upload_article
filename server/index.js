@@ -345,13 +345,13 @@ app.use(express.json());
 // Routes
 app.use("/api/articles", articlesGetAllRouter);
 app.use("/api/create/section", articlesAddNewSectionRouter);
-app.use("/api/create-articles", articlesCreateArticlesRouter);
+app.use("/api/create/articles/header", articlesCreateArticlesRouter);
 app.use("/api/delete/articles", articlesDeleteByIdRouter);
 app.use("/api/delete/section", sectionDeleteByIdRouter);
-app.use("/api/sections", sectionUpdateByIdRouter);
-app.use("/api/all-like-dislike", sectionUpdateByIdRouter);
-app.use("/api/like", likeRouter);
-app.use("/api/dislike", dislikeRouter);
+app.use("/api/edit/article", sectionUpdateByIdRouter);
+app.use("/api/get/all-like-dislike", sectionUpdateByIdRouter);
+app.use("/api/get/like", likeRouter);
+app.use("/api/get/dislike", dislikeRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

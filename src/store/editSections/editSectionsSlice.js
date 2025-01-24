@@ -4,7 +4,7 @@ import axios from 'axios';
 // Асинхронна функция за актуализиране на секция
 // Async thunk за качване на секция с изображение
 export const updateSection = createAsyncThunk('sections/updateSection', async (data, { rejectWithValue }) => {
- const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/sections`;
+ const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/edit/article`;
 
  try {
   const response = await axios.post(`${url}/${data.id}`, data, {
