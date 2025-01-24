@@ -5,7 +5,7 @@ import { deleteArticle } from '../deleteArticle/deleteArticleSlice';
 
 // Async action за изтриване
 export const deleteSection = createAsyncThunk('sections/deleteSection', async (sectionId, { rejectWithValue }) => {
- const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/sections`;
+ const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/delete/section`;
 
  try {
   const response = await axios.delete(`${url}/${sectionId}`);

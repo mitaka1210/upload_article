@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/create-articles`;
+const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/create/articles/header`;
 
 // Async action за добавяне на статия
 export const addArticle = createAsyncThunk('articles/addArticle', async (title) => {
