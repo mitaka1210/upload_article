@@ -335,6 +335,8 @@ import sectionDeleteByIdRouter from "./routes/delete_section_by_id/delete_articl
 import sectionUpdateByIdRouter from "./routes/section_update_by_id/sections.js";
 import likeRouter from "./routes/like_articles/like_articles.js";
 import dislikeRouter from "./routes/dislike_articles_by_id/dislike_articles.js";
+import loginPage from "./routes/login_page/login_page.js";
+import checkAuth from "./routes/check-token/check-token.js";
 
 const app = express();
 const PORT = process.env.PORT || 3400;
@@ -352,6 +354,8 @@ app.use("/api/edit/article", sectionUpdateByIdRouter);
 app.use("/api/get/all-like-dislike", sectionUpdateByIdRouter);
 app.use("/api/get/like", likeRouter);
 app.use("/api/get/dislike", dislikeRouter);
+app.use("/api/login", loginPage);
+app.use("/api/check-auth", checkAuth);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

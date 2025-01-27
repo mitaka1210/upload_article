@@ -7,6 +7,7 @@ import articlesSliceAdd from '../add-new-article/addNewArticleSlice';
 import editSectionsSlice from '../editSections/editSectionsSlice';
 import deleteSection from '../deleteArticleSection/deleteArticleSectionSlice';
 import deleteArticlesSlice from '../deleteArticle/deleteArticleSlice';
+import authReducer from '../login/authSlice';
 
 const store = configureStore({
  reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
   editSection: editSectionsSlice,
   deleteArticle: deleteArticlesSlice,
   deleteSection: deleteSection,
+  auth: authReducer,
  },
 });
 

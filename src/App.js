@@ -1,10 +1,10 @@
 import React from 'react';
 import './reusable.scss';
+import './typography.scss';
 import { Route, Routes } from 'react-router-dom'; //components
 import Read from './components/Read';
 import Home from './components/Home';
 import EditTodo from './components/EditTodo';
-import './App.scss';
 
 function App() {
  return (
