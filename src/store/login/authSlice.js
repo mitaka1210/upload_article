@@ -33,12 +33,11 @@ export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWi
   });
 
   const data = await response.json();
-
   if (!response.ok) {
    throw new Error(data.message || 'Authorization failed');
   }
 
-  return data.user;
+  return data;
  } catch (error) {
   return rejectWithValue(error.message);
  }

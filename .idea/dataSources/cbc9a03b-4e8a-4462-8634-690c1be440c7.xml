@@ -3,7 +3,7 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <IntrospectionStateNumber>1325</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1349</IntrospectionStateNumber>
       <ServerVersion>16.5</ServerVersion>
       <StartupTime>1737708888</StartupTime>
       <TimeZones>true ACDT
@@ -1400,7 +1400,7 @@ false posixrules
 13212||10|C|G
 13212||-9223372036854775808|U|G
 13212||10|U|G</Grants>
-      <IntrospectionStateNumber>1325</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1349</IntrospectionStateNumber>
       <ObjectId>5</ObjectId>
       <OwnerName>mitaka</OwnerName>
     </database>
@@ -4819,21 +4819,13 @@ false posixrules
     <schema id="263" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>1325</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2025-01-24.12:51:56</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>1349</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2025-01-27.16:05:31</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
     </schema>
-    <sequence id="264" parent="263" name="accounts_user_id_seq">
-      <ObjectId>24576</ObjectId>
-      <SequenceIdentity>1</SequenceIdentity>
-      <StartValue>1</StartValue>
-      <StateNumber>743</StateNumber>
-      <StoredType>integer|0s</StoredType>
-      <OwnerName>mitaka</OwnerName>
-    </sequence>
-    <sequence id="265" parent="263" name="article_feedback_id_seq">
+    <sequence id="264" parent="263" name="article_feedback_id_seq">
       <ObjectId>32889</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
@@ -4841,7 +4833,7 @@ false posixrules
       <StoredType>integer|0s</StoredType>
       <OwnerName>mitaka</OwnerName>
     </sequence>
-    <sequence id="266" parent="263" name="articles_id_seq">
+    <sequence id="265" parent="263" name="articles_id_seq">
       <ObjectId>24656</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
@@ -4849,7 +4841,7 @@ false posixrules
       <StoredType>integer|0s</StoredType>
       <OwnerName>mitaka</OwnerName>
     </sequence>
-    <sequence id="267" parent="263" name="sections_id_seq">
+    <sequence id="266" parent="263" name="sections_id_seq">
       <ObjectId>24664</ObjectId>
       <SequenceIdentity>1</SequenceIdentity>
       <StartValue>1</StartValue>
@@ -4857,12 +4849,22 @@ false posixrules
       <StoredType>integer|0s</StoredType>
       <OwnerName>mitaka</OwnerName>
     </sequence>
-    <table id="268" parent="263" name="accounts">
-      <ObjectId>24577</ObjectId>
-      <StateNumber>743</StateNumber>
-      <AccessMethodId>2</AccessMethodId>
+    <sequence id="267" parent="263" name="user_logins_id_seq">
+      <ObjectId>32935</ObjectId>
+      <SequenceIdentity>1</SequenceIdentity>
+      <StartValue>1</StartValue>
+      <StateNumber>1348</StateNumber>
+      <StoredType>integer|0s</StoredType>
       <OwnerName>mitaka</OwnerName>
-    </table>
+    </sequence>
+    <sequence id="268" parent="263" name="users_id_seq">
+      <ObjectId>32922</ObjectId>
+      <SequenceIdentity>1</SequenceIdentity>
+      <StartValue>1</StartValue>
+      <StateNumber>1346</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <OwnerName>mitaka</OwnerName>
+    </sequence>
     <table id="269" parent="263" name="article_feedback">
       <ObjectId>32890</ObjectId>
       <StateNumber>1320</StateNumber>
@@ -4881,100 +4883,19 @@ false posixrules
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>mitaka</OwnerName>
     </table>
-    <column id="272" parent="268" name="user_id">
-      <DefaultExpression>nextval(&apos;accounts_user_id_seq&apos;::regclass)</DefaultExpression>
-      <NotNull>1</NotNull>
-      <Position>1</Position>
-      <StateNumber>743</StateNumber>
-      <StoredType>integer|0s</StoredType>
-      <SequenceId>24576</SequenceId>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="273" parent="268" name="username">
-      <NotNull>1</NotNull>
-      <Position>2</Position>
-      <StateNumber>743</StateNumber>
-      <StoredType>varchar(50)|0s</StoredType>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="274" parent="268" name="password">
-      <NotNull>1</NotNull>
-      <Position>3</Position>
-      <StateNumber>743</StateNumber>
-      <StoredType>varchar(50)|0s</StoredType>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="275" parent="268" name="email">
-      <NotNull>1</NotNull>
-      <Position>4</Position>
-      <StateNumber>743</StateNumber>
-      <StoredType>varchar(255)|0s</StoredType>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="276" parent="268" name="created_at">
-      <NotNull>1</NotNull>
-      <Position>5</Position>
-      <StateNumber>743</StateNumber>
-      <StoredType>timestamp|0s</StoredType>
-      <TypeId>1114</TypeId>
-    </column>
-    <column id="277" parent="268" name="last_login">
-      <Position>6</Position>
-      <StateNumber>743</StateNumber>
-      <StoredType>timestamp|0s</StoredType>
-      <TypeId>1114</TypeId>
-    </column>
-    <index id="278" parent="268" name="accounts_pkey">
-      <ColNames>user_id</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>24581</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>743</StateNumber>
-      <Unique>1</Unique>
-      <AccessMethodId>403</AccessMethodId>
-    </index>
-    <index id="279" parent="268" name="accounts_username_key">
-      <ColNames>username</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>24583</ObjectId>
-      <StateNumber>743</StateNumber>
-      <Unique>1</Unique>
-      <AccessMethodId>403</AccessMethodId>
-      <CollationNames>default</CollationNames>
-      <CollationIds>100</CollationIds>
-      <CollationParentNames>pg_catalog</CollationParentNames>
-    </index>
-    <index id="280" parent="268" name="accounts_email_key">
-      <ColNames>email</ColNames>
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>24585</ObjectId>
-      <StateNumber>743</StateNumber>
-      <Unique>1</Unique>
-      <AccessMethodId>403</AccessMethodId>
-      <CollationNames>default</CollationNames>
-      <CollationIds>100</CollationIds>
-      <CollationParentNames>pg_catalog</CollationParentNames>
-    </index>
-    <key id="281" parent="268" name="accounts_pkey">
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>24582</ObjectId>
-      <Primary>1</Primary>
-      <StateNumber>743</StateNumber>
-      <UnderlyingIndexId>24581</UnderlyingIndexId>
-    </key>
-    <key id="282" parent="268" name="accounts_username_key">
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>24584</ObjectId>
-      <StateNumber>743</StateNumber>
-      <UnderlyingIndexId>24583</UnderlyingIndexId>
-    </key>
-    <key id="283" parent="268" name="accounts_email_key">
-      <NameSurrogate>1</NameSurrogate>
-      <ObjectId>24586</ObjectId>
-      <StateNumber>743</StateNumber>
-      <UnderlyingIndexId>24585</UnderlyingIndexId>
-    </key>
-    <column id="284" parent="269" name="id">
+    <table id="272" parent="263" name="user_logins">
+      <ObjectId>32936</ObjectId>
+      <StateNumber>1348</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>mitaka</OwnerName>
+    </table>
+    <table id="273" parent="263" name="users">
+      <ObjectId>32923</ObjectId>
+      <StateNumber>1346</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+      <OwnerName>mitaka</OwnerName>
+    </table>
+    <column id="274" parent="269" name="id">
       <DefaultExpression>nextval(&apos;article_feedback_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -4983,47 +4904,47 @@ false posixrules
       <SequenceId>32889</SequenceId>
       <TypeId>23</TypeId>
     </column>
-    <column id="285" parent="269" name="article_id">
+    <column id="275" parent="269" name="article_id">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>1315</StateNumber>
       <StoredType>integer|0s</StoredType>
       <TypeId>23</TypeId>
     </column>
-    <column id="286" parent="269" name="user_id">
+    <column id="276" parent="269" name="user_id">
       <Position>3</Position>
       <StateNumber>1315</StateNumber>
       <StoredType>integer|0s</StoredType>
       <TypeId>23</TypeId>
     </column>
-    <column id="287" parent="269" name="comment">
+    <column id="277" parent="269" name="comment">
       <Position>4</Position>
       <StateNumber>1315</StateNumber>
       <StoredType>text|0s</StoredType>
       <TypeId>25</TypeId>
     </column>
-    <column id="288" parent="269" name="is_like">
+    <column id="278" parent="269" name="is_like">
       <DefaultExpression>false</DefaultExpression>
       <Position>5</Position>
       <StateNumber>1315</StateNumber>
       <StoredType>boolean|0s</StoredType>
       <TypeId>16</TypeId>
     </column>
-    <column id="289" parent="269" name="like_at">
+    <column id="279" parent="269" name="like_at">
       <DefaultExpression>(CURRENT_TIMESTAMP AT TIME ZONE &apos;Europe/Sofia&apos;::text)</DefaultExpression>
       <Position>6</Position>
       <StateNumber>1315</StateNumber>
       <StoredType>timestamp|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="290" parent="269" name="is_dislike">
+    <column id="280" parent="269" name="is_dislike">
       <DefaultExpression>false</DefaultExpression>
       <Position>7</Position>
       <StateNumber>1320</StateNumber>
       <StoredType>boolean|0s</StoredType>
       <TypeId>16</TypeId>
     </column>
-    <foreign-key id="291" parent="269" name="article_feedback_article_id_fkey">
+    <foreign-key id="281" parent="269" name="article_feedback_article_id_fkey">
       <ColNames>article_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>32900</ObjectId>
@@ -5031,7 +4952,7 @@ false posixrules
       <RefKeyColPositions>1</RefKeyColPositions>
       <RefTableId>24657</RefTableId>
     </foreign-key>
-    <index id="292" parent="269" name="article_feedback_pkey">
+    <index id="282" parent="269" name="article_feedback_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>32898</ObjectId>
@@ -5040,14 +4961,14 @@ false posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="293" parent="269" name="article_feedback_pkey">
+    <key id="283" parent="269" name="article_feedback_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>32899</ObjectId>
       <Primary>1</Primary>
       <StateNumber>1315</StateNumber>
       <UnderlyingIndexId>32898</UnderlyingIndexId>
     </key>
-    <column id="294" parent="270" name="id">
+    <column id="284" parent="270" name="id">
       <DefaultExpression>nextval(&apos;articles_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -5056,28 +4977,28 @@ false posixrules
       <SequenceId>24656</SequenceId>
       <TypeId>23</TypeId>
     </column>
-    <column id="295" parent="270" name="title">
+    <column id="285" parent="270" name="title">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>798</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="296" parent="270" name="created_at">
+    <column id="286" parent="270" name="created_at">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>3</Position>
       <StateNumber>798</StateNumber>
       <StoredType>timestamp|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="297" parent="270" name="status">
+    <column id="287" parent="270" name="status">
       <DefaultExpression>true</DefaultExpression>
       <Position>4</Position>
       <StateNumber>1219</StateNumber>
       <StoredType>boolean|0s</StoredType>
       <TypeId>16</TypeId>
     </column>
-    <index id="298" parent="270" name="articles_pkey">
+    <index id="288" parent="270" name="articles_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24662</ObjectId>
@@ -5086,14 +5007,14 @@ false posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="299" parent="270" name="articles_pkey">
+    <key id="289" parent="270" name="articles_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24663</ObjectId>
       <Primary>1</Primary>
       <StateNumber>798</StateNumber>
       <UnderlyingIndexId>24662</UnderlyingIndexId>
     </key>
-    <column id="300" parent="271" name="id">
+    <column id="290" parent="271" name="id">
       <DefaultExpression>nextval(&apos;sections_id_seq&apos;::regclass)</DefaultExpression>
       <NotNull>1</NotNull>
       <Position>1</Position>
@@ -5102,47 +5023,47 @@ false posixrules
       <SequenceId>24664</SequenceId>
       <TypeId>23</TypeId>
     </column>
-    <column id="301" parent="271" name="article_id">
+    <column id="291" parent="271" name="article_id">
       <NotNull>1</NotNull>
       <Position>2</Position>
       <StateNumber>799</StateNumber>
       <StoredType>integer|0s</StoredType>
       <TypeId>23</TypeId>
     </column>
-    <column id="302" parent="271" name="title">
+    <column id="292" parent="271" name="title">
       <NotNull>1</NotNull>
       <Position>3</Position>
       <StateNumber>799</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <column id="303" parent="271" name="content">
+    <column id="293" parent="271" name="content">
       <Position>4</Position>
       <StateNumber>799</StateNumber>
       <StoredType>text|0s</StoredType>
       <TypeId>25</TypeId>
     </column>
-    <column id="304" parent="271" name="position">
+    <column id="294" parent="271" name="position">
       <NotNull>1</NotNull>
       <Position>5</Position>
       <StateNumber>799</StateNumber>
       <StoredType>integer|0s</StoredType>
       <TypeId>23</TypeId>
     </column>
-    <column id="305" parent="271" name="created_at">
+    <column id="295" parent="271" name="created_at">
       <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
       <Position>6</Position>
       <StateNumber>799</StateNumber>
       <StoredType>timestamp|0s</StoredType>
       <TypeId>1114</TypeId>
     </column>
-    <column id="306" parent="271" name="image_url">
+    <column id="296" parent="271" name="image_url">
       <Position>7</Position>
       <StateNumber>821</StateNumber>
       <StoredType>varchar(255)|0s</StoredType>
       <TypeId>1043</TypeId>
     </column>
-    <foreign-key id="307" parent="271" name="sections_article_id_fkey">
+    <foreign-key id="297" parent="271" name="sections_article_id_fkey">
       <ColNames>article_id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24674</ObjectId>
@@ -5151,7 +5072,7 @@ false posixrules
       <RefKeyColPositions>1</RefKeyColPositions>
       <RefTableId>24657</RefTableId>
     </foreign-key>
-    <index id="308" parent="271" name="sections_pkey">
+    <index id="298" parent="271" name="sections_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24672</ObjectId>
@@ -5160,12 +5081,165 @@ false posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="309" parent="271" name="sections_pkey">
+    <key id="299" parent="271" name="sections_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>24673</ObjectId>
       <Primary>1</Primary>
       <StateNumber>799</StateNumber>
       <UnderlyingIndexId>24672</UnderlyingIndexId>
+    </key>
+    <check id="300" parent="272" name="user_logins_role_check">
+      <ColNames>role</ColNames>
+      <ObjectId>32941</ObjectId>
+      <Predicate>(role)::text = ANY ((ARRAY[&apos;admin&apos;::character varying, &apos;user&apos;::character varying])::text[])</Predicate>
+      <StateNumber>1348</StateNumber>
+    </check>
+    <column id="301" parent="272" name="id">
+      <DefaultExpression>nextval(&apos;user_logins_id_seq&apos;::regclass)</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>1348</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <SequenceId>32935</SequenceId>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="302" parent="272" name="username">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>1348</StateNumber>
+      <StoredType>varchar(50)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="303" parent="272" name="password">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StateNumber>1348</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="304" parent="272" name="role">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StateNumber>1348</StateNumber>
+      <StoredType>varchar(20)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="305" parent="272" name="login_time">
+      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
+      <Position>5</Position>
+      <StateNumber>1348</StateNumber>
+      <StoredType>timestamp|0s</StoredType>
+      <TypeId>1114</TypeId>
+    </column>
+    <index id="306" parent="272" name="user_logins_pkey">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>32942</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>1348</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="307" parent="272" name="user_logins_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>32943</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>1348</StateNumber>
+      <UnderlyingIndexId>32942</UnderlyingIndexId>
+    </key>
+    <column id="308" parent="273" name="id">
+      <DefaultExpression>nextval(&apos;users_id_seq&apos;::regclass)</DefaultExpression>
+      <NotNull>1</NotNull>
+      <Position>1</Position>
+      <StateNumber>1346</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <SequenceId>32922</SequenceId>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="309" parent="273" name="username">
+      <NotNull>1</NotNull>
+      <Position>2</Position>
+      <StateNumber>1346</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="310" parent="273" name="first_name">
+      <NotNull>1</NotNull>
+      <Position>3</Position>
+      <StateNumber>1346</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="311" parent="273" name="last_name">
+      <NotNull>1</NotNull>
+      <Position>4</Position>
+      <StateNumber>1346</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="312" parent="273" name="email">
+      <NotNull>1</NotNull>
+      <Position>5</Position>
+      <StateNumber>1346</StateNumber>
+      <StoredType>varchar(255)|0s</StoredType>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="313" parent="273" name="password">
+      <NotNull>1</NotNull>
+      <Position>6</Position>
+      <StateNumber>1346</StateNumber>
+      <StoredType>text|0s</StoredType>
+      <TypeId>25</TypeId>
+    </column>
+    <index id="314" parent="273" name="users_pkey">
+      <ColNames>id</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>32929</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>1346</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <index id="315" parent="273" name="users_username_key">
+      <ColNames>username</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>32931</ObjectId>
+      <StateNumber>1346</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationNames>default</CollationNames>
+      <CollationIds>100</CollationIds>
+      <CollationParentNames>pg_catalog</CollationParentNames>
+    </index>
+    <index id="316" parent="273" name="users_email_key">
+      <ColNames>email</ColNames>
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>32933</ObjectId>
+      <StateNumber>1346</StateNumber>
+      <Unique>1</Unique>
+      <AccessMethodId>403</AccessMethodId>
+      <CollationNames>default</CollationNames>
+      <CollationIds>100</CollationIds>
+      <CollationParentNames>pg_catalog</CollationParentNames>
+    </index>
+    <key id="317" parent="273" name="users_pkey">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>32930</ObjectId>
+      <Primary>1</Primary>
+      <StateNumber>1346</StateNumber>
+      <UnderlyingIndexId>32929</UnderlyingIndexId>
+    </key>
+    <key id="318" parent="273" name="users_username_key">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>32932</ObjectId>
+      <StateNumber>1346</StateNumber>
+      <UnderlyingIndexId>32931</UnderlyingIndexId>
+    </key>
+    <key id="319" parent="273" name="users_email_key">
+      <NameSurrogate>1</NameSurrogate>
+      <ObjectId>32934</ObjectId>
+      <StateNumber>1346</StateNumber>
+      <UnderlyingIndexId>32933</UnderlyingIndexId>
     </key>
   </database-model>
 </dataSource>
