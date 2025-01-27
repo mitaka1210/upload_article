@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { body, validationResult } from "express-validator";
+import pool from "../../config/db.js";
 
 const router = express.Router();
 const SECRET_KEY = "your_secret_key"; // Сложи сигурен ключ
@@ -30,28 +31,50 @@ router.post(
     }
 
     const { username, password } = req.body;
-    const user = users.find((u) => u.username === username);
-    console.log("pesho", user);
 
-    if (!user) {
-      return res.status(401).json({ message: "Invalid username or password" });
+    try {
+      // Check if the user exists
+      const userResult = await pool.query(
+        "SELECT * FROM users WHERE username = $1",
+        [username],
+      );
+
+      if (userResult.rows.length === 0) {
+        return res
+          .status(401)
+          .json({ message: "Invalid username or password" });
+      }
+
+      const user = userResult.rows[0];
+
+      // Verify the password
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res
+          .status(401)
+          .json({ message: "Invalid username or password" });
+      }
+
+      const token = jwt.sign(
+        { id: user.id, username: user.username },
+        SECRET_KEY,
+        { expiresIn: "1h" },
+      );
+
+      // Insert login record into user_logins table
+      const query = `
+       INSERT INTO user_logins (username, password, role, login_time)
+       VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
+   `;
+      const values = [user.username, user.password, "user"]; // Adjust role as needed
+
+      await pool.query(query, values);
+
+      res.json({ token });
+    } catch (err) {
+      console.error("Error during login:", err);
+      return res.status(500).json({ message: "Internal server error" });
     }
-
-    const isMatch = await bcrypt.compare("123", user.password);
-    console.log("pesho", password);
-    console.log("pesho", user.password);
-    console.log("pesho", isMatch);
-
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid username or password" });
-    }
-
-    const token = jwt.sign(
-      { id: user.id, username: user.username },
-      SECRET_KEY,
-      { expiresIn: "1h" },
-    );
-    res.json({ token });
   },
 );
 export default router;

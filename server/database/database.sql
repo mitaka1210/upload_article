@@ -30,5 +30,24 @@ CREATE TABLE article_feedback
 );
 
 
+-- Table to store user information
+CREATE TABLE users
+(
+    id         SERIAL PRIMARY KEY,           -- Unique identifier for each user
+    username   VARCHAR(255) UNIQUE NOT NULL,-- Username of the user, must be unique
+    first_name VARCHAR(255)        NOT NULL, -- First name of the user
+    last_name  VARCHAR(255)        NOT NULL, -- Last name of the user
+    email      VARCHAR(255) UNIQUE NOT NULL,-- Email of the user, must be unique
+    password   TEXT                NOT NULL  -- Password of the user
+);
+CREATE TABLE user_logins
+(
+    id         SERIAL PRIMARY KEY,
+    username   VARCHAR(50)                                   NOT NULL,
+    password   VARCHAR(255)                                  NOT NULL,
+    role       VARCHAR(20) CHECK (role IN ('admin', 'user')) NOT NULL,
+    login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 ALTER SEQUENCE articles_id_seq RESTART WITH 1;
 ALTER SEQUENCE sections_id_seq RESTART WITH 1;

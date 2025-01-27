@@ -12,6 +12,15 @@ const Home = () => {
  useEffect(() => {
   dispatch(checkAuth());
  }, [dispatch, setIsLoggedIn]);
+ useEffect(() => {
+  const checkUserAuth = async () => {
+   const result = await dispatch(checkAuth());
+   if (result.payload.isAuthenticated) {
+    setIsLoggedIn(true);
+   }
+  };
+  checkUserAuth().then((r) => {});
+ }, [dispatch]);
  return (
   <div>
    {isLoggedIn ? (

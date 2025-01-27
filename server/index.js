@@ -337,6 +337,7 @@ import likeRouter from "./routes/like_articles/like_articles.js";
 import dislikeRouter from "./routes/dislike_articles_by_id/dislike_articles.js";
 import loginPage from "./routes/login_page/login_page.js";
 import checkAuth from "./routes/check-token/check-token.js";
+import createAccountRouter from "./routes/create_account/create_account.js";
 
 const app = express();
 const PORT = process.env.PORT || 3400;
@@ -356,6 +357,7 @@ app.use("/api/get/like", likeRouter);
 app.use("/api/get/dislike", dislikeRouter);
 app.use("/api/login", loginPage);
 app.use("/api/check-auth", checkAuth);
+app.use("/api/create-account", createAccountRouter);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
