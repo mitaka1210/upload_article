@@ -7,13 +7,18 @@ const router = express.Router();
 const SECRET_KEY = "your_secret_key"; // Сложи сигурен ключ
 
 // Mock база данни (замени с реална)
+// Example users array
 const users = [
-  { id: 1, username: "admin", password: "$2b$10$abc123hashedpassword" }, // парола: "password"
+  {
+    id: 1,
+    username: "admin",
+    password: await bcrypt.hash("123", 10), // Hash the password before storing
+  },
 ];
 
 // Login API
 router.post(
-  "/login",
+  "/",
   [
     body("username").notEmpty().withMessage("Username is required"),
     body("password").notEmpty().withMessage("Password is required"),
@@ -26,12 +31,17 @@ router.post(
 
     const { username, password } = req.body;
     const user = users.find((u) => u.username === username);
+    console.log("pesho", user);
 
     if (!user) {
       return res.status(401).json({ message: "Invalid username or password" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare("123", user.password);
+    console.log("pesho", password);
+    console.log("pesho", user.password);
+    console.log("pesho", isMatch);
+
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid username or password" });
     }

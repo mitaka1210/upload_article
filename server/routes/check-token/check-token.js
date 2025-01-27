@@ -5,7 +5,8 @@ const router = express.Router();
 const SECRET_KEY = "your_secret_key"; // Сложи сигурен ключ
 
 // Проверка на токен
-router.get("/check-auth", (req, res) => {
+router.get("/", (req, res) => {
+  console.log("pesho auth", req.headers);
   const token = req.headers["authorization"];
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
 import './login.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../store/login/authSlice';
 
-const LoginPage = (login: boolean) => {
+const LoginPage = () => {
  const [username, setUsername] = useState('');
  const [password, setPassword] = useState('');
- const [error, setError] = useState('');
+ const dispatch = useDispatch();
+ const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
+ const [errorInput, setError] = useState('');
  const [isLoggedIn, setIsLoggedIn] = useState(false);
- 
+
  const validateInputs = () => {
   if (!username || !password) {
    setError('Both fields are required');
@@ -19,44 +23,13 @@ const LoginPage = (login: boolean) => {
   setError('');
   return true;
  };
- 
+
  const handleLogin = async (e) => {
   e.preventDefault();
-  if (!validateInputs()) return;
-  
-  try {
-   const response = await fetch('http://localhost:5000/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password }),
-   });
-   
-   const data = await response.json();
-   if (response.ok) {
-    localStorage.setItem('token', data.token);
-    setIsLoggedIn(true);
-    setError('');
-   } else {
-    setError(data.message || 'Login failed');
-   }
-  } catch (err) {
-   setError('Something went wrong');
-  }
- };
- 
- const checkAuth = async () => {
-  const token = localStorage.getItem('token');
-  if (!token) return setIsLoggedIn(false);
-  
-  try {
-   const response = await fetch('http://localhost:5000/check-auth', {
-    headers: { Authorization: token },
-   });
-   
-   const data = await response.json();
-   setIsLoggedIn(data.isAuthenticated);
-  } catch {
-   setIsLoggedIn(false);
+  console.log('pesho', username, password);
+  dispatch(login({ username, password }));
+  if (!validateInputs()) {
+   return false;
   }
  };
 
@@ -110,22 +83,16 @@ const LoginPage = (login: boolean) => {
       <span>or use your account</span>
       <div>
        <label>Username</label>
-       <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername (e.target.value)}
-       />
+       <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
       </div>
       <div>
        <label>Password</label>
-       <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-       />
+       <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button type="submit" onClick={handleClickSignIn}>Sign In</button>
+      <button onClick={handleClickSignIn} type="submit" disabled={loading}>
+       {loading ? 'Logging in...' : 'Login'}
+      </button>
      </form>
     </div>
     <div className="overlay-container-login">
