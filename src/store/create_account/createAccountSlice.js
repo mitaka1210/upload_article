@@ -10,12 +10,13 @@ export const createAccount = createAsyncThunk('account/createAccount', async (us
   },
   body: JSON.stringify(userData),
  });
+ const data = await response.json();
 
  if (!response.ok) {
   const error = await response.json();
   return thunkAPI.rejectWithValue(error);
  }
-
+ localStorage.setItem('token', data.token); // Съхранява токена
  return response.json();
 });
 
@@ -28,7 +29,7 @@ const createAccountSlice = createSlice({
   email: '',
   password: '',
   status: 'idle',
-  error: null,
+  errorCreate: null,
  },
  reducers: {
   setFirstName: (state, action) => {
@@ -62,7 +63,7 @@ const createAccountSlice = createSlice({
    })
    .addCase(createAccount.rejected, (state, action) => {
     state.status = 'failed';
-    state.error = action.payload;
+    state.errorCreate = action.payload;
    });
  },
 });

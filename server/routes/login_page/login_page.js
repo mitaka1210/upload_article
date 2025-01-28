@@ -1,8 +1,8 @@
-import express from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { body, validationResult } from "express-validator";
-import pool from "../../config/db.js";
+import express from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { body, validationResult } from 'express-validator';
+import pool from '../../config/db.js';
 
 const router = express.Router();
 const SECRET_KEY = "your_secret_key"; // Сложи сигурен ключ
@@ -40,7 +40,8 @@ router.post(
       );
 
       if (userResult.rows.length === 0) {
-        return res
+         
+         return res
           .status(401)
           .json({ message: "Invalid username or password" });
       }
