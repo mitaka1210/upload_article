@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import InputTodo from './InputTodo';
 import ListTodos from '../ListTodos/ListTodos';
-import LoginPage from './loginPage';
+import LoginPage from '../Login/Login.jsx';
 import { useDispatch } from 'react-redux';
 import { checkAuth } from '../store/login/authSlice';
 

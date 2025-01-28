@@ -5,7 +5,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'; // components
 import Read from './components/Read';
 import Home from './components/Home';
 import EditTodo from './components/EditTodo';
-import LoginPage from './components/loginPage';
+import LoginPage from './Login/Login.jsx';
 
 function App() {
    return (
