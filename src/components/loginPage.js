@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../store/login/authSlice';
 import { createAccount } from '../store/create_account/createAccountSlice';
 import { useNavigate } from 'react-router-dom';
+import google from '../assets/google-svgrepo-com.svg';
 
 const LoginPage = () => {
  const [username, setUsername] = useState('');
@@ -23,7 +24,7 @@ const LoginPage = () => {
  const dispatch = useDispatch();
  const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
  const [errorInput, setError] = useState('');
- const [isLoggedIn, setIsLoggedIn] = useState(true);
+ const [isLoggedIn, setIsLoggedIn] = useState(false);
  const navigate = useNavigate();
 
  const validateInputs = () => {
@@ -115,9 +116,11 @@ const LoginPage = () => {
    containerLogin.classList.add('right-panel-active');
   });
  };
+ console.log ('pesho',error);
  const handleClickSignIn = () => {
   console.log('pesho CLICK2');
   setHideForm(true);
+  setIsLoggedIn(true);
 
   const signInButton = document.getElementById('signIn');
   const containerLogin = document.getElementById('login');
@@ -182,22 +185,22 @@ const LoginPage = () => {
      {loginForm ? (
       <div>
        <form action="#" onSubmit={handleLogin}>
-        <h1>Sign In</h1>
+        <h2 className="add-color-white">Sign In</h2>
         <div className="social-container-login">
          <a href="#" className="social">
-          <ion-icon name="logo-googleplus"></ion-icon>
+          <img className="google-size" src={google} alt="google"/>
          </a>
         </div>
-        <span>or use your account</span>
+        <span className="add-color-white">or use your account</span>
         <div>
-         <label>Username</label>
+         <label className="add-color-white">Username</label>
          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
         </div>
         <div>
-         <label>Password</label>
+         <label className="add-color-white">Password</label>
          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {isLoggedIn && <p style={{ color: 'red' }}>{error}</p>}
         <button onClick={handleClickSignIn} type="submit" disabled={loading}>
          {loading ? 'Logging in...' : 'Login'}
         </button>

@@ -24,7 +24,7 @@
 //  margin: 15px 0;
 //}
 .container-login-page {
-  background: #2D2C2C;
+  background: url("../assets/bgr-login-page.jpg") no-repeat center center/cover;
   height: 100dvh;
   display: flex;
   align-items: center;
@@ -100,7 +100,7 @@ input[type=text] {
   font-family: 'PLay', sans-serif;
   font-size: 16px;
   //font-weight: 200px;
-  padding: 10px 0;
+  padding: 0px 0;
   transition: border 0.5s;
   outline: none;
   color: #fff;
@@ -116,7 +116,7 @@ input[type=password] {
   font-family: 'PLay', sans-serif;
   font-size: 16px;
   font-weight: bold;
-  padding: 10px 0;
+  padding: 0px 0;
   transition: border 0.5s;
   outline: none;
   color: #fff;
@@ -130,7 +130,7 @@ input[type=email] {
   border-bottom: 1px solid #fff;
   font-family: 'PLay', sans-serif;
   font-size: 16px;
-  padding: 10px 0;
+  padding: 0px 0;
   transition: border 0.5s;
   outline: none;
   color: #fff;
@@ -249,5 +249,8 @@ button.ghost {
 .container-login.right-panel-active .overlay-right {
   transform: translateX(20%);
 }
-
+.google-size{
+  width: 24px;
+  height: 24px;
+}
 //media queries
