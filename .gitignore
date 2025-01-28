@@ -17,3 +17,6 @@ node_modules/*
 .idea/dataSources/cbc9a03b-4e8a-4462-8634-690c1be440c7.xml
 .idea/dataSources/cbc9a03b-4e8a-4462-8634-690c1be440c7/storage_v2/_src_/database/postgres.edMnLQ/schema/public.abK9xQ.meta
 .idea/misc.xml
+*.xml
+*.xml
+*.meta

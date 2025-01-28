@@ -10,8 +10,6 @@ export const login = createAsyncThunk('auth/login', async ({ username, password 
   });
 
   const data = await response.json();
-  console.log('pesho', data);
-
   if (!response.ok) {
    throw new Error(data.message || 'Login failed');
   }
