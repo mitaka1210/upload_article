@@ -1,21 +1,22 @@
-import express from 'express';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import { body, validationResult } from 'express-validator';
-import pool from '../../config/db.js';
+import express from "express";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { body, validationResult } from "express-validator";
+import pool from "../../config/db.js";
 
 const router = express.Router();
 const SECRET_KEY = "your_secret_key"; // Сложи сигурен ключ
 
 // Mock база данни (замени с реална)
 // Example users array
-const users = [
-  {
-    id: 1,
-    username: "admin",
-    password: await bcrypt.hash("123", 10), // Hash the password before storing
-  },
-];
+// const users = [
+//   {
+//     id: 1,
+//     username: "admin",
+//     password: await bcrypt.hash("123", 10), // Hash the password before storing,
+//     role: "admin",
+//   },
+// ];
 
 // Login API
 router.post(
@@ -30,7 +31,7 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { username, password } = req.body;
+    const { username, password, role } = req.body;
 
     try {
       // Check if the user exists
@@ -40,8 +41,7 @@ router.post(
       );
 
       if (userResult.rows.length === 0) {
-         
-         return res
+        return res
           .status(401)
           .json({ message: "Invalid username or password" });
       }
@@ -56,6 +56,12 @@ router.post(
           .json({ message: "Invalid username or password" });
       }
 
+      // Change role to admin for a specific account
+      let userRole = role;
+      if (username === "asda") {
+        userRole = "admin";
+      }
+
       const token = jwt.sign(
         { id: user.id, username: user.username },
         SECRET_KEY,
@@ -67,11 +73,11 @@ router.post(
        INSERT INTO user_logins (username, password, role, login_time)
        VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
    `;
-      const values = [user.username, user.password, "user"]; // Adjust role as needed
+      const values = [user.username, user.password, role]; // Adjust role as needed
 
       await pool.query(query, values);
 
-      res.json({ token });
+      res.json({ token, user: userRole });
     } catch (err) {
       console.error("Error during login:", err);
       return res.status(500).json({ message: "Internal server error" });

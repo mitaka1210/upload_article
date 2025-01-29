@@ -3,7 +3,7 @@ import { updateSection } from '../store/editSections/editSectionsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
-import '../EditArticle/edit.scss';
+import './edit.scss';
 import deleteSectionImg from '../assets/delete-svgrepo-com.svg';
 import { deleteSection } from '../store/deleteArticleSection/deleteArticleSectionSlice';
 
@@ -18,9 +18,6 @@ const EditTodo = () => {
  const [, setSection] = useState([]);
  const navigate = useNavigate();
  let sections = {};
- // eslint-disable-next-line no-unused-vars
- let content = '';
- let error = '';
 
  useEffect(() => {
   articlesStatus();
@@ -41,12 +38,10 @@ const EditTodo = () => {
    },
   ],
  });
-
+ // TODO add logic for  info === 'loading'
  const articlesStatus = () => {
   if (info === 'idle') {
    dispatch(fetchArticles());
-  } else if (info === 'loading') {
-   content = <div>Loading...</div>;
   } else if (info === 'succeeded') {
    let sectionId = Number(id);
    articlesInfo.forEach((section) => {
@@ -57,9 +52,8 @@ const EditTodo = () => {
      setShowArticle(sections.status);
     }
    });
-  } else if (info === 'failed') {
-   content = <div>{error}</div>;
   }
+  // TODO add logic for info === 'failed'
  };
 
  const handleChange = (e) => {
@@ -146,7 +140,7 @@ const EditTodo = () => {
    ) : (
     <div className="edit-form-bgr">
      <div className="flex-vertical-container align-items-center edit-header">
-      <h2 className={showArticle ? 'add-color-green' + ' remove-margin-bottom' : 'add-color-orange remove-margin-bottom'}>{showArticle ? 'Статия е' + ' побликувана' : 'Статията не' + ' е побликувана'}</h2>
+      <h6 className={showArticle ? 'add-color-green' + ' remove-margin-bottom' : 'add-color-orange remove-margin-bottom'}>{showArticle ? 'Статия е' + ' побликувана' : 'Статията не' + ' е побликувана'}</h6>
       <div className="show-article">
        <input
         type="checkbox"
