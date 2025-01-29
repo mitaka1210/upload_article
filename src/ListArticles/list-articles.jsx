@@ -1,18 +1,22 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './list.scss';
 import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import { useNavigate } from 'react-router-dom';
 import { deleteArticle } from '../store/deleteArticle/deleteArticleSlice';
+import AccessDeniedDialog from '../dialogs/no-privilegest/accessDeniedDialog';
 
-const ListTodos = () => {
+const ListArticles = () => {
  //? properties
  let err = '';
- // eslint-disable-next-line no-unused-vars
- let content = '';
+ //react-redux and react
  const dispatch = useDispatch();
  const status = useSelector((state) => state.articlesSections.status);
- const error = useSelector((state) => state.articlesSections.error);
+ const [showDialog, setShowDialog] = useState(false);
+ const [dialog, setDialog] = useState(false);
+
+ // storage
+ const role = localStorage.getItem('role');
  useEffect(() => {
   getTodos();
  }, [1]);
@@ -20,7 +24,12 @@ const ListTodos = () => {
  const navigate = useNavigate();
 
  const editSection = (section) => {
-  navigate(`/update-section/${section.id}`);
+  if (role !== 'admin') {
+   navigate(`/update-section/${section.id}`);
+  } else {
+   setDialog(true); // Задаваме true, за да покажем диалога
+   setShowDialog(true); // Показва диалога
+  }
  };
 
  //delete article function
@@ -41,11 +50,11 @@ const ListTodos = () => {
   if (status === 'idle') {
    dispatch(fetchArticles());
   } else if (status === 'loading') {
-   content = <div>Loading...</div>;
+   // TODO add logic
   } else if (status === 'succeeded') {
    /* empty */
   } else if (status === 'failed') {
-   content = <div>{error}</div>;
+   // TODO add logic
   }
  };
 
@@ -53,6 +62,7 @@ const ListTodos = () => {
 
  return (
   <div>
+   {showDialog && <AccessDeniedDialog onClose={() => setShowDialog(false)} />} {/* Подава функцията за затваряне */}
    {articlesInfo.isLoading ? (
     <div>
      <h1>Loading........{err}</h1>
@@ -95,4 +105,4 @@ const ListTodos = () => {
  );
 };
 
-export default ListTodos;
+export default ListArticles;

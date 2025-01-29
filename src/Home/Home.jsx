@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import CreateEditArticles from '../create-edit-article/create-edit-article';
-import ListTodos from '../ListArticles/ListTodos';
+import ListArticles from '../ListArticles/list-articles';
 import LoginPage from '../Login/Login.jsx';
 import { useDispatch } from 'react-redux';
 import { checkAuth } from '../store/login/authSlice';
@@ -26,7 +26,7 @@ const Home = () => {
    {isLoggedIn ? (
     <>
      <CreateEditArticles />
-     <ListTodos />
+     <ListArticles />
     </>
    ) : (
     <LoginPage />
