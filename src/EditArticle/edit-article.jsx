@@ -128,7 +128,6 @@ const EditTodo = () => {
   if (str.length <= num) {
    return str;
   } else {
-   console.log('pesho', str.slice(0, num) + '...');
    return str.slice(0, num) + '...';
   }
  };
@@ -140,7 +139,7 @@ const EditTodo = () => {
    ) : (
     <div className="edit-form-bgr">
      <div className="flex-vertical-container align-items-center edit-header">
-      <h6 className={showArticle ? 'add-color-green' + ' remove-margin-bottom' : 'add-color-orange remove-margin-bottom'}>{showArticle ? 'Статия е' + ' побликувана' : 'Статията не' + ' е побликувана'}</h6>
+      <h3 className={showArticle ? 'add-color-green' + ' remove-margin-bottom' : 'add-color-orange remove-margin-bottom'}>{showArticle ? 'Статия е' + ' побликувана' : 'Статията не' + ' е побликувана'}</h3>
       <div className="show-article">
        <input
         type="checkbox"
@@ -159,7 +158,7 @@ const EditTodo = () => {
       </div>
      </div>
      <form className="signup edit-form-styles" id="myForm" autoComplete="off" onSubmit={handleSubmit}>
-      <h3 className="center-header text-align-center">Редактиране на статия:</h3>
+      <h5 className="center-header text-align-center">Редактиране на статия:</h5>
       <div className="text-align-center">
        <p>{formData.title}</p>
       </div>

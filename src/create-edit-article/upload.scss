@@ -262,7 +262,7 @@
   transition: all .3s ease;
 }
 
-button:active {
+.upload:active {
   transform: scale(1.1);
 }
 
@@ -288,7 +288,13 @@ button:active {
   color: #2D2C2C;
   line-height: 20px;
 }
+.log-out{
 
+  & img{
+    width: 50px;
+    height: 50px;
+  }
+}
 @media screen and (max-width: 1080px) {
   .text-container {
     display: none;

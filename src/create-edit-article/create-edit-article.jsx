@@ -6,6 +6,7 @@ import InfoDiv from '../more-info/more-Info';
 import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import { addArticle } from '../store/add-new-article/addNewArticleSlice';
 import { uploadSection } from '../store/uploadArticleSlice/uploadArticleSlice';
+import logOut from '../assets/sign-out-alt-4-svgrepo-com.svg';
 
 const SectionUpload = () => {
  const dispatch = useDispatch ();
@@ -16,7 +17,6 @@ const SectionUpload = () => {
  const [sameArticleId, setSameArticleId] = useState (0);
  let newArticleId = useSelector ((state) => state.articlesHeader.articles.id);
  const getAllArticles = useSelector ((state) => state.articlesSections.data);
- const userPrivilegest = localStorage.getItem('role');
  const [form, setForm] = useState ({
   article_id: '',
   title: '',
@@ -58,7 +58,11 @@ const SectionUpload = () => {
    console.error ('Error submitting form:', error);
   }
  };
- 
+ const LogOut = () => {
+  console.log ('pesho',1123);
+  // localStorage.clear ();
+  // window.location.reload ();
+ }
  const addArticleHeader = async () => {
   const sameTitle = getAllArticles.filter ((article) => article.title === title);
   try {
@@ -84,6 +88,9 @@ const SectionUpload = () => {
  
  return (
   <div className="flex-horizontal-container-raw justify-content-center">
+   <div className="log-out" onClick={LogOut}>
+      <img src={logOut} alt="logout" />
+   </div>
    <div className="container">
     <h4>Създаване на статия</h4>
     <hr className="line-after-header" />
