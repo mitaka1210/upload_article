@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 // Async Thunks за логин
-export const login = createAsyncThunk('auth/login', async ({ username, password }, { rejectWithValue }) => {
+export const login = createAsyncThunk('auth/login', async ({ username, password, role }, { rejectWithValue }) => {
  try {
   const response = await fetch('http://localhost:3400/api/login', {
    method: 'POST',
    headers: { 'Content-Type': 'application/json' },
-   body: JSON.stringify({ username, password }),
+   body: JSON.stringify({ username, password, role }),
   });
 
   const data = await response.json();
@@ -15,6 +15,7 @@ export const login = createAsyncThunk('auth/login', async ({ username, password 
   }
 
   localStorage.setItem('token', data.token); // Съхранява токена
+  localStorage.setItem('role', data.user); // Съхранява токена
   return data;
  } catch (error) {
   return rejectWithValue(error.message);
@@ -45,6 +46,7 @@ const authSlice = createSlice({
  name: 'auth',
  initialState: {
   user: null,
+  role: 'user',
   isAuthenticated: false,
   loading: false,
   error: null,

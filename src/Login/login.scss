@@ -78,7 +78,7 @@
   width: 100%;
 }
 
-button {
+.btn-login-page {
   border-radius: 20px;
   border: 1px solid #ff4b2b;
   background: #ff4b2b;
@@ -137,15 +137,15 @@ input[type=email] {
   font-weight: bold;
 }
 
-button:active {
+.btn-login-page:active {
   transform: scale(0.95);
 }
 
-button:focus {
+.btn-login-page:focus {
   outline: none;
 }
 
-button.ghost {
+.btn-login-page.ghost {
   background: transparent;
   border-color: #ff4b2b;
   //background-color: #ff4b2b

@@ -13,8 +13,7 @@ export const createAccount = createAsyncThunk('account/createAccount', async (us
  const data = await response.json();
 
  if (!response.ok) {
-  const error = await response.json();
-  return thunkAPI.rejectWithValue(error);
+  return thunkAPI.rejectWithValue(data); // ✅ Връщаме грешката от `data`
  }
  localStorage.setItem('token', data.token); // Съхранява токена
  return response.json();

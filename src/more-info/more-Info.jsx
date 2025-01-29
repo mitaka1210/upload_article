@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import './moreInfor.scss';
+import '../components/moreInfor.scss';
 import info from '../assets/more-info.png';
 
 const InfoDiv = () => {

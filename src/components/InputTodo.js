@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import './upload.scss';
+import '../create-edit-article/upload.scss';
 import upload from '../assets/cloud-computing.png';
-import InfoDiv from './moreInfo';
+import InfoDiv from '../more-info/more-Info';
 import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import { addArticle } from '../store/add-new-article/addNewArticleSlice';
 import { uploadSection } from '../store/uploadArticleSlice/uploadArticleSlice';
@@ -16,6 +16,7 @@ const SectionUpload = () => {
    const [sameArticleId, setSameArticleId] = useState (0);
    let newArticleId = useSelector ((state) => state.articlesHeader.articles.id);
    const getAllArticles = useSelector ((state) => state.articlesSections.data);
+   const userPrivilegest = localStorage.getItem('role');
    const [form, setForm] = useState ({
 	 article_id: '',
 	 title: '',
@@ -37,7 +38,6 @@ const SectionUpload = () => {
 	    setImage (e.target.files[0]);
 	 }
    };
-   
    const handleSubmit = async (e: React.FormEvent) => {
 	 e.preventDefault ();
 	 
@@ -85,7 +85,7 @@ const SectionUpload = () => {
    return (
 	 <div className="flex-horizontal-container-raw justify-content-center">
 	    <div className="container">
-		  <h1>Създаване на статия</h1>
+		  <h4>Създаване на статия</h4>
 		  <hr className="line-after-header" />
 		  <h5>Как работи качването</h5>
 		  <InfoDiv />

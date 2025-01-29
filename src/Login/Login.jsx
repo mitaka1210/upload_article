@@ -7,27 +7,26 @@ import google from '../assets/google-svgrepo-com.svg';
 import SignUpForm from '../SignUpForm/SignUpForm';
 
 const LoginPage = () => {
-     const [first_name, setFirstName] = useState('');
-     const [lastName, setLastName] = useState('');
-     const [confirmPassword, setConfirmPassword] = useState('');
-     const [email, setEmail] = useState('');
-     //! ERROR input default state
-     const [usernameError, setUsernameError] = useState('');
-     const [firstNameError, setFirstNameError] = useState('');
-     const [lastNameError, setLastNameError] = useState('');
-     const [emailError, setEmailError] = useState('');
-     const [passwordError, setPasswordError] = useState('');
-     const [confirmPasswordError, setConfirmPasswordError] = useState('');
+ const [first_name] = useState('');
+ const [lastName] = useState('');
+ const [confirmPassword] = useState('');
+ const [email] = useState('');
+ //! ERROR input default state
+ const [, setUsernameError] = useState('');
+ const [, setFirstNameError] = useState('');
+ const [, setLastNameError] = useState('');
+ const [, setEmailError] = useState('');
+ const [, setPasswordError] = useState('');
+ const [, setConfirmPasswordError] = useState('');
  const [username, setUsername] = useState('');
  const [password, setPassword] = useState('');
  const [loginForm, setHideForm] = useState(true);
  const dispatch = useDispatch();
- const { loading, error, isAuthenticated } = useSelector((state) => state.auth);
- const {  errorCreate } = useSelector((state) => state.createAccount);
+ const { loading, error } = useSelector((state) => state.auth);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const navigate = useNavigate();
 
-// трябва да го изнеса като функция във файла validInput.js
+ // трябва да го изнеса като функция във файла validInput.js
  const validateInputs = () => {
   let isValid = true;
 
@@ -39,7 +38,7 @@ const LoginPage = () => {
   setPasswordError('');
   setConfirmPasswordError('');
 
-  // Проверка дали всички полета са попълнени 
+  // Проверка дали всички полета са попълнени
   if (!username) {
    setUsernameError('Username is required');
    isValid = false;
@@ -87,12 +86,11 @@ const LoginPage = () => {
   return isValid;
  };
 
-
  const handleLogin = async (e) => {
   let userTokenLocalStorage = '';
   e.preventDefault();
   if (!validateInputs()) {
-   const result = await dispatch(login({ username, password }));
+   const result = await dispatch(login({ username, password, role: 'user' }));
    userTokenLocalStorage = localStorage.getItem('token');
    if (result.payload.token === userTokenLocalStorage) {
     navigate('/home');
@@ -123,7 +121,7 @@ const LoginPage = () => {
   <div className="container-login-page">
    <div className="container-login" id="login">
     <div className="form-container-login sign-up-container-login">
-      <SignUpForm/>
+     <SignUpForm />
     </div>
     <div className="form-container-login sign-in-container-login">
      {loginForm ? (
@@ -132,7 +130,7 @@ const LoginPage = () => {
         <h2 className="add-color-white">Sign In</h2>
         <div className="social-container-login">
          <a href="#" className="social">
-          <img className="google-size" src={google} alt="google"/>
+          <img className="google-size" src={google} alt="google" />
          </a>
         </div>
         <span className="add-color-white">or use your account</span>
@@ -145,7 +143,7 @@ const LoginPage = () => {
          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         {isLoggedIn && <p style={{ color: 'red' }}>{error}</p>}
-        <button onClick={handleClickSignIn} type="submit" disabled={loading}>
+        <button className="btn-login-page" onClick={handleClickSignIn} type="submit" disabled={loading}>
          {loading ? 'Logging in...' : 'Login'}
         </button>
        </form>
@@ -157,14 +155,14 @@ const LoginPage = () => {
       <div className="overlay-panel overlay-left" onClick={handleClickSignIn}>
        <h5>Welcome Back</h5>
        <p>To keep connected with us please login with your personal info</p>
-       <button className="ghost" id="signIn" onClick={handleClickSignIn}>
+       <button className="ghost btn-login-page" id="signIn" onClick={handleClickSignIn}>
         Sign In
        </button>
       </div>
       <div className="overlay-panel overlay-right" onClick={handleClickSignUp}>
        <h4>Hello,Friend</h4>
        <p>Enter your personal details and start journey with me!</p>
-       <button className="ghost hello-friend-btn" id="signUp">
+       <button className="ghost btn-login-page hello-friend-btn" id="signUp">
         Sign Up
        </button>
       </div>
