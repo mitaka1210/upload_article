@@ -24,6 +24,7 @@ export const login = createAsyncThunk('auth/login', async ({ username, password,
 
 export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWithValue }) => {
  try {
+  console.log('pesho auth', localStorage.getItem('token'));
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No token found');
 
@@ -46,7 +47,6 @@ const authSlice = createSlice({
  name: 'auth',
  initialState: {
   user: null,
-  role: 'user',
   isAuthenticated: false,
   loading: false,
   error: null,

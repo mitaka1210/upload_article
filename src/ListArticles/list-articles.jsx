@@ -24,8 +24,9 @@ const ListArticles = () => {
  const navigate = useNavigate();
 
  const editSection = (section) => {
-  if (role !== 'admin') {
-   navigate(`/update-section/${section.id}`);
+  let articleId = section.id;
+  if (role === 'admin') {
+   navigate(`/update-section/${articleId}`);
   } else {
    setDialog(true); // Задаваме true, за да покажем диалога
    setShowDialog(true); // Показва диалога
@@ -34,15 +35,20 @@ const ListArticles = () => {
 
  //delete article function
  const deleteTodo = async (id) => {
-  try {
-   // Първо изчакай `updateSection`
-   await dispatch(deleteArticle(id)).unwrap();
-   // След това извикай `fetchArticles`
-   await dispatch(fetchArticles()).unwrap();
-   // Ако всичко е наред, пренасочи към началната страница
-   navigate('/');
-  } catch (error) {
-   console.error('Error:', error);
+  if (role !== 'admin') {
+   setDialog(true); // Задаваме true, за да покажем диалога
+   setShowDialog(true); // Показва диалога
+  } else {
+   try {
+    // Първо изчакай `updateSection`
+    await dispatch(deleteArticle(id)).unwrap();
+    // След това извикай `fetchArticles`
+    await dispatch(fetchArticles()).unwrap();
+    // Ако всичко е наред, пренасочи към началната страница
+    navigate('/home');
+   } catch (error) {
+    console.error('Error:', error);
+   }
   }
  };
 
@@ -86,12 +92,12 @@ const ListArticles = () => {
          <td style={{ position: 'relative', top: '25px' }}>{section.create_article_date}</td>
          <td style={{ position: 'relative', top: '25px' }}>{section.create_article_time}</td>
          <td>
-          <button onClick={() => editSection(section)} className="custom-btn btn-5">
+          <button onClick={() => editSection(section)} className="custom-btn  btn-5">
            <span>Edit</span>
           </button>
          </td>
          <td className="flex-horizontal-container-raw justify-content-center">
-          <button onClick={() => deleteTodo(section.id)} className="btn first">
+          <button onClick={() => deleteTodo(section.id)} className="btn first edit-btn">
            Delete
           </button>
          </td>

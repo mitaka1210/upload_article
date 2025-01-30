@@ -224,6 +224,7 @@
   border: none;
   font-size: 14px;
   margin: 5px;
+  background: none;
 }
 
 .text img {
@@ -287,6 +288,16 @@
   font-family: Arial, Helvetica, sans-serif;
   color: #2D2C2C;
   line-height: 20px;
+}
+.block-adding-article{
+  background: rgba(189, 183, 183, 0.56);
+  cursor: none;
+  pointer-events: none;
+
+
+  & .upload{
+    background: grey;
+  }
 }
 .log-out{
 

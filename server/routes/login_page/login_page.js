@@ -51,10 +51,25 @@ router.post(
       // Verify the password
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
-        return res
-          .status(401)
-          .json({ message: "Invalid username or password" });
+        // Increment failed attempts
+        const failedAttempts = user.failed_attempts + 1;
+        await pool.query(
+          "UPDATE users SET failed_attempts = $1, blocked = $2 WHERE username = $3",
+          [failedAttempts, failedAttempts >= 5, username],
+        );
+
+        return res.status(401).json({
+          message:
+            "You have reached the maximum number of login attempts. Please contact an administrator at the following email address:" +
+            "dimitard185@gmail.com",
+        });
       }
+
+      // Reset failed attempts on successful login
+      await pool.query(
+        "UPDATE users SET failed_attempts = 0 WHERE username = $1",
+        [username],
+      );
 
       // Change role to admin for a specific account
       let userRole = role;

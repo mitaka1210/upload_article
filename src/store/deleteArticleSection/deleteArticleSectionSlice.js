@@ -4,12 +4,13 @@ import axios from 'axios';
 import { deleteArticle } from '../deleteArticle/deleteArticleSlice';
 
 // Async action за изтриване
-export const deleteSection = createAsyncThunk('sections/deleteSection', async (sectionId, { rejectWithValue }) => {
- const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/delete/section`;
+export const deleteSection = createAsyncThunk('sections/deleteSection', async ({ articleId, sectionId }, { rejectWithValue }) => {
+ console.log('pesho', articleId, sectionId);
+
+ const url = `${process.env.REACT_APP_API_URL_PROD}/api/delete/section`;
 
  try {
-  const response = await axios.delete(`${url}/${sectionId}`);
-  return { id: sectionId };
+  return await axios.delete(`${url}/${articleId}/${sectionId}`);
  } catch (err) {
   return rejectWithValue(err.response.data);
  }

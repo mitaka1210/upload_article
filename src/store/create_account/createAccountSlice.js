@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+const url = `${process.env.REACT_APP_API_URL_PROD}/api/create-account`;
+
 // Async thunk for creating an account
 export const createAccount = createAsyncThunk('account/createAccount', async (userData, thunkAPI) => {
- console.log('pesho', userData);
- const response = await fetch('http://localhost:3400/api/create-account', {
+ const response = await fetch(`${url}`, {
   method: 'POST',
   headers: {
    'Content-Type': 'application/json',

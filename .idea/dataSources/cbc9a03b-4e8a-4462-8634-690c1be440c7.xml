@@ -3,9 +3,9 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.53">
     <root id="1">
       <DateStyle>mdy</DateStyle>
-      <IntrospectionStateNumber>1349</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1415</IntrospectionStateNumber>
       <ServerVersion>16.5</ServerVersion>
-      <StartupTime>1737708888</StartupTime>
+      <StartupTime>1738054465</StartupTime>
       <TimeZones>true ACDT
 true ACSST
 false ACST
@@ -1400,7 +1400,7 @@ false posixrules
 13212||10|C|G
 13212||-9223372036854775808|U|G
 13212||10|U|G</Grants>
-      <IntrospectionStateNumber>1349</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1415</IntrospectionStateNumber>
       <ObjectId>5</ObjectId>
       <OwnerName>mitaka</OwnerName>
     </database>
@@ -4819,8 +4819,8 @@ false posixrules
     <schema id="263" parent="2" name="public">
       <Comment>standard public schema</Comment>
       <Current>1</Current>
-      <IntrospectionStateNumber>1349</IntrospectionStateNumber>
-      <LastIntrospectionLocalTimestamp>2025-01-27.16:05:31</LastIntrospectionLocalTimestamp>
+      <IntrospectionStateNumber>1415</IntrospectionStateNumber>
+      <LastIntrospectionLocalTimestamp>2025-01-30.06:55:30</LastIntrospectionLocalTimestamp>
       <ObjectId>2200</ObjectId>
       <StateNumber>524</StateNumber>
       <OwnerName>pg_database_owner</OwnerName>
@@ -4891,7 +4891,7 @@ false posixrules
     </table>
     <table id="273" parent="263" name="users">
       <ObjectId>32923</ObjectId>
-      <StateNumber>1346</StateNumber>
+      <StateNumber>1414</StateNumber>
       <AccessMethodId>2</AccessMethodId>
       <OwnerName>mitaka</OwnerName>
     </table>
@@ -5191,7 +5191,21 @@ false posixrules
       <StoredType>text|0s</StoredType>
       <TypeId>25</TypeId>
     </column>
-    <index id="314" parent="273" name="users_pkey">
+    <column id="314" parent="273" name="failed_attempts">
+      <DefaultExpression>0</DefaultExpression>
+      <Position>7</Position>
+      <StateNumber>1413</StateNumber>
+      <StoredType>integer|0s</StoredType>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="315" parent="273" name="blocked">
+      <DefaultExpression>false</DefaultExpression>
+      <Position>8</Position>
+      <StateNumber>1414</StateNumber>
+      <StoredType>boolean|0s</StoredType>
+      <TypeId>16</TypeId>
+    </column>
+    <index id="316" parent="273" name="users_pkey">
       <ColNames>id</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>32929</ObjectId>
@@ -5200,7 +5214,7 @@ false posixrules
       <Unique>1</Unique>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <index id="315" parent="273" name="users_username_key">
+    <index id="317" parent="273" name="users_username_key">
       <ColNames>username</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>32931</ObjectId>
@@ -5211,7 +5225,7 @@ false posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <index id="316" parent="273" name="users_email_key">
+    <index id="318" parent="273" name="users_email_key">
       <ColNames>email</ColNames>
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>32933</ObjectId>
@@ -5222,20 +5236,20 @@ false posixrules
       <CollationIds>100</CollationIds>
       <CollationParentNames>pg_catalog</CollationParentNames>
     </index>
-    <key id="317" parent="273" name="users_pkey">
+    <key id="319" parent="273" name="users_pkey">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>32930</ObjectId>
       <Primary>1</Primary>
       <StateNumber>1346</StateNumber>
       <UnderlyingIndexId>32929</UnderlyingIndexId>
     </key>
-    <key id="318" parent="273" name="users_username_key">
+    <key id="320" parent="273" name="users_username_key">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>32932</ObjectId>
       <StateNumber>1346</StateNumber>
       <UnderlyingIndexId>32931</UnderlyingIndexId>
     </key>
-    <key id="319" parent="273" name="users_email_key">
+    <key id="321" parent="273" name="users_email_key">
       <NameSurrogate>1</NameSurrogate>
       <ObjectId>32934</ObjectId>
       <StateNumber>1346</StateNumber>
