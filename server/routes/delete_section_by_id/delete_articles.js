@@ -3,15 +3,16 @@ import pool from "../../config/db.js";
 
 const router = express.Router();
 
-// DELETE article by ID
-router.delete("/:id", async (req, res) => {
-  const { articleId, sectionId } = req.params;
+// DELETE article by ID and section ID
+router.delete("/:article_id/:position", async (req, res) => {
+  const { article_id, position } = req.params;
+  console.log("pesho", article_id, position);
 
   try {
-    // Изтриване на статия
+    // Delete article by articleId and sectionId
     const deleteArticle = await pool.query(
-      "DELETE FROM articles WHERE articleId = $1 AND sectionId = $2",
-      [articleId, sectionId],
+      "DELETE FROM sections WHERE article_id = $1 AND position = $2",
+      [article_id, position],
     );
 
     if (deleteArticle.rowCount === 0) {

@@ -90,7 +90,12 @@ const EditTodo = () => {
  const deleteSectionFromArticle = async (sectionId) => {
   try {
    // Първо изчакай `updateSection`
-   await dispatch(deleteSection(articleId, sectionId)).unwrap();
+   await dispatch(
+    deleteSection({
+     articleId: articleId,
+     sectionId: sectionId,
+    })
+   ).unwrap();
    // След това извикай `fetchArticles`
    await dispatch(fetchArticles()).unwrap();
    // Ако всичко е наред, презареди страницата
