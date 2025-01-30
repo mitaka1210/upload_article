@@ -8,7 +8,7 @@ import deleteSectionImg from '../assets/delete-svgrepo-com.svg';
 import { deleteSection } from '../store/deleteArticleSection/deleteArticleSectionSlice';
 
 const EditTodo = () => {
- const { id } = useParams();
+ const { articleId } = useParams();
  const dispatch = useDispatch();
  const articlesInfo = useSelector((state) => state.articlesSections.data);
  const info = useSelector((state) => state.articlesSections.status);
@@ -21,12 +21,12 @@ const EditTodo = () => {
 
  useEffect(() => {
   articlesStatus();
- }, [id, info]); // Задължително да използваш [id], за да се извиква при промяна
+ }, [articleId, info]); // Задължително да използваш [id], за да се извиква при промяна
  // на ID.
 
  const [formData, setFormData] = useState({
-  id: id,
-  article_id: id,
+  id: articleId,
+  article_id: articleId,
   title: '',
   image: '',
   status: false,
@@ -43,7 +43,7 @@ const EditTodo = () => {
   if (info === 'idle') {
    dispatch(fetchArticles());
   } else if (info === 'succeeded') {
-   let sectionId = Number(id);
+   let sectionId = Number(articleId);
    articlesInfo.forEach((section) => {
     if (section.id === sectionId) {
      sections = section;
@@ -87,10 +87,15 @@ const EditTodo = () => {
   }
  };
  //delete article function
- const deleteSectionFromArticle = async (id) => {
+ const deleteSectionFromArticle = async (sectionId) => {
   try {
    // Първо изчакай `updateSection`
-   await dispatch(deleteSection(id)).unwrap();
+   await dispatch(
+    deleteSection({
+     articleId: articleId,
+     sectionId: sectionId,
+    })
+   ).unwrap();
    // След това извикай `fetchArticles`
    await dispatch(fetchArticles()).unwrap();
    // Ако всичко е наред, презареди страницата

@@ -23,12 +23,14 @@ const AccessDeniedDialog = ({ onClose }) => {
  };
 
  return (
-  <div>
-   <dialog ref={dialogRef} className="show-hide-dialog" onClick={closeOnClickOutside} style={{ display: isOpen ? 'block' : 'none' }}>
-    <div style={{ padding: '20px', background: 'white', borderRadius: '8px' }}>
-     <h2>⚠️ Нямате права!</h2>
-     <p>Нямате достатъчно права, за да изпълните тази операция.</p>
-     <button onClick={closeDialog}>Затвори</button>
+  <div className="input-width-100">
+   <dialog ref={dialogRef} className="show-hide-dialog dialog-content flex-vertical-container align-content-center align-items-center text-align-center padding-15" onClick={closeOnClickOutside} style={{ display: isOpen ? 'block' : 'none' }}>
+    <h6>⚠️ Нямате права!</h6>
+    <p>Нямате достатъчно права, за да изпълните тази операция.</p>
+    <div>
+     <button className="access-denied-btn" onClick={closeDialog}>
+      Затвори
+     </button>
     </div>
    </dialog>
   </div>

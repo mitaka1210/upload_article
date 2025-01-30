@@ -1,4 +1,3 @@
-
 // optimazed code
 
 import express from "express";
@@ -15,6 +14,8 @@ import dislikeRouter from "./routes/dislike_articles_by_id/dislike_articles.js";
 import loginPage from "./routes/login_page/login_page.js";
 import checkAuth from "./routes/check-token/check-token.js";
 import createAccountRouter from "./routes/create_account/create_account.js";
+import resetPasswordRouter from "./routes/reset-password/reset-password.js";
+import requestNewPassword from "./routes/request-new-password/request-new-password.js";
 
 const app = express();
 const PORT = process.env.PORT || 3400;
@@ -35,6 +36,8 @@ app.use("/api/get/dislike", dislikeRouter);
 app.use("/api/login", loginPage);
 app.use("/api/check-auth", checkAuth);
 app.use("/api/create-account", createAccountRouter);
+app.use("/api/reset-password", resetPasswordRouter);
+app.use("/api/request-new-password", requestNewPassword);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

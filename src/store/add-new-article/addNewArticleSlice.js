@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const url = `${process.env.REACT_APP_API_URL_LOCALHOST}/api/create/articles/header`;
+// const url = `${process.env.REACT_APP_API_URL_PROD}`;//production
+
+const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`; //development
 
 // Async action за добавяне на статия
 export const addArticle = createAsyncThunk('articles/addArticle', async (title) => {
- const response = await axios.post(url, { title });
+ const response = await axios.post(`${url}/api/create/articles/header`, { title });
  return response.data;
 });
 

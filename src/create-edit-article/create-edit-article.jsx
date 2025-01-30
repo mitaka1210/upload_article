@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './upload.scss';
 import upload from '../assets/cloud-computing.png';
@@ -7,16 +7,30 @@ import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import { addArticle } from '../store/add-new-article/addNewArticleSlice';
 import { uploadSection } from '../store/uploadArticleSlice/uploadArticleSlice';
 import logOut from '../assets/sign-out-alt-4-svgrepo-com.svg';
+import { useNavigate } from 'react-router-dom';
 
 const SectionUpload = () => {
+ const navigate = useNavigate();
  const dispatch = useDispatch ();
  const [image_name, setImageName] = useState ('');
  const [headerName, setHeaderName] = useState (true);
+ const [blockAdding, setBlockAdding] = useState (false);
  const [image, setImage] = useState (null);
  const [title, setTitle] = useState ('');
  const [sameArticleId, setSameArticleId] = useState (0);
  let newArticleId = useSelector ((state) => state.articlesHeader.articles.id);
  const getAllArticles = useSelector ((state) => state.articlesSections.data);
+ // storage
+ const role = localStorage.getItem('role');
+ useEffect (() => {
+  if (role !== 'admin') {
+   setBlockAdding (false);
+  }else {
+   setBlockAdding (true);
+  }
+ }, [1]);
+ 
+ //default value
  const [form, setForm] = useState ({
   article_id: '',
   title: '',
@@ -59,9 +73,8 @@ const SectionUpload = () => {
   }
  };
  const LogOut = () => {
-  console.log ('pesho',1123);
-  // localStorage.clear ();
-  // window.location.reload ();
+  localStorage.clear ();
+  navigate("/login"); // Пренасочва без презареждане
  }
  const addArticleHeader = async () => {
   const sameTitle = getAllArticles.filter ((article) => article.title === title);
@@ -91,7 +104,7 @@ const SectionUpload = () => {
    <div className="log-out" onClick={LogOut}>
       <img src={logOut} alt="logout" />
    </div>
-   <div className="container">
+   <div className={blockAdding ? 'container' : 'container block-adding-article'} >
     <h4>Създаване на статия</h4>
     <hr className="line-after-header" />
     <h5>Как работи качването</h5>
@@ -154,7 +167,7 @@ const SectionUpload = () => {
       </label>
       <p className="upload-image-name">{image_name}</p>
      </div>
-     <button className="submit upload">Публикуване на статията
+     <button className="submit margin-15 upload">Публикуване на статията
      </button>
     </form>
    </div>

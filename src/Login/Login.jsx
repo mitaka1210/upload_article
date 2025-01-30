@@ -18,6 +18,7 @@ const LoginPage = () => {
  const navigate = useNavigate();
 
  const handleLogin = async (e) => {
+  console.log(username, password);
   e.preventDefault();
   const validationErrors = validLoginInput(username, password);
   if (Object.keys(validationErrors).length > 0) {
@@ -30,7 +31,6 @@ const LoginPage = () => {
   }
  };
  const handleClickSignUp = () => {
-  console.log('pesho CLICK');
   setHideForm(false);
   const signUpButton = document.getElementById('signUp');
   const containerLogin = document.getElementById('login');
@@ -40,7 +40,6 @@ const LoginPage = () => {
   });
  };
  const handleClickSignIn = () => {
-  console.log('pesho CLICK2');
   setHideForm(true);
   setIsLoggedIn(true);
   const signInButton = document.getElementById('signIn');
@@ -52,9 +51,7 @@ const LoginPage = () => {
  return (
   <div className="container-login-page">
    <div className="container-login" id="login">
-    <div className="form-container-login sign-up-container-login">
-     <SignUpForm />
-    </div>
+    <div className="form-container-login sign-up-container-login">{loginForm ? '' : <SignUpForm />}</div>
     <div className="form-container-login sign-in-container-login">
      {loginForm ? (
       <div>
@@ -68,7 +65,7 @@ const LoginPage = () => {
         <span className="add-color-white">or use your account</span>
         <div>
          <label className="add-color-white login-input margin-top-15">Username</label>
-         <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+         <input type="text" value={username} name="username" onChange={(e) => setUsername(e.target.value)} />
          {errors.username && <p style={{ color: 'red' }}>{errors.username}</p>}
         </div>
         <div>
