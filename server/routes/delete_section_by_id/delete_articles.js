@@ -6,8 +6,6 @@ const router = express.Router();
 // DELETE article by ID and section ID
 router.delete("/:article_id/:position", async (req, res) => {
   const { article_id, position } = req.params;
-  console.log("pesho", article_id, position);
-
   try {
     // Delete article by articleId and sectionId
     const deleteArticle = await pool.query(

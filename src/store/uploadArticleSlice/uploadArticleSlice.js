@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+// const url = `${process.env.REACT_APP_API_URL_PROD}`;//production
 
-const url = `${process.env.REACT_APP_API_URL_PROD}/api/create/section`;
+const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`; //development
 
 // Async thunk за качване на секция с изображение
 export const uploadSection = createAsyncThunk('sections/upload', async (data, { rejectWithValue }) => {
  try {
-  const response = await axios.post(`${url}`, data, {
+  const response = await axios.post(`${url}/api/create/section`, data, {
    headers: { 'Content-Type': 'multipart/form-data' },
   });
   return response.data;
