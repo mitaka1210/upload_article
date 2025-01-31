@@ -11,19 +11,24 @@ services:
       - DB_USER=mitaka
       - DB_PASSWORD=mitaka
       - DB_NAME=postgres
-      - ALLOWED_ORIGIN=https://upload.d-dimitrov.eu  # Add this
-      - NODE_ENV=production  # Add this
+      - ALLOWED_ORIGIN=https://upload.d-dimitrov.eu
+      - NODE_ENV=production
     volumes:
       - ./server:/app
       - /app/node_modules
+      - ./upload:/app/upload  # ✅ Споделена папка
     restart: always
+
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
       - backend
+    volumes:
+      - ./upload:/app/public/upload  # ✅ Добавяме достъп до качените файлове
     restart: always
+
 networks:
   default:
     external:
