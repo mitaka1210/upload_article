@@ -1,13 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-// Асинхронна функция за актуализиране на секция
+//!production
+const url = `${process.env.REACT_APP_API_URL_PROD}`;
+//!development
+// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
 // Async thunk за качване на секция с изображение
 export const updateSection = createAsyncThunk('sections/updateSection', async (data, { rejectWithValue }) => {
- const url = `${process.env.REACT_APP_API_URL_PROD}/api/edit/article`;
-
  try {
-  const response = await axios.post(`${url}/${data.id}`, data, {
+  const response = await axios.post(`${url}/api/edit/article/${data.id}`, data, {
    headers: { 'Content-Type': 'multipart/form-data' },
   });
   return response.data;

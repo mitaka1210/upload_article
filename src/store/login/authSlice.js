@@ -1,9 +1,14 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+//!production
+const url = `${process.env.REACT_APP_API_URL_PROD}`;
+
+//!development
+// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
 // Async Thunks за логин
 export const login = createAsyncThunk('auth/login', async ({ username, password, role }, { rejectWithValue }) => {
  try {
-  const response = await fetch('http://localhost:3400/api/login', {
+  const response = await fetch(`${url}/api/login`, {
    method: 'POST',
    headers: { 'Content-Type': 'application/json' },
    body: JSON.stringify({ username, password, role }),
@@ -24,11 +29,10 @@ export const login = createAsyncThunk('auth/login', async ({ username, password,
 
 export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWithValue }) => {
  try {
-  console.log('pesho auth', localStorage.getItem('token'));
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No token found');
 
-  const response = await fetch('http://localhost:3400/api/check-auth', {
+  const response = await fetch(`${url}/api/check-auth`, {
    headers: { Authorization: token },
   });
 
