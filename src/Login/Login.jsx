@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './login.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../store/login/authSlice';
@@ -16,7 +16,27 @@ const LoginPage = () => {
  const { loading, error } = useSelector((state) => state.auth);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const navigate = useNavigate();
+ useEffect(() => {
+  const signUpButton = document.getElementById('signUp');
+  const signInButton = document.getElementById('signIn');
+  const containerLogin = document.getElementById('login');
 
+  const handleSignUpClick = () => {
+   containerLogin.classList.add('right-panel-active');
+  };
+
+  const handleSignInClick = () => {
+   containerLogin.classList.remove('right-panel-active');
+  };
+
+  signUpButton.addEventListener('click', handleSignUpClick);
+  signInButton.addEventListener('click', handleSignInClick);
+
+  return () => {
+   signUpButton.removeEventListener('click', handleSignUpClick);
+   signInButton.removeEventListener('click', handleSignInClick);
+  };
+ }, []);
  const handleLogin = async (e) => {
   console.log(username, password);
   e.preventDefault();
@@ -32,21 +52,10 @@ const LoginPage = () => {
  };
  const handleClickSignUp = () => {
   setHideForm(false);
-  const signUpButton = document.getElementById('signUp');
-  const containerLogin = document.getElementById('login');
-
-  signUpButton.addEventListener('click', () => {
-   containerLogin.classList.add('right-panel-active');
-  });
  };
  const handleClickSignIn = () => {
   setHideForm(true);
   setIsLoggedIn(true);
-  const signInButton = document.getElementById('signIn');
-  const containerLogin = document.getElementById('login');
-  signInButton.addEventListener('click', () => {
-   containerLogin.classList.remove('right-panel-active');
-  });
  };
  return (
   <div className="container-login-page">
