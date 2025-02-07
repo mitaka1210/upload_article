@@ -98,43 +98,71 @@ const SignUpForm = () => {
    <h5 className="add-color-white">Create Account</h5>
    <span className="add-color-white">or use your email for registration</span>
 
-   <div>
+   <div className="input-width-100 margin-5">
     <label className="add-color-white">Username</label>
-    <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-    {usernameError && <p style={{ color: 'red' }}>{usernameError}</p>}
+    <input className="border-radius-10" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+    {usernameError && (
+     <p className="remove-padding-bottom" style={{ color: 'red' }}>
+      {usernameError}
+     </p>
+    )}
    </div>
 
-   <div>
+   <div className="input-width-100 margin-5">
     <label className="add-color-white">First name</label>
-    <input type="text" value={first_name} onChange={(e) => setFirstName(e.target.value)} />
-    {firstNameError && <p style={{ color: 'red' }}>{firstNameError}</p>}
+    <input className="border-radius-10" type="text" value={first_name} onChange={(e) => setFirstName(e.target.value)} />
+    {firstNameError && (
+     <p className="remove-padding-bottom" style={{ color: 'red' }}>
+      {firstNameError}
+     </p>
+    )}
    </div>
 
-   <div>
+   <div className="input-width-100 margin-5">
     <label className="add-color-white">Last name</label>
-    <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
-    {lastNameError && <p style={{ color: 'red' }}>{lastNameError}</p>}
+    <input className="border-radius-10" type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+    {lastNameError && (
+     <p className="remove-padding-bottom" style={{ color: 'red' }}>
+      {lastNameError}
+     </p>
+    )}
    </div>
 
-   <div className="flex-vertical-container">
+   <div className="flex-vertical-container input-width-100 margin-5">
     <label className="add-color-white">Email</label>
-    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-    {emailError && <p style={{ color: 'red' }}>{emailError}</p>}
+    <input className="border-radius-10" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+    {emailError && (
+     <p className="remove-padding-bottom" style={{ color: 'red' }}>
+      {emailError}
+     </p>
+    )}
    </div>
 
-   <div>
+   <div className="input-width-100 margin-5">
     <label className="add-color-white">Password</label>
-    <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-    {passwordError && <p style={{ color: 'red' }}>{passwordError}</p>}
+    <input className="border-radius-10" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+    {passwordError && (
+     <p className="remove-padding-bottom" style={{ color: 'red' }}>
+      {passwordError}
+     </p>
+    )}
    </div>
 
-   <div>
+   <div className="margin-10 input-width-100 margin-5">
     <label className="add-color-white">Confirm Password</label>
-    <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-    {confirmPasswordError && <p style={{ color: 'red' }}>{confirmPasswordError}</p>}
+    <input className="border-radius-10" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+    {confirmPasswordError && (
+     <p className="remove-padding-bottom" style={{ color: 'red' }}>
+      {confirmPasswordError}
+     </p>
+    )}
    </div>
 
-   {errorCreate && <p style={{ color: 'red' }}>{errorCreate.message}</p>}
+   {errorCreate && (
+    <p className="remove-padding-bottom" style={{ color: 'red' }}>
+     {errorCreate.message}
+    </p>
+   )}
    <button className="btn-login-page" id="idCreateAccount">
     Sign Up
    </button>

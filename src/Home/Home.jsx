@@ -8,19 +8,19 @@ import { checkAuth } from '../store/login/authSlice';
 const Home = () => {
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const dispatch = useDispatch();
+ const getGoogleToken = localStorage.getItem('googleToken');
 
- useEffect(() => {
-  dispatch(checkAuth());
- }, [dispatch, setIsLoggedIn]);
  useEffect(() => {
   const checkUserAuth = async () => {
    const result = await dispatch(checkAuth());
    if (result.payload.isAuthenticated) {
     setIsLoggedIn(true);
+   } else if (getGoogleToken) {
+    setIsLoggedIn(true);
    }
   };
-  checkUserAuth().then((r) => {});
- }, [dispatch]);
+  checkUserAuth().then(() => {});
+ }, [dispatch, getGoogleToken]);
  return (
   <div>
    {isLoggedIn ? (

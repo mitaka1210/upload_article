@@ -4,8 +4,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../store/login/authSlice';
 import { useNavigate } from 'react-router-dom';
 import google from '../assets/google-svgrepo-com.svg';
-import SignUpForm from '../SignUpForm/SignUpForm';
 import { validLoginInput } from '../valid-input-login/valid-input-login';
+import SignUpForm from '../SignUpForm/SignUpForm';
+import { auth, signInWithGoogle } from '../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const LoginPage = () => {
  const [errors, setErrors] = useState({});
@@ -16,6 +18,7 @@ const LoginPage = () => {
  const { loading, error } = useSelector((state) => state.auth);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const navigate = useNavigate();
+ const [user, setUser] = useState(null);
  useEffect(() => {
   const signUpButton = document.getElementById('signUp');
   const signInButton = document.getElementById('signIn');
@@ -31,10 +34,18 @@ const LoginPage = () => {
 
   signUpButton.addEventListener('click', handleSignUpClick);
   signInButton.addEventListener('click', handleSignInClick);
-
+  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+   setUser(currentUser);
+  });
+  // 🔹 Проверка дали потребителят е влязъл след redirect
+  const googleToken = localStorage.getItem('googleToken');
+  if (googleToken != null) {
+   navigate('/home');
+  }
   return () => {
    signUpButton.removeEventListener('click', handleSignUpClick);
    signInButton.removeEventListener('click', handleSignInClick);
+   unsubscribe();
   };
  }, []);
  const handleLogin = async (e) => {
@@ -60,13 +71,12 @@ const LoginPage = () => {
  return (
   <div className="container-login-page">
    <div className="container-login" id="login">
-    <div className="form-container-login sign-up-container-login">{loginForm ? '' : <SignUpForm />}</div>
     <div className="form-container-login sign-in-container-login">
      {loginForm ? (
       <div>
        <form action="#" onSubmit={handleLogin}>
         <h2 className="add-color-white">Sign In</h2>
-        <div className="social-container-login">
+        <div className="social-container-login" onClick={signInWithGoogle}>
          <a href="#" className="social">
           <img className="google-size" src={google} alt="google" />
          </a>
@@ -77,7 +87,7 @@ const LoginPage = () => {
          <input type="text" value={username} name="username" onChange={(e) => setUsername(e.target.value)} />
          {errors.username && <p style={{ color: 'red' }}>{errors.username}</p>}
         </div>
-        <div>
+        <div className="margin-15">
          <label className="add-color-white">Password</label>
          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
          {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
@@ -88,7 +98,11 @@ const LoginPage = () => {
         </button>
        </form>
       </div>
-     ) : null}
+     ) : (
+      <div className="form-container-login sign-up-container-login">
+       <SignUpForm />
+      </div>
+     )}
     </div>
     <div className="overlay-container-login">
      <div className="overlay">
@@ -102,7 +116,7 @@ const LoginPage = () => {
       <div className="overlay-panel overlay-right" onClick={handleClickSignUp}>
        <h4>Hello,Friend</h4>
        <p>Enter your personal details and start journey with me!</p>
-       <button className="ghost btn-login-page hello-friend-btn" id="signUp">
+       <button className="ghost btn-login-page hello-friend-btn" id="signUp" onClick={handleClickSignUp}>
         Sign Up
        </button>
       </div>
