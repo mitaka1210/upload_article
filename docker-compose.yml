@@ -16,7 +16,7 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules
-      - ./upload:/app/upload  # ✅ Споделена папка
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload  # ✅ Споделена папка
     restart: always
 
   frontend:
@@ -26,7 +26,7 @@ services:
     depends_on:
       - backend
     volumes:
-      - ./upload:/app/public/upload  # ✅ Добавяме достъп до качените файлове
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload  # ✅ Добавяме достъп до качените файлове
     restart: always
 
 networks:
