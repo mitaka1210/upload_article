@@ -5,6 +5,7 @@ services:
     build:
       context: ./server
       dockerfile: Dockerfile
+    container_name: upload-be  # Задаване на име на контейнера за backend
     environment:
       - DB_HOST=192.168.55.5
       - DB_PORT=5434
@@ -23,6 +24,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: upload-fe  # Задаване на име на контейнера за frontend
     depends_on:
       - backend
     volumes:
