@@ -12,9 +12,8 @@ const EditTodo = () => {
  const dispatch = useDispatch();
  const articlesInfo = useSelector((state) => state.articlesSections.data);
  const info = useSelector((state) => state.articlesSections.status);
- const [setImageName] = useState('');
+ const [imageName, setImageName] = useState('');
  const [showArticle, setShowArticle] = useState(false);
- const [image] = useState(null);
  const [, setSection] = useState([]);
  const navigate = useNavigate();
  let sections = {};
@@ -81,6 +80,8 @@ const EditTodo = () => {
  };
  const handleImageChange = (name) => {
   const file = name.target.files[0].name;
+  console.log('pesho', file);
+
   if (file) {
    const truncatedName = truncateString(file, 30);
    setImageName(truncatedName);
@@ -112,7 +113,7 @@ const EditTodo = () => {
   e.preventDefault();
   const copy = structuredClone({
    ...formData,
-   image: image,
+   image: imageName,
    status: showArticle,
   });
 
@@ -124,7 +125,7 @@ const EditTodo = () => {
    await dispatch(fetchArticles()).unwrap();
 
    // Ако всичко е наред, пренасочи към началната страница
-   navigate('/');
+   navigate('/home');
   } catch (error) {
    console.error('Error:', error);
   }

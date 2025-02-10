@@ -87,6 +87,7 @@ const EditTodo = () => {
  };
  const handleImageChange = (name) => {
   const file = name.target.files[0].name;
+  console.log('pesho', file);
   if (file) {
    const truncatedName = truncateString(file, 30);
    setImageName(truncatedName);
@@ -125,7 +126,7 @@ const EditTodo = () => {
    await dispatch(fetchArticles()).unwrap();
 
    // Ако всичко е наред, пренасочи към началната страница
-   navigate('/');
+   navigate('/home');
   } catch (error) {
    console.error('Error:', error);
   }
