@@ -12,11 +12,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Създаваме production контейнер с Nginx
-FROM nginx:alpine
-COPY --from=build /app/build /usr/share/nginx/html
-
 # Излагане на Nginx порта
 EXPOSE 3500
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm", "start"]
