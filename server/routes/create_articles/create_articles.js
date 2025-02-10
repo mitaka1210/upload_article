@@ -6,10 +6,10 @@ const router = express.Router();
 // POST create article
 router.post("/", async (req, res) => {
   try {
-    const { title } = req.body;
+    const { title, status } = req.body;
     const result = await pool.query(
-      "INSERT INTO articles (title) VALUES ($1) RETURNING *",
-      [title],
+      "INSERT INTO articles (title,status) VALUES ($1, $2) RETURNING *",
+      [title, status],
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
