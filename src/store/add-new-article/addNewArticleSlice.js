@@ -2,14 +2,14 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 //!production
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+// const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
 
 // Async action за добавяне на статия
-export const addArticle = createAsyncThunk('articles/addArticle', async (title) => {
- const response = await axios.post(`${url}/api/create/articles/header`, { title });
+export const addArticle = createAsyncThunk('articles/addArticle', async ({ title, status }) => {
+ const response = await axios.post(`${url}/api/create/articles/header`, { title, status });
  return response.data;
 });
 

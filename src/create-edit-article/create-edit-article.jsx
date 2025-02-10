@@ -91,7 +91,10 @@ const SectionUpload = () => {
      image: '',
     }));
    } else {
-    await dispatch (addArticle (title));
+    await dispatch (addArticle ({
+     title,
+     status: false,
+    })).unwrap ();
     setHeaderName (false);
    }
   } catch (error) {
