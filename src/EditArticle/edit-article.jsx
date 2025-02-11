@@ -78,13 +78,15 @@ const EditTodo = () => {
    }));
   }
  };
- const handleImageChange = (name) => {
-  const file = name.target.files[0].name;
-  console.log('pesho', file);
-
+ const handleImageChange = (e) => {
+  const file = e.target.files[0];
   if (file) {
-   const truncatedName = truncateString(file, 30);
+   const truncatedName = truncateString(file.name, 30);
    setImageName(truncatedName);
+   setFormData((prevData) => ({
+    ...prevData,
+    image: file,
+   }));
   }
  };
  //delete article function
@@ -113,10 +115,9 @@ const EditTodo = () => {
   e.preventDefault();
   const copy = structuredClone({
    ...formData,
-   image: imageName,
+   image: formData.image,
    status: showArticle,
   });
-
   try {
    // Първо изчакай `updateSection`
    await dispatch(updateSection(copy)).unwrap();
@@ -163,7 +164,7 @@ const EditTodo = () => {
        </label>
       </div>
      </div>
-     <form className="signup edit-form-styles" id="myForm" autoComplete="off" onSubmit={handleSubmit}>
+     <form className="signup edit-form-styles" id="myForm" autoComplete="off" onSubmit={handleSubmit} encType="multipart/form-data">
       <h5 className="center-header text-align-center">Редактиране на статия:</h5>
       <div className="text-align-center">
        <p>{formData.title}</p>
