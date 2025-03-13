@@ -28,3 +28,8 @@ node_modules/*
 .idea/dataSources/cbc9a03b-4e8a-4462-8634-690c1be440c7.xml
 /.idea
 /.idea
+.idea/dataSources/cbc9a03b-4e8a-4462-8634-690c1be440c7.xml
+*.xml
+*.meta
+.idea/dbnavigator.xml
+.idea/sqldialects.xml

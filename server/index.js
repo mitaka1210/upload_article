@@ -9,13 +9,13 @@ import articlesCreateArticlesRouter from "./routes/create_articles/create_articl
 import articlesDeleteByIdRouter from "./routes/delete_articles_by_id/delete_articles_by_id.js";
 import sectionDeleteByIdRouter from "./routes/delete_section_by_id/delete_articles.js";
 import sectionUpdateByIdRouter from "./routes/section_update_by_id/sections.js";
-import likeRouter from "./routes/like_articles/like_articles.js";
-import dislikeRouter from "./routes/dislike_articles_by_id/dislike_articles.js";
 import loginPage from "./routes/login_page/login_page.js";
 import checkAuth from "./routes/check-token/check-token.js";
 import createAccountRouter from "./routes/create_account/create_account.js";
 import resetPasswordRouter from "./routes/reset-password/reset-password.js";
 import requestNewPassword from "./routes/request-new-password/request-new-password.js";
+import getAllLikeDislike from "./routes/get_all_like_dislike/get_all_like_dislike.js";
+import addLikeOrDislike from "./routes/add_like_dislike/add_like_dislike.js";
 import path from "path";
 
 const app = express();
@@ -31,9 +31,8 @@ app.use("/api/create/articles/header", articlesCreateArticlesRouter);
 app.use("/api/delete/articles", articlesDeleteByIdRouter);
 app.use("/api/delete/section", sectionDeleteByIdRouter);
 app.use("/api/edit/article", sectionUpdateByIdRouter);
-app.use("/api/get/all-like-dislike", sectionUpdateByIdRouter);
-app.use("/api/get/like", likeRouter);
-app.use("/api/get/dislike", dislikeRouter);
+app.use("/api/get/all-like-dislike", getAllLikeDislike);
+app.use("/api/post/like-dislike", addLikeOrDislike);
 app.use("/api/login", loginPage);
 app.use("/api/check-auth", checkAuth);
 app.use("/api/create-account", createAccountRouter);
