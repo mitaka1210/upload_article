@@ -87,7 +87,7 @@ router.post(
    `;
       const values = [user.username, user.password, role]; // Adjust role as needed
       await pool.query(query, values);
-
+      //TODO да започнва да връщам и името с което е регистриран имам го в username
       res.json({ token, user: userRole });
     } catch (err) {
       console.error("Error during login:", err);
