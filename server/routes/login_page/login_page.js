@@ -6,18 +6,6 @@ import pool from "../../config/db.js";
 
 const router = express.Router();
 const SECRET_KEY = "your_secret_key"; // Сложи сигурен ключ
-
-// Mock база данни (замени с реална)
-// Example users array
-// const users = [
-//   {
-//     id: 1,
-//     username: "admin",
-//     password: await bcrypt.hash("123", 10), // Hash the password before storing,
-//     role: "admin",
-//   },
-// ];
-
 // Login API
 router.post(
   "/",
@@ -58,11 +46,17 @@ router.post(
           [failedAttempts, failedAttempts >= 5, username],
         );
 
-        return res.status(401).json({
-          message:
-            "You have reached the maximum number of login attempts. Please contact an administrator at the following email address:" +
-            "dimitard185@gmail.com",
-        });
+        if (failedAttempts >= 5) {
+          return res.status(401).json({
+            message:
+              "You have reached the maximum number of login attempts. Please contact an administrator at the following email address:" +
+              "dimitard185@gmail.com",
+          });
+        } else {
+          return res
+            .status(401)
+            .json({ message: "Invalid username or password" });
+        }
       }
 
       // Reset failed attempts on successful login
@@ -73,7 +67,10 @@ router.post(
 
       // Change role to admin for a specific account
       let userRole = role;
-      if (username === "asda") {
+      if (
+        username === "dimitard185@gmail.com" ||
+        username === "dimitar_dimitrov12@mail.bg"
+      ) {
         userRole = "admin";
       }
 
@@ -89,9 +86,8 @@ router.post(
        VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
    `;
       const values = [user.username, user.password, role]; // Adjust role as needed
-
       await pool.query(query, values);
-
+      //TODO да започнва да връщам и името с което е регистриран имам го в username
       res.json({ token, user: userRole });
     } catch (err) {
       console.error("Error during login:", err);
