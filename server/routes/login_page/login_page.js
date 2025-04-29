@@ -64,16 +64,6 @@ router.post(
         "UPDATE users SET failed_attempts = 0 WHERE username = $1",
         [username],
       );
-
-      // Change role to admin for a specific account
-      let userRole = role;
-      if (
-        username === "dimitard185@gmail.com" ||
-        username === "dimitar_dimitrov12@mail.bg"
-      ) {
-        userRole = "admin";
-      }
-
       const token = jwt.sign(
         { id: user.id, username: user.username },
         SECRET_KEY,
@@ -88,7 +78,7 @@ router.post(
       const values = [user.username, user.password, role]; // Adjust role as needed
       await pool.query(query, values);
       //TODO да започнва да връщам и името с което е регистриран имам го в username
-      res.json({ token, user: userRole });
+      res.json({ token, role: role, userName: user.username });
     } catch (err) {
       console.error("Error during login:", err);
       return res.status(500).json({ message: "Internal server error" });
