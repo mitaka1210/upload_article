@@ -3,9 +3,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { body, validationResult } from "express-validator";
 import pool from "../../config/db.js";
+import dotenv from "dotenv";
 
+dotenv.config();
 const router = express.Router();
-const SECRET_KEY = "your_secret_key"; // Сложи сигурен ключ
+const SECRET_KEY = "asdas"; // Сложи сигурен ключ
 // Login API
 router.post(
   "/",
