@@ -28,12 +28,12 @@ export const login = createAsyncThunk('auth/login', async ({ username, password,
  }
 });
 
-export const checkAuth = createAsyncThunk('auth/checkAuth', async (_, { rejectWithValue }) => {
+export const checkAuth = createAsyncThunk('auth/checkAuth', async ({ language }, { rejectWithValue }) => {
  try {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No token found');
-
-  const response = await fetch(`${url}/api/check-auth`, {
+  console.log('pesho', language);
+  const response = await fetch(`${url}/api/check-auth?lang=${language}`, {
    headers: { Authorization: token },
   });
 

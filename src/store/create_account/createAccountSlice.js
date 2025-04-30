@@ -7,6 +7,7 @@ const url = `${process.env.REACT_APP_API_URL_PROD}`;
 // const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
 // Async thunk for creating an account
 export const createAccount = createAsyncThunk('account/createAccount', async (userData, thunkAPI) => {
+ console.log('pesho', userData);
  const response = await fetch(`${url}/api/create-account`, {
   method: 'POST',
   headers: {
@@ -29,6 +30,7 @@ const createAccountSlice = createSlice({
   userName: '',
   firstName: '',
   lastName: '',
+  role: '',
   email: '',
   password: '',
   status: 'idle',
@@ -50,6 +52,9 @@ const createAccountSlice = createSlice({
   setPassword: (state, action) => {
    state.password = action.payload;
   },
+  setRole: (state, action) => {
+   state.role = action.payload;
+  },
  },
  extraReducers: (builder) => {
   builder
@@ -61,6 +66,7 @@ const createAccountSlice = createSlice({
     state.userName = '';
     state.firstName = '';
     state.lastName = '';
+    state.role = '';
     state.email = '';
     state.password = '';
    })
@@ -71,6 +77,6 @@ const createAccountSlice = createSlice({
  },
 });
 
-export const { setUserName, setFirstName, setLastName, setEmail, setPassword } = createAccountSlice.actions;
+export const { setUserName, setFirstName, setLastName, setEmail, setRole, setPassword } = createAccountSlice.actions;
 
 export default createAccountSlice.reducer;

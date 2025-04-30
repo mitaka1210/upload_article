@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const router = express.Router();
-const SECRET_KEY = "your_secret_key"; // Сложи сигурен ключ
+const SECRET_KEY = process.env.SECRET_KEY; // Сложи сигурен ключ
 // Login API
 router.post(
   "/",
@@ -26,14 +26,14 @@ router.post(
     try {
       // Check if the user exists
       const userResult = await pool.query(
-        "SELECT * FROM users WHERE username = $1",
-        [username],
+        "SELECT * FROM users WHERE username = $1 and role = $2",
+        [username, role],
       );
 
       if (userResult.rows.length === 0) {
         return res
           .status(401)
-          .json({ message: "Invalid username or password" });
+          .json({ message: "Invalid username or password6" });
       }
 
       const user = userResult.rows[0];
@@ -57,7 +57,7 @@ router.post(
         } else {
           return res
             .status(401)
-            .json({ message: "Invalid username or password" });
+            .json({ message: "Invalid username or password7" });
         }
       }
 
@@ -66,16 +66,6 @@ router.post(
         "UPDATE users SET failed_attempts = 0 WHERE username = $1",
         [username],
       );
-
-      // Change role to admin for a specific account
-      let userRole = role;
-      if (
-        username === "dimitard185@gmail.com" ||
-        username === "dimitar_dimitrov12@mail.bg"
-      ) {
-        userRole = "admin";
-      }
-
       const token = jwt.sign(
         { id: user.id, username: user.username },
         SECRET_KEY,
@@ -90,7 +80,7 @@ router.post(
       const values = [user.username, user.password, role]; // Adjust role as needed
       await pool.query(query, values);
       //TODO да започнва да връщам и името с което е регистриран имам го в username
-      res.json({ token, user: userRole });
+      res.json({ token, user: role, username: user.username });
     } catch (err) {
       console.error("Error during login:", err);
       return res.status(500).json({ message: "Internal server error" });
