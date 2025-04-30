@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 const router = express.Router();
-const SECRET_KEY = "asdas"; // Сложи сигурен ключ
+const SECRET_KEY = "your_secret_key"; // Сложи сигурен ключ
 // Login API
 router.post(
   "/",
