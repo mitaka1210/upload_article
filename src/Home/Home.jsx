@@ -12,7 +12,11 @@ const Home = () => {
 
  useEffect(() => {
   const checkUserAuth = async () => {
-   const result = await dispatch(checkAuth());
+   const result = await dispatch(
+    checkAuth({
+     language: 'bg',
+    })
+   );
    if (result.payload.isAuthenticated) {
     setIsLoggedIn(true);
    } else if (getGoogleToken) {

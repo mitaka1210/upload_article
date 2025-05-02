@@ -1,0 +1,7 @@
+{
+  "missing_token": "Missing access token.",
+  "token_expired": "Access token has expired.",
+  "invalid_token_format": "Invalid token format.",
+  "token_not_yet_valid": "Token is not yet valid.",
+  "invalid_token": "Invalid token."
+}

@@ -18,8 +18,9 @@ router.post(
     body("first_name").notEmpty().withMessage("First name is required"),
     body("lastName").notEmpty().withMessage("Last name is required"),
     body("email").isEmail().withMessage("Valid email is required"),
+    body("role"),
     body("password")
-      .isLength({ min: 6 })
+      .isLength({ min: 3 })
       .withMessage("Password must be at least 6 characters long"),
   ],
   async (req, res) => {
@@ -28,8 +29,8 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-
-    const { username, first_name, lastName, email, password } = req.body;
+    console.log("pesho", req.body);
+    const { username, first_name, lastName, email, password, role } = req.body;
 
     try {
       // Check if the user already exists
@@ -48,14 +49,18 @@ router.post(
 
       // Insert the new user into the database
       const newUser = await pool.query(
-        "INSERT INTO users (username, first_name, last_name, email, password)" +
-          " VALUES ($1, $2, $3, $4, $5) RETURNING *",
-        [username, first_name, lastName, email, hashedPassword],
+        "INSERT INTO users (username, first_name, last_name, email,role, password)" +
+          " VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+        [username, first_name, lastName, email, role, hashedPassword],
       );
 
       // Generate a JWT token
       const token = jwt.sign(
-        { id: newUser.rows[0].id, email: newUser.rows[0].email },
+        {
+          id: newUser.rows[0].id,
+          email: newUser.rows[0].email,
+          role: "user",
+        },
         JWT_SECRET,
         { expiresIn: "1h" }, // Token valid for 1 hour
       );
@@ -66,6 +71,7 @@ router.post(
           id: newUser.rows[0].id,
           username: newUser.rows[0].username,
           email: newUser.rows[0].email,
+          role: "user",
         },
         token,
       });

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './login.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../store/login/authSlice';
+import { checkAuth, login } from '../store/login/authSlice';
 import { useNavigate } from 'react-router-dom';
 import google from '../assets/google-svgrepo-com.svg';
 import { validLoginInput } from '../valid-input-login/valid-input-login';
@@ -48,6 +48,30 @@ const LoginPage = () => {
    unsubscribe();
   };
  }, []);
+ const loginAndCheckAuth = async (loginData) => {
+  const loginResult = await dispatch(login(loginData));
+
+  if (loginResult.meta.requestStatus === 'rejected') {
+   console.log('Login failed:', loginResult.error.message);
+   // Спираме процеса тук, не изпълняваме checkAuth и не навигираме
+   return;
+  }
+
+  const checkAuthResult = await dispatch(
+   checkAuth({
+    language: 'bg',
+   })
+  );
+
+  if (checkAuthResult.meta.requestStatus === 'rejected') {
+   console.log('Authentication check failed:', checkAuthResult.error.message);
+   // Може да решиш да направиш нещо тук, например да редиректнеш към страница за грешка
+   return;
+  }
+
+  // Ако и двата action-а са успешни, навигираме към /home
+  navigate('/home');
+ };
  const handleLogin = async (e) => {
   console.log(username, password);
   e.preventDefault();
@@ -56,10 +80,11 @@ const LoginPage = () => {
    setErrors(validationErrors);
    return;
   }
-  const result = await dispatch(login({ username, password, role: 'user' }));
-  if (result.payload.token) {
-   navigate('/home');
-  }
+  await loginAndCheckAuth({ username, password, role: 'user' });
+  // const loginResult = await dispatch(login({ username, password, role: 'user' }));
+  // if (loginResult.payload.token) {
+  //  navigate('/home');
+  // }
  };
  const handleClickSignUp = () => {
   setHideForm(false);

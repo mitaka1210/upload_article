@@ -79,10 +79,11 @@ const SignUpForm = () => {
  };
 
  const handleCreateAccount = async (e) => {
+  const role = 'user';
   e.preventDefault();
   if (validateInputs()) {
    try {
-    dispatch(createAccount({ username, first_name, lastName, email, password })).unwrap();
+    dispatch(createAccount({ username, first_name, lastName, email, password, role })).unwrap();
     const signInButton = document.getElementById('idCreateAccount');
     const containerLogin = document.getElementById('login');
     signInButton.addEventListener('click', () => {
