@@ -8,146 +8,154 @@ $range: $large-screen - $small-screen !default;
 $intervals: 20 !default;
 $interval-size: $range / $intervals !default;
 @font-face {
-
 }
 
 @font-face {
-
 }
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 * {
-  padding: 0;
-  margin: 0;
+ padding: 0;
+ margin: 0;
 }
 
 html {
-  box-sizing: border-box;
-  font-family: roboto-regular, sans-serif !important;
+ box-sizing: border-box;
+ font-family: roboto-regular, sans-serif !important;
 }
 
-*, *:before, *:after {
-  font-family: roboto-regular, sans-serif !important;
-  box-sizing: inherit; // така казваме на елементите да гледат парента и да взема стиловете спрямо него
+*,
+*:before,
+*:after {
+ font-family: roboto-regular, sans-serif !important;
+ box-sizing: inherit; // така казваме на елементите да гледат парента и да взема стиловете спрямо него
 }
 
 /* Typography */
 
 html {
-  font: var(--sizing-fs-base)/1.5 "font-family", serif;
+ font:
+  var(--sizing-fs-base) / 1.5 'font-family',
+  serif;
 }
 
 @media (max-width: 400px) {
-  html {
-    font-size: var(--sizing-fs-phone);
-  }
+ html {
+  font-size: var(--sizing-fs-phone);
+ }
 }
 
 @media (min-width: 600px) {
-  html {
-    font-size: var(--sizing-fs-tablet);
-  }
+ html {
+  font-size: var(--sizing-fs-tablet);
+ }
 }
 
 @media (min-width: 1260px) {
-  html {
-    font-size: var(--sizing-fs-laptop);
-  }
+ html {
+  font-size: var(--sizing-fs-laptop);
+ }
 }
 
-p, ul, ol {
-  padding-bottom: .5em;
+p,
+ul,
+ol {
+ padding-bottom: 0.5em;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  margin: 0 0 calc(var(--sizing-ws-base) / 7) 0;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+ margin: 0 0 calc(var(--sizing-ws-base) / 7) 0;
 }
 
 // Credit to materialize css
 // https://github.com/Dogfalo/materialize/blob/master/sass/components/_typography.scss
 // Auto resizes text to be more readable
 h1 {
-  font-weight: 600;
-  $i: 0;
-  @while $i <= $intervals {
-    @media only screen and (min-width: 360 + ($i * $interval-size)) {
-      font-size: $base-font-size * (1.2 + (.06 * $i));
-    }
-    $i: $i + 1;
+ font-weight: 600;
+ $i: 0;
+ @while $i <= $intervals {
+  @media only screen and (min-width: 360 + ($i * $interval-size)) {
+   font-size: $base-font-size * (1.2 + (0.06 * $i));
   }
+  $i: $i + 1;
+ }
 }
 
 h2 {
-  font-weight: 500;
-  $i: 0;
-  @while $i <= $intervals {
-    @media only screen and (min-width: 360 + ($i * $interval-size)) {
-      font-size: $base-font-size * (1.1 + (.05 * $i));
-    }
-    $i: $i + 1;
+ font-weight: 500;
+ $i: 0;
+ @while $i <= $intervals {
+  @media only screen and (min-width: 360 + ($i * $interval-size)) {
+   font-size: $base-font-size * (1.1 + (0.05 * $i));
   }
+  $i: $i + 1;
+ }
 }
 
 h3 {
-  font-weight: 400;
-  $i: 0;
-  @while $i <= $intervals {
-    @media only screen and (min-width: 360 + ($i * $interval-size)) {
-      font-size: $base-font-size * (1 + (.04 * $i));
-    }
-    $i: $i + 1;
+ font-weight: 400;
+ $i: 0;
+ @while $i <= $intervals {
+  @media only screen and (min-width: 360 + ($i * $interval-size)) {
+   font-size: $base-font-size * (1 + (0.04 * $i));
   }
+  $i: $i + 1;
+ }
 }
 
 h4 {
-  $i: 0;
-  @while $i <= $intervals {
-    @media only screen and (min-width: 360 + ($i * $interval-size)) {
-      font-size: $base-font-size * (.9 + (.03 * $i));
-    }
-    $i: $i + 1;
+ $i: 0;
+ @while $i <= $intervals {
+  @media only screen and (min-width: 360 + ($i * $interval-size)) {
+   font-size: $base-font-size * (0.9 + (0.03 * $i));
   }
+  $i: $i + 1;
+ }
 }
 
 h5 {
-  $i: 0;
-  @while $i <= $intervals {
-    @media only screen and (min-width: 360 + ($i * $interval-size)) {
-      font-size: $base-font-size * (.8 + (.02 * $i));
-    }
-    $i: $i + 1;
+ $i: 0;
+ @while $i <= $intervals {
+  @media only screen and (min-width: 360 + ($i * $interval-size)) {
+   font-size: $base-font-size * (0.8 + (0.02 * $i));
   }
+  $i: $i + 1;
+ }
 }
 
 h6 {
-  $i: 0;
-  @while $i <= $intervals {
-    @media only screen and (min-width: 360 + ($i * $interval-size)) {
-      font-size: $base-font-size * (.3 + (.01 * $i));
-    }
-    $i: $i + 1;
+ $i: 0;
+ @while $i <= $intervals {
+  @media only screen and (min-width: 360 + ($i * $interval-size)) {
+   font-size: $base-font-size * (0.3 + (0.01 * $i));
   }
+  $i: $i + 1;
+ }
 }
 
 q {
-  $i: 0;
-  @while $i <= $intervals {
-    @media only screen and (min-width: 360 + ($i * $interval-size)) {
-      font-size: $base-font-size * (.6 + (.01 * $i));
-    }
-    $i: $i + 1;
+ $i: 0;
+ @while $i <= $intervals {
+  @media only screen and (min-width: 360 + ($i * $interval-size)) {
+   font-size: $base-font-size * (0.6 + (0.01 * $i));
   }
+  $i: $i + 1;
+ }
 }
 
-
 span {
-  $i: 0;
-  @while $i <= $intervals {
-    @media only screen and (min-width: 360 + ($i * $interval-size)) {
-      font-size: $base-font-size * (.01 + (.03 * $i));
-    }
-    $i: $i + 1;
+ $i: 0;
+ @while $i <= $intervals {
+  @media only screen and (min-width: 360 + ($i * $interval-size)) {
+   font-size: $base-font-size * (0.01 + (0.03 * $i));
   }
+  $i: $i + 1;
+ }
 }

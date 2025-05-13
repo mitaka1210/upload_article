@@ -1,11 +1,11 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
     build:
       context: ./server
       dockerfile: Dockerfile
-    container_name: upload-be  # Задаване на име на контейнера за backend
+    container_name: upload-be # Задаване на име на контейнера за backend
     environment:
       - DB_HOST=192.168.55.5
       - DB_PORT=5434
@@ -17,18 +17,18 @@ services:
     volumes:
       - ./server:/app
       - /app/node_modules
-      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload  # ✅ Споделена папка
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload # ✅ Споделена папка
     restart: always
 
   frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: upload-fe  # Задаване на име на контейнера за frontend
+    container_name: upload-fe # Задаване на име на контейнера за frontend
     depends_on:
       - backend
     volumes:
-      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload  # ✅ Добавяме достъп до качените файлове
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload # ✅ Добавяме достъп до качените файлове
     restart: always
 
 networks:
