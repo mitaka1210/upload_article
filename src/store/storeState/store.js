@@ -9,6 +9,7 @@ import deleteSection from '../deleteArticleSection/deleteArticleSectionSlice';
 import deleteArticlesSlice from '../deleteArticle/deleteArticleSlice';
 import authReducer from '../login/authSlice';
 import createAccountSlice from '../create_account/createAccountSlice';
+import adminSlice from '../change_role/adminSlice';
 
 const store = configureStore({
  reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
   deleteSection: deleteSection,
   auth: authReducer,
   createAccount: createAccountSlice,
+  roleManager: adminSlice,
  },
 });
 

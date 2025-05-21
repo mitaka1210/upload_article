@@ -80,7 +80,7 @@ router.post(
       const values = [user.username, user.password, role]; // Adjust role as needed
       await pool.query(query, values);
       //TODO да започнва да връщам и името с което е регистриран имам го в username
-      res.json({ token, user: role, username: user.username });
+      res.json({ token, role: role, username: user.username });
     } catch (err) {
       console.error("Error during login:", err);
       return res.status(500).json({ message: "Internal server error" });

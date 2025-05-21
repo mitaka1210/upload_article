@@ -20,7 +20,8 @@ export const login = createAsyncThunk('auth/login', async ({ username, password,
   }
 
   localStorage.setItem('token', data.token); // Съхранява токена
-  localStorage.setItem('role', data.user); // Съхранява токена
+  localStorage.setItem('role', data.role); // Съхранява токена
+  localStorage.setItem('username', data.username); // Съхранява токена
 
   return data;
  } catch (error) {
