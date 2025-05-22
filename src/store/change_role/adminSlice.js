@@ -14,7 +14,10 @@ export const changeUserRole = createAsyncThunk('admin/changeUserRole', async ({ 
    },
    body: JSON.stringify({ username, newRole }),
   });
-
+  if (response.status === 401) {
+   localStorage.clear();
+   window.location.href = '/';
+  }
   if (!response.ok) {
    const data = await response.json();
    throw new Error(data.message || 'Failed to change role');

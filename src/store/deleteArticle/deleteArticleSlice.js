@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios from '../../api/axiosConfig';
 
 //!production
 const url = `${process.env.REACT_APP_API_URL_PROD}`;

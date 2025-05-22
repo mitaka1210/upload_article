@@ -18,7 +18,6 @@ const SignUpForm = () => {
  const [confirmPasswordError, setConfirmPasswordError] = useState('');
  const { errorCreate } = useSelector((state) => state.createAccount);
  const dispatch = useDispatch();
- console.log('pesho SignUpForm');
  const validateInputs = () => {
   let isValid = true;
 

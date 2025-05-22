@@ -25,7 +25,7 @@ const ListArticles = () => {
 
  const editSection = (section) => {
   let articleId = section.id;
-  if (role === 'admin') {
+  if (role === 'admin' || role === 'super_admin') {
    navigate(`/update-section/${articleId}`);
   } else {
    setDialog(true); // Задаваме true, за да покажем диалога

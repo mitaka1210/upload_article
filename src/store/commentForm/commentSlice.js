@@ -8,7 +8,10 @@ export const submitComment = createAsyncThunk('comments/submitComment', async ({
    method: 'POST',
    body: JSON.stringify({ email, comment }),
   });
-  console.log('pesho', response.data);
+  if (response.status === 401) {
+   localStorage.clear();
+   window.location.href = '/';
+  }
   return response.data;
  } catch (error) {
   return rejectWithValue(error.response.data);

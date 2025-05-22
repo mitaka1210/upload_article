@@ -6,6 +6,7 @@ import Read from './components/Read';
 import Home from './Home/Home';
 import LoginPage from './Login/Login.jsx';
 import EditArticle from './EditArticle/edit-article';
+import RoleManager from './roleManager/roleManager';
 
 function App() {
  return (
@@ -15,6 +16,7 @@ function App() {
     <Route path="/login" element={<LoginPage />} name="Login" />
     <Route path="/home" element={<Home />} name="Home" />
     <Route path="/read" element={<Read />} name="Read" />
+    <Route path="/change-role" element={<RoleManager />} name="RoleManager" />
     <Route path="/update-section/:articleId" element={<EditArticle />} />
    </Routes>
   </div>

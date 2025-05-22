@@ -9,6 +9,10 @@ export const fetchArticles = createAsyncThunk('getArticles', async () => {
  return fetch(`${url}/api/articles`)
   .then((response) => response.json())
   .then((json) => {
+   if (json.status === 401) {
+    localStorage.clear();
+    window.location.href = '/';
+   }
    return json;
   });
 });

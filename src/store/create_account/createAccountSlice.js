@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 //!production
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+// const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
 // Async thunk for creating an account
 export const createAccount = createAsyncThunk('account/createAccount', async (userData, thunkAPI) => {
- console.log('pesho', userData);
  const response = await fetch(`${url}/api/create-account`, {
   method: 'POST',
   headers: {
@@ -16,12 +15,15 @@ export const createAccount = createAsyncThunk('account/createAccount', async (us
   body: JSON.stringify(userData),
  });
  const data = await response.json();
-
+ if (response.status === 401) {
+  localStorage.clear();
+  window.location.href = '/';
+ }
  if (!response.ok) {
   return thunkAPI.rejectWithValue(data); // ✅ Връщаме грешката от `data`
  }
  localStorage.setItem('token', data.token); // Съхранява токена
- return response.json();
+ return data;
 });
 
 const createAccountSlice = createSlice({

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { changeUserRole } from '../store/change_role/adminSlice';
 import { useDispatch } from 'react-redux';
+import { useGetUsersQuery } from '../store/getAllUsers/getAllUsersSlice';
 
 const RoleManager = ({ users }) => {
  console.log('pesho', users);
@@ -8,6 +9,7 @@ const RoleManager = ({ users }) => {
  const token = localStorage.getItem('token');
  const [selectedUser, setSelectedUser] = useState(null);
  const [newRole, setNewRole] = useState('');
+ const { data, isLoading, error } = useGetUsersQuery();
 
  const handleChangeRole = () => {
   console.log('pesho', token);
@@ -16,14 +18,16 @@ const RoleManager = ({ users }) => {
   dispatch(changeUserRole({ username: selectedUser, newRole, token }));
  };
 
+ if (isLoading) return <p>Loading users...</p>;
+ if (error) return <p>Error: {error?.data?.message || 'Something went wrong'}</p>;
  return (
   <div className="p-4">
    <h2 className="text-xl font-bold mb-2">Change User Role</h2>
    <select onChange={(e) => setSelectedUser(e.target.value)} className="border p-1 mr-2">
     <option value="">Select user</option>
-    {users.map((u, i) => (
+    {data.map((u, i) => (
      <option key={i} value={u.username}>
-      {u.userName}
+      {u.username}
      </option>
     ))}
    </select>

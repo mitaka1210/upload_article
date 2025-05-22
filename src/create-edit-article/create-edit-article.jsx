@@ -8,7 +8,6 @@ import { addArticle } from '../store/add-new-article/addNewArticleSlice';
 import { uploadSection } from '../store/uploadArticleSlice/uploadArticleSlice';
 import logOut from '../assets/sign-out-alt-4-svgrepo-com.svg';
 import { useNavigate } from 'react-router-dom';
-import RoleManager from '../roleManager/roleManager';
 
 const SectionUpload = () => {
  const navigate = useNavigate();
@@ -31,7 +30,7 @@ const SectionUpload = () => {
   }
  ]
  useEffect (() => {
-  if (role !== 'admin') {
+  if (role !== 'admin' && role !== 'super_admin') {
    setBlockAdding (false);
   }else {
    setBlockAdding (true);
@@ -60,6 +59,11 @@ const SectionUpload = () => {
    setImage (e.target.files[0]);
   }
  };
+ const changePrivileges = () => {
+  if (role === 'super_admin') {
+   navigate(`/change-role`);
+  }
+ }
  const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault ();
   
@@ -112,9 +116,16 @@ const SectionUpload = () => {
  
  return (
   <div className="flex-horizontal-container-raw justify-content-center">
-   <RoleManager users={users}/>
-   <div className="log-out" onClick={LogOut}>
+   <div className="flex-horizontal-container-raw justify-content-space-between input-width-100 position-absolute">
+     <div className="log-out" onClick={LogOut}>
       <img src={logOut} alt="logout" />
+     </div>
+    {
+     role === 'super_admin' ?
+      <button onClick={() => changePrivileges()} className="custom-btn  btn-5">
+       <span>change role</span>
+      </button> : null
+    }
    </div>
    <div className={blockAdding ? 'container' : 'container block-adding-article'} >
     <h4>Създаване на статия</h4>
