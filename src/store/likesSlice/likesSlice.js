@@ -7,6 +7,10 @@ export const fetchLikesDislikes = createAsyncThunk('fetchLikesDislikes', async (
  return fetch(`${url}/api/likes-dislikes`)
   .then((response) => response.json())
   .then((json) => {
+   if (json.status === 401) {
+    localStorage.clear();
+    window.location.href = '/';
+   }
    return json;
   });
 });

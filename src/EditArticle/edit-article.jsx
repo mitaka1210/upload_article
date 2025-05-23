@@ -54,7 +54,6 @@ const EditTodo = () => {
   }
   // TODO add logic for info === 'failed'
  };
-
  const handleChange = (e) => {
   const { name, value } = e.target;
 
@@ -102,7 +101,6 @@ const EditTodo = () => {
    // След това извикай `fetchArticles`
    await dispatch(fetchArticles()).unwrap();
    // Ако всичко е наред, презареди страницата
-   window.location.reload();
   } catch (error) {
    console.error('Error:', error);
   }
@@ -137,6 +135,20 @@ const EditTodo = () => {
   } else {
    return str.slice(0, num) + '...';
   }
+ };
+ const handleAddSection = () => {
+  console.log('pesho23123', articlesInfo);
+  setFormData((prevData) => ({
+   ...prevData,
+   section: [
+    ...prevData.section,
+    {
+     position: prevData.section.length,
+     title: '',
+     content: '',
+    },
+   ],
+  }));
  };
 
  return (
@@ -211,6 +223,11 @@ const EditTodo = () => {
        Запази промените
       </button>
      </form>
+     <div className="margin-15 text-align-center">
+      <button className="padding-15 border-radius-10 border-color-green" onClick={() => handleAddSection()}>
+       Добавяне на нова секция
+      </button>
+     </div>
     </div>
    )}
   </>

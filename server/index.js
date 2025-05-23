@@ -14,8 +14,10 @@ import checkAuth from "./routes/check-token/check-token.js";
 import createAccountRouter from "./routes/create_account/create_account.js";
 import resetPasswordRouter from "./routes/reset-password/reset-password.js";
 import requestNewPassword from "./routes/request-new-password/request-new-password.js";
+import changeRole from "./routes/change_role/change_role.js";
 import getAllLikeDislike from "./routes/get_all_like_dislike/get_all_like_dislike.js";
 import addLikeOrDislike from "./routes/add_like_dislike/add_like_dislike.js";
+import usersRoute from "./routes/users_list/usersList.js";
 import path from "path";
 
 const app = express();
@@ -38,7 +40,8 @@ app.use("/api/check-auth", checkAuth);
 app.use("/api/create-account", createAccountRouter);
 app.use("/api/reset-password", resetPasswordRouter);
 app.use("/api/request-new-password", requestNewPassword);
-
+app.use("/api/change-role", changeRole);
+app.use("/api/users", usersRoute);
 // Добави преди `app.listen()`
 const uploadPath = path.join(process.cwd(), "upload"); // Работи в Docker
 app.use("/uploads", express.static(uploadPath));

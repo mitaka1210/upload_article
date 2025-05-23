@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 //!production
-// const url = `${process.env.REACT_APP_API_URL_PROD}`;
+const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
-const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
 // Async Thunks за логин
 export const login = createAsyncThunk('auth/login', async ({ username, password, role }, { rejectWithValue }) => {
  try {
@@ -13,14 +13,18 @@ export const login = createAsyncThunk('auth/login', async ({ username, password,
    headers: { 'Content-Type': 'application/json' },
    body: JSON.stringify({ username, password, role }),
   });
-
+  if (response.status === 401) {
+   localStorage.clear();
+   window.location.href = '/';
+  }
   const data = await response.json();
   if (!response.ok) {
    throw new Error(data.message || 'Login failed');
   }
 
   localStorage.setItem('token', data.token); // Съхранява токена
-  localStorage.setItem('role', data.user); // Съхранява токена
+  localStorage.setItem('role', data.role); // Съхранява токена
+  localStorage.setItem('username', data.username); // Съхранява токена
 
   return data;
  } catch (error) {

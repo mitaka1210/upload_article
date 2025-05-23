@@ -47,12 +47,11 @@ const LoginPage = () => {
    signInButton.removeEventListener('click', handleSignInClick);
    unsubscribe();
   };
- }, []);
+ }, [1]);
  const loginAndCheckAuth = async (loginData) => {
   const loginResult = await dispatch(login(loginData));
 
   if (loginResult.meta.requestStatus === 'rejected') {
-   console.log('Login failed:', loginResult.error.message);
    // Спираме процеса тук, не изпълняваме checkAuth и не навигираме
    return;
   }
@@ -73,7 +72,6 @@ const LoginPage = () => {
   navigate('/home');
  };
  const handleLogin = async (e) => {
-  console.log(username, password);
   e.preventDefault();
   const validationErrors = validLoginInput(username, password);
   if (Object.keys(validationErrors).length > 0) {
@@ -92,6 +90,7 @@ const LoginPage = () => {
  const handleClickSignIn = () => {
   setHideForm(true);
   setIsLoggedIn(true);
+  console.log('pesho', loginForm);
  };
  return (
   <div className="container-login-page">
@@ -124,8 +123,8 @@ const LoginPage = () => {
        </form>
       </div>
      ) : (
-      <div className="form-container-login sign-up-container-login">
-       <SignUpForm />
+      <div>
+       <SignUpForm onAccountCreated={handleClickSignIn} />
       </div>
      )}
     </div>

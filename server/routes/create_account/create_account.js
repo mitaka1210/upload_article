@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Secret key for JWT
 const JWT_SECRET = "your_secret_key"; // Смени това с реална тайна стойност
-
+console.log("pesho test123");
 // Endpoint to create a new account
 router.post(
   "/",
@@ -18,7 +18,7 @@ router.post(
     body("first_name").notEmpty().withMessage("First name is required"),
     body("lastName").notEmpty().withMessage("Last name is required"),
     body("email").isEmail().withMessage("Valid email is required"),
-    body("role"),
+    body("role").notEmpty().withMessage("Username is required"),
     body("password")
       .isLength({ min: 3 })
       .withMessage("Password must be at least 6 characters long"),
@@ -29,16 +29,25 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log("pesho", req.body);
     const { username, first_name, lastName, email, password, role } = req.body;
 
     try {
+      // Check if the username already exists
+      const usernameExists = await pool.query(
+        "SELECT * FROM users WHERE username = $1",
+        [username],
+      );
+      if (usernameExists.rows.length > 0) {
+        return res
+          .status(400)
+          .json({ message: "User with this username already exists" });
+      }
       // Check if the user already exists
-      const userExists = await pool.query(
+      const userEmailExists = await pool.query(
         "SELECT * FROM users WHERE email = $1",
         [email],
       );
-      if (userExists.rows.length > 0) {
+      if (userEmailExists.rows.length > 0) {
         return res
           .status(400)
           .json({ message: "User with this email already exists" });
