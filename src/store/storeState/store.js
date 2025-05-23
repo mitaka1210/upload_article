@@ -10,6 +10,7 @@ import deleteArticlesSlice from '../deleteArticle/deleteArticleSlice';
 import authReducer from '../login/authSlice';
 import createAccountSlice from '../create_account/createAccountSlice';
 import adminSlice from '../change_role/adminSlice';
+import addSectionSlice from '../add-new-section/addNewSectionSlice';
 import { api } from '../getAllUsers/getAllUsersSlice';
 
 const store = configureStore({
@@ -24,6 +25,7 @@ const store = configureStore({
   deleteSection: deleteSection,
   auth: authReducer,
   createAccount: createAccountSlice,
+  addSectionSlice: addSectionSlice,
   roleManager: adminSlice,
   [api.reducerPath]: api.reducer,
  },

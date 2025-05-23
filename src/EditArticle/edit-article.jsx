@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { updateSection } from '../store/editSections/editSectionsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import './edit.scss';
 import deleteSectionImg from '../assets/delete-svgrepo-com.svg';
 import { deleteSection } from '../store/deleteArticleSection/deleteArticleSectionSlice';
+import { addSection } from '../store/add-new-section/addNewSectionSlice';
 
 const EditTodo = () => {
  const { articleId } = useParams();
@@ -14,9 +15,10 @@ const EditTodo = () => {
  const info = useSelector((state) => state.articlesSections.status);
  const [imageName, setImageName] = useState('');
  const [showArticle, setShowArticle] = useState(false);
- const [, setSection] = useState([]);
+ const [section, setSection] = useState([]);
  const navigate = useNavigate();
  let sections = {};
+ const newSectionRef = useRef(null);
 
  useEffect(() => {
   articlesStatus();
@@ -90,17 +92,26 @@ const EditTodo = () => {
  };
  //delete article function
  const deleteSectionFromArticle = async (sectionId) => {
+  console.log('pesho', sectionId);
+  console.log('pesho', section.length);
+  // 1. Remove from local state
+  setFormData((prevData) => ({
+   ...prevData,
+   section: prevData.section.filter((section) => section.position !== sectionId),
+  }));
+
+  // 2. Delete from backend
   try {
-   // Първо изчакай `updateSection`
-   await dispatch(
-    deleteSection({
-     articleId: articleId,
-     sectionId: sectionId,
-    })
-   ).unwrap();
-   // След това извикай `fetchArticles`
-   await dispatch(fetchArticles()).unwrap();
-   // Ако всичко е наред, презареди страницата
+   if (section.length === sectionId) {
+    await dispatch(deleteSection({ articleId, sectionId })).unwrap();
+    await dispatch(fetchArticles()).unwrap();
+    // Скрол след малко време (след като се рендерира)
+    setTimeout(() => {
+     if (newSectionRef.current) {
+      newSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+     }
+    }, 100);
+   }
   } catch (error) {
    console.error('Error:', error);
   }
@@ -136,19 +147,30 @@ const EditTodo = () => {
    return str.slice(0, num) + '...';
   }
  };
- const handleAddSection = () => {
-  console.log('pesho23123', articlesInfo);
-  setFormData((prevData) => ({
-   ...prevData,
-   section: [
-    ...prevData.section,
-    {
-     position: prevData.section.length,
-     title: '',
-     content: '',
-    },
-   ],
-  }));
+ const handleAddSection = async (newSection) => {
+  console.log('pesho', newSection);
+  console.log('pesho', articleId);
+  const section = {
+   article_id: articleId,
+   title: 'Нова секция',
+   content: 'Съдържание на нова секция',
+   position: formData.section.length + 1,
+   image: formData.image, // може да е null
+  };
+
+  try {
+   await dispatch(addSection(section)).unwrap();
+   // Презареди статиите след успешен запис
+   await dispatch(fetchArticles());
+   // Скрол след малко време (след като се рендерира)
+   setTimeout(() => {
+    if (newSectionRef.current) {
+     newSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+   }, 100);
+  } catch (error) {
+   console.error('Грешка при добавяне на секция:', error);
+  }
  };
 
  return (
@@ -191,8 +213,9 @@ const EditTodo = () => {
 
       <div className="flex-vertical-container input-width-100">
        {formData.section.map((section, index) => {
+        const isLast = index === formData.section.length - 1;
         return (
-         <div className="section-title-content flex-vertical-container margin-15" key={index}>
+         <div className="section-title-content flex-vertical-container margin-15" key={index} ref={isLast ? newSectionRef : null}>
           <div className="signup__field">
            <input type="text" className="signup__input margin-top-15" name={`section[${index}].title`} value={section.title || ''} onChange={handleChange} placeholder="Задължително" required />
            <label className="signup__label" htmlFor="email">
@@ -203,7 +226,7 @@ const EditTodo = () => {
           <textarea name={`section[${index}].content`} value={section.content || ''} onChange={handleChange} placeholder="Content" className="add-textarea-height padding-20" />
           <br />
           <br />
-          <div className="delete_section" onClick={() => deleteSectionFromArticle(section.position)}>
+          <div className="delete_section" onClick={() => deleteSectionFromArticle(index + 1)}>
            <img src={deleteSectionImg} alt="delete" />
           </div>
          </div>
@@ -224,7 +247,7 @@ const EditTodo = () => {
       </button>
      </form>
      <div className="margin-15 text-align-center">
-      <button className="padding-15 border-radius-10 border-color-green" onClick={() => handleAddSection()}>
+      <button className="padding-15 border-radius-10 border-color-green" onClick={() => handleAddSection(formData.section.length + 1)}>
        Добавяне на нова секция
       </button>
      </div>
