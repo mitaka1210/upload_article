@@ -24,22 +24,30 @@ router.post(
       .withMessage("Password must be at least 6 characters long"),
   ],
   async (req, res) => {
-    console.log("pesho", req.body);
     // Validate request data
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    console.log("pesho", req.body);
     const { username, first_name, lastName, email, password, role } = req.body;
 
     try {
+      // Check if the username already exists
+      const usernameExists = await pool.query(
+        "SELECT * FROM users WHERE username = $1",
+        [username],
+      );
+      if (usernameExists.rows.length > 0) {
+        return res
+          .status(400)
+          .json({ message: "User with this username already exists" });
+      }
       // Check if the user already exists
-      const userExists = await pool.query(
+      const userEmailExists = await pool.query(
         "SELECT * FROM users WHERE email = $1",
         [email],
       );
-      if (userExists.rows.length > 0) {
+      if (userEmailExists.rows.length > 0) {
         return res
           .status(400)
           .json({ message: "User with this email already exists" });
