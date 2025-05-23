@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 //!production
-// const url = `${process.env.REACT_APP_API_URL_PROD}`;
+const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
-const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
 export const changeUserRole = createAsyncThunk('admin/changeUserRole', async ({ username, newRole, token }, thunkAPI) => {
  try {
   const response = await fetch(`${url}/api/change-role`, {
