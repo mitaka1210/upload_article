@@ -1,0 +1,80 @@
+version: "3.8"
+
+services:
+  backend-dev:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: upload-be-dev
+    environment:
+      - DB_HOST=192.168.55.5
+      - DB_PORT=5434
+      - DB_USER=mitaka
+      - DB_PASSWORD=mitaka
+      - DB_NAME=dev_db
+      - ALLOWED_ORIGIN=http://localhost:3000
+      - NODE_ENV=development
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
+      - ./path/to/.env.development:/app/.env
+    restart: always
+    networks:
+      - docker_network
+
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: upload-fe-dev
+    depends_on:
+      - backend-dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
+    restart: always
+    networks:
+      - docker_network
+
+  backend-prod:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: upload-be-prod
+    environment:
+      - DB_HOST=192.168.55.5
+      - DB_PORT=5434
+      - DB_USER=mitaka
+      - DB_PASSWORD=mitaka
+      - DB_NAME=prod_db
+      - ALLOWED_ORIGIN=https://upload.d-dimitrov.eu
+      - NODE_ENV=production
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
+      - ./path/to/.env.production:/app/.env
+    restart: always
+    networks:
+      - docker_network
+
+  frontend-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: upload-fe-prod
+    depends_on:
+      - backend-prod
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
+    restart: always
+    networks:
+      - docker_network
+
+networks:
+  docker_network:
+    external: true
