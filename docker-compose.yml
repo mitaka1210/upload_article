@@ -18,6 +18,8 @@ services:
       - ./server:/app
       - /app/node_modules
       - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload # ✅ Споделена папка
+      - ./path/to/.env.production:/app/.env.production
+      - ./path/to/.env.development:/app/.env.development
     restart: always
 
   frontend:

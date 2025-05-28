@@ -8,7 +8,7 @@ const router = express.Router();
 
 // Secret key for JWT
 const JWT_SECRET = "your_secret_key"; // Смени това с реална тайна стойност
-console.log("pesho test123");
+console.log("pesho test123", pool);
 // Endpoint to create a new account
 router.post(
   "/",
