@@ -8,6 +8,7 @@ const url = `${process.env.REACT_APP_API_URL_PROD}`;
 // Async Thunks за логин
 export const login = createAsyncThunk('auth/login', async ({ username, password, role }, { rejectWithValue }) => {
  try {
+  console.log('pesho', url);
   const response = await fetch(`${url}/api/login`, {
    method: 'POST',
    headers: { 'Content-Type': 'application/json' },
