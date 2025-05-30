@@ -10,6 +10,10 @@ RUN npm install
 
 # Копираме кода и билдваме React приложението
 COPY . .
+# Добавяме аргумент за NODE_ENV
+ARG NODE_ENV
+ENV NODE_ENV=${NODE_ENV}
+# Реално билдваме в указаната среда
 RUN npm run build
 
 # Излагане на Nginx порта

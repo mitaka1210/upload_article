@@ -16,7 +16,8 @@ COPY . .
 
 # Излагане на порта за Express сървъра
 EXPOSE 3400
-# Set NODE_ENV
-ENV NODE_ENV=production
+# Задаваме аргумент и го правим ENV
+ARG NODE_ENV
+ENV NODE_ENV=${NODE_ENV}
 # Стартиране на сървъра с nodemon
 CMD ["npm", "run", "start"]
