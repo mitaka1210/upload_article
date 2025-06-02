@@ -12,7 +12,7 @@ services:
     environment:
       - NODE_ENV=production
       - DB_HOST=192.168.55.5
-      - DB_PORT=5434
+      - DB_PORT=5435
       - DB_USER=mitaka
       - DB_PASSWORD=mitaka
       - DB_NAME=prod_db
@@ -20,8 +20,8 @@ services:
     volumes:
       - ./server:/app
       - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
-      - ./path/to/.env.production:/app/.env.production
-      - ./path/to/.env.development:/app/.env.development
+      - ./.env.production:/app/.env.production
+      - ./.env.development:/app/.env.development
     restart: always
 
   # === PROD FRONTEND ===
@@ -51,7 +51,7 @@ services:
     environment:
       - NODE_ENV=development
       - DB_HOST=192.168.55.5
-      - DB_PORT=5435
+      - DB_PORT=5434
       - DB_USER=mitaka
       - DB_PASSWORD=mitaka
       - DB_NAME=dev_db
@@ -59,8 +59,8 @@ services:
     volumes:
       - ./server:/app
       - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
-      - ./path/to/.env.production:/app/.env.production
-      - ./path/to/.env.development:/app/.env.development
+      - ./.env.production:/app/.env.production
+      - ./.env.development:/app/.env.development
     restart: always
 
   # === DEV FRONTEND ===

@@ -9,11 +9,11 @@ COPY package*.json ./
 
 # Инсталираме зависимостите
 RUN npm i -g nodemon
+RUN npm i -g bcrypt
 RUN npm install --force
 
 # Копираме всичките файлове на сървъра
 COPY . .
-
 # Излагане на порта за Express сървъра
 EXPOSE 3400
 # Задаваме аргумент и го правим ENV
