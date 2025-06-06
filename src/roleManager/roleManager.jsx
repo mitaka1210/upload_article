@@ -3,16 +3,14 @@ import { changeUserRole } from '../store/change_role/adminSlice';
 import { useDispatch } from 'react-redux';
 import { useGetUsersQuery } from '../store/getAllUsers/getAllUsersSlice';
 
-const RoleManager = ({ users }) => {
- console.log('pesho', users);
+const RoleManager = () => {
  const dispatch = useDispatch();
  const token = localStorage.getItem('token');
  const [selectedUser, setSelectedUser] = useState(null);
  const [newRole, setNewRole] = useState('');
  const { data, isLoading, error } = useGetUsersQuery();
-
+ console.log('pesho', token);
  const handleChangeRole = () => {
-  console.log('pesho', token);
   if (!selectedUser || !newRole) return;
 
   dispatch(changeUserRole({ username: selectedUser, newRole, token }));

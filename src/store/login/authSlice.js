@@ -14,11 +14,11 @@ export const login = createAsyncThunk('auth/login', async ({ username, password,
    headers: { 'Content-Type': 'application/json' },
    body: JSON.stringify({ username, password, role }),
   });
+  const data = await response.json();
+
   if (response.status === 401) {
    localStorage.clear();
-   window.location.href = '/';
   }
-  const data = await response.json();
   if (!response.ok) {
    throw new Error(data.message || 'Login failed');
   }

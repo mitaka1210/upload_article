@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import './upload.scss';
-import upload from '../assets/cloud-computing.png';
 import InfoDiv from '../more-info/more-Info';
 import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import { addArticle } from '../store/add-new-article/addNewArticleSlice';
@@ -181,17 +180,16 @@ const SectionUpload = () => {
                   onChange={handleInputChange}></textarea>
      </div>
      {/*upload button*/}
-     <div className="file file--uploading">
-      <input id="input-file" onChange={handleImageChange}
-             type="file" />
-      <label htmlFor="input-file" className="input-file">
-       <img src={upload} alt="upload" />
-       <p>Качване на снимка към статия</p>
-      </label>
-      <p className="upload-image-name">{image_name}</p>
-     </div>
-     <button className="submit margin-15 upload">Публикуване на статията
-     </button>
+     {/* <div className="file file--uploading">*/}
+     {/*   <input id="input-file" onChange={handleImageChange}*/}
+     {/*          type="file" />*/}
+     {/*   <label htmlFor="input-file" className="input-file">*/}
+     {/*    <img src={upload} alt="upload" />*/}
+     {/*    <p>Качване на снимка към статия</p>*/}
+     {/*   </label>*/}
+     {/*   <p className="upload-image-name">{image_name}</p>*/}
+     {/* </div>*/}
+      <button className="submit margin-15 upload">Публикуване на статията</button>
     </form>
    </div>
   </div>

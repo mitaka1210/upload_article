@@ -79,10 +79,10 @@ const LoginPage = () => {
    return;
   }
   await loginAndCheckAuth({ username, password, role: 'user' });
-  // const loginResult = await dispatch(login({ username, password, role: 'user' }));
-  // if (loginResult.payload.token) {
-  //  navigate('/home');
-  // }
+  const loginResult = await dispatch(login({ username, password, role: 'user' }));
+  if (loginResult.payload.token) {
+   navigate('/home');
+  }
  };
  const handleClickSignUp = () => {
   setHideForm(false);
@@ -90,7 +90,6 @@ const LoginPage = () => {
  const handleClickSignIn = () => {
   setHideForm(true);
   setIsLoggedIn(true);
-  console.log('pesho', loginForm);
  };
  return (
   <div className="container-login-page">
