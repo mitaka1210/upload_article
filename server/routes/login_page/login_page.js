@@ -36,7 +36,7 @@ router.post(
       if (userResult.rows.length === 0) {
         return res
           .status(401)
-          .json({ message: "Invalid username or password6" });
+          .json({ message: "Invalid username or password" });
       }
 
       const user = userResult.rows[0];
@@ -60,7 +60,7 @@ router.post(
         } else {
           return res
             .status(401)
-            .json({ message: "Invalid username or password7" });
+            .json({ message: "Invalid username or password" });
         }
       }
 

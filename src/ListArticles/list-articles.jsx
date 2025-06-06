@@ -35,7 +35,7 @@ const ListArticles = () => {
 
  //delete article function
  const deleteTodo = async (id) => {
-  if (role !== 'admin') {
+  if (role === 'admin' || role === 'user') {
    setDialog(true); // Задаваме true, за да покажем диалога
    setShowDialog(true); // Показва диалога
   } else {
