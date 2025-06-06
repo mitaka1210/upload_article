@@ -45,7 +45,7 @@ CREATE TABLE user_logins
     id         SERIAL PRIMARY KEY,
     username   VARCHAR(50)                                   NOT NULL,
     password   VARCHAR(255)                                  NOT NULL,
-    role       VARCHAR(20) CHECK (role IN ('admin', 'user')) NOT NULL,
+    role VARCHAR(20) CHECK (role IN ('admin', 'user', 'super_admin', 'manager')) NOT NULL;
     login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
