@@ -5,6 +5,7 @@ import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import { useNavigate } from 'react-router-dom';
 import { deleteArticle } from '../store/deleteArticle/deleteArticleSlice';
 import AccessDeniedDialog from '../dialogs/no-privilegest/accessDeniedDialog';
+import ConfirmDeleteDialog from '../dialogs/you-sure-delete-article/confirmDeleteDialog';
 
 const ListArticles = () => {
  //? properties
@@ -14,7 +15,8 @@ const ListArticles = () => {
  const status = useSelector((state) => state.articlesSections.status);
  const [showDialog, setShowDialog] = useState(false);
  const [dialog, setDialog] = useState(false);
-
+ const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+ const [showDeleteDialog, setShowDeleteDialog] = useState(false);
  // storage
  const role = localStorage.getItem('role');
  useEffect(() => {
@@ -35,23 +37,44 @@ const ListArticles = () => {
 
  //delete article function
  const deleteTodo = async (id) => {
-  if (role !== 'admin') {
+  console.log('pesho');
+  if (role === 'admin' || role === 'user') {
    setDialog(true); // Задаваме true, за да покажем диалога
    setShowDialog(true); // Показва диалога
   } else {
    try {
+    console.log('pesho', showDeleteDialog);
+
+    setShowConfirmDialog(true); // Показва диалога за потвърждение
+    setShowDeleteDialog(true); // Показва диалога за потвърждение
+    console.log('pesho', showDeleteDialog);
     // Първо изчакай `updateSection`
-    await dispatch(deleteArticle(id)).unwrap();
-    // След това извикай `fetchArticles`
-    await dispatch(fetchArticles()).unwrap();
+    // await dispatch(deleteArticle(id)).unwrap();
+    // // След това извикай `fetchArticles`
+    // await dispatch(fetchArticles()).unwrap();
     // Ако всичко е наред, пренасочи към началната страница
-    navigate('/home');
+    // navigate('/home');
    } catch (error) {
     console.error('Error:', error);
    }
   }
  };
-
+ const openAgain = (data) => {
+  console.log('pesho', data);
+  setShowConfirmDialog(false); // Затваря диалога за потвърждение
+  setShowDeleteDialog(false); // Затваря диалога за потвърждение
+  if (data === 'delete') {
+   dispatch(deleteArticle(data)).unwrap()
+    .then(() => {
+     dispatch(fetchArticles());
+    })
+    .catch((error) => {
+     console.error('Error deleting article:', error);
+    });
+  } else {
+   setShowDialog(false); // Затваря диалога
+  }
+ };
  const getTodos = () => {
   if (status === 'idle') {
    dispatch(fetchArticles());
@@ -69,6 +92,9 @@ const ListArticles = () => {
  return (
   <div>
    {showDialog && <AccessDeniedDialog onClose={() => setShowDialog(false)} />} {/* Подава функцията за затваряне */}
+   {showDeleteDialog && <ConfirmDeleteDialog onClose={(data) => openAgain(data)} />}
+   {/* Подава
+    функцията за затваряне */}
    {articlesInfo.isLoading ? (
     <div>
      <h1>Loading........{err}</h1>
