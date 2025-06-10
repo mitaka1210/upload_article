@@ -10,7 +10,9 @@ const config = {
   allowedOrigins: [
     "http://192.168.55.47:3333",
     "http://localhost:3333",
+    "http://localhost:3000",
     "https://upload.d-dimitrov.eu",
+    "https://share.d-dimitrov.eu",
   ],
 };
 
