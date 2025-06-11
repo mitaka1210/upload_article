@@ -92,4 +92,4 @@ router.post(
 );
 
 export default router;
-// Compare this snippet from src/store/login/authSlice.js:
+// Compare this snippet from src/store/login/authSlice.ts:

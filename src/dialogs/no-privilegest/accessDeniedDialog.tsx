@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import './access-denied.scss';
 
 const AccessDeniedDialog = ({ onClose }) => {

@@ -1,0 +1,42 @@
+.snackbar {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(30px);
+  background: #e74c3c;
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.snackbar.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.snackbar button {
+  background: #fff;
+  color: #e74c3c;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.snackbar-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  background: #fff;
+  width: 0%;
+  border-radius: 0 0 4px 4px;
+  transition: none;
+}

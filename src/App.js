@@ -4,7 +4,7 @@ import './typography.scss';
 import { Navigate, Route, Routes } from 'react-router-dom'; // components
 import Read from './components/Read';
 import Home from './Home/Home';
-import LoginPage from './Login/Login.jsx';
+import LoginPage from './Login/Login.tsx';
 import EditArticle from './EditArticle/edit-article';
 import RoleManager from './roleManager/roleManager';
 

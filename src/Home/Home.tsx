@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CreateEditArticles from '../create-edit-article/create-edit-article';
 import ListArticles from '../ListArticles/list-articles';
-import LoginPage from '../Login/Login.jsx';
+import LoginPage from '../Login/Login';
 import { useDispatch } from 'react-redux';
 import { checkAuth } from '../store/login/authSlice';
 

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { deleteArticle } from '../store/deleteArticle/deleteArticleSlice';
 import AccessDeniedDialog from '../dialogs/no-privilegest/accessDeniedDialog';
 import ConfirmDeleteDialog from '../dialogs/you-sure-delete-article/confirmDeleteDialog';
+import Snackbar from '../dialogs/show-error/show-error';
 
 const ListArticles = () => {
  //? properties
@@ -17,6 +18,9 @@ const ListArticles = () => {
  const [dialog, setDialog] = useState(false);
  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+ const [articleId, setArticleId] = useState(0);
+ const [snackbarOpen, setSnackbarOpen] = useState(false);
+ const [snackbarMsg, setSnackbarMsg] = useState('');
  // storage
  const role = localStorage.getItem('role');
  useEffect(() => {
@@ -37,7 +41,8 @@ const ListArticles = () => {
 
  //delete article function
  const deleteTodo = async (id) => {
-  console.log('pesho');
+  setArticleId(id);
+  console.log('pesho', id);
   if (role === 'admin' || role === 'user') {
    setDialog(true); // Задаваме true, за да покажем диалога
    setShowDialog(true); // Показва диалога
@@ -60,15 +65,17 @@ const ListArticles = () => {
   }
  };
  const openAgain = (data) => {
-  console.log('pesho', data);
+  console.log('pesho', articleId);
   setShowConfirmDialog(false); // Затваря диалога за потвърждение
   setShowDeleteDialog(false); // Затваря диалога за потвърждение
   if (data === 'delete') {
-   dispatch(deleteArticle(data)).unwrap()
+   dispatch(deleteArticle(data))
+    .unwrap()
     .then(() => {
      dispatch(fetchArticles());
     })
     .catch((error) => {
+     setSnackbarMsg(error);
      console.error('Error deleting article:', error);
     });
   } else {
@@ -93,6 +100,7 @@ const ListArticles = () => {
   <div>
    {showDialog && <AccessDeniedDialog onClose={() => setShowDialog(false)} />} {/* Подава функцията за затваряне */}
    {showDeleteDialog && <ConfirmDeleteDialog onClose={(data) => openAgain(data)} />}
+   {<Snackbar message={snackbarMsg} open={snackbarOpen} onClose={() => setSnackbarOpen(false)} />}
    {/* Подава
     функцията за затваряне */}
    {articlesInfo.isLoading ? (

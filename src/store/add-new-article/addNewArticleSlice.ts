@@ -6,20 +6,29 @@ const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
 // const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
-
+// Интерфейс за параметрите на addArticle
+interface AddArticleParams {
+ title: string;
+ status: boolean; // примерно валидни статуси
+}
+interface AddArticleState {
+ articles: Record<string, unknown>;
+ status: 'idle' | 'loading' | 'succeeded' | 'failed';
+ error: string | null;
+}
 // Async action за добавяне на статия
-export const addArticle = createAsyncThunk('articles/addArticle', async ({ title, status }) => {
+export const addArticle = createAsyncThunk('articles/addArticle', async ({ title, status }: AddArticleParams) => {
  const response = await axios.post(`${url}/api/create/articles/header`, { title, status });
  return response.data;
 });
-
+const initialState: AddArticleState = {
+ articles: {},
+ status: 'idle',
+ error: null,
+};
 const articlesSliceAdd = createSlice({
  name: 'articlesHeader',
- initialState: {
-  articles: {},
-  status: 'idle', // idle | loading | succeeded | failed
-  error: null,
- },
+ initialState,
  reducers: {},
  extraReducers: (builder) => {
   builder
@@ -32,7 +41,7 @@ const articlesSliceAdd = createSlice({
    })
    .addCase(addArticle.rejected, (state, action) => {
     state.status = 'failed';
-    state.error = action.error.message;
+    state.error = action.error.message ?? null; // string или null
    });
  },
 });
