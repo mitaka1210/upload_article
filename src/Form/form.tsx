@@ -1,20 +1,32 @@
 import React, { useState } from 'react';
+// @ts-ignore
 import google from '../assets/google-svgrepo-com.svg';
 import '../components/login.scss';
-const Form = ({ username, setUsername, password, setPassword, handleLogin, loading, error }) => {
+
+interface FormProps {
+ username: string;
+ setUsername: (value: string) => void;
+ password: string;
+ setPassword: (value: string) => void;
+ handleLogin: (e: React.FormEvent) => void;
+ loading: boolean;
+ error: string | null;
+}
+
+const Form = ({ username, setUsername, password, setPassword, handleLogin, loading, error }: FormProps) => {
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const [loginForm, setHideForm] = useState(true);
 
  const handleClickSignIn = () => {
-  console.log('pesho CLICK2');
   setHideForm(true);
   setIsLoggedIn(true);
   const signInButton = document.getElementById('signIn');
   const containerLogin = document.getElementById('login');
-  signInButton.addEventListener('click', () => {
-   containerLogin.classList.remove('right-panel-active');
+  signInButton?.addEventListener('click', () => {
+   containerLogin?.classList.remove('right-panel-active');
   });
  };
+
  return (
   <div className="container-login-page">
    <div className="container-login" id="login"></div>

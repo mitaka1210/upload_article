@@ -1,8 +1,8 @@
 import React, { useRef, useState } from 'react';
 import './access-denied.scss';
 
-const AccessDeniedDialog = ({ onClose }) => {
- const dialogRef = useRef(null);
+const AccessDeniedDialog = ({ onClose }: { onClose: () => void }) => {
+ const dialogRef = useRef<HTMLDialogElement>(null);
  const [isOpen, setIsOpen] = useState(true);
 
  // Функция за затваряне на диалога
@@ -15,7 +15,7 @@ const AccessDeniedDialog = ({ onClose }) => {
  };
 
  // Затваряне при клик извън съдържанието на <dialog>
- const closeOnClickOutside = (event) => {
+ const closeOnClickOutside = (event: React.MouseEvent<HTMLDialogElement>) => {
   if (event.target === dialogRef.current) {
    closeDialog();
   }
@@ -35,10 +35,4 @@ const AccessDeniedDialog = ({ onClose }) => {
   </div>
  );
 };
-
-// Добави PropTypes валидация
-AccessDeniedDialog.propTypes = {
- onClose: PropTypes.func, // onClose трябва да бъде function
-};
-
 export default AccessDeniedDialog;

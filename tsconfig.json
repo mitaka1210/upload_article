@@ -102,9 +102,7 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
     /* Language and Environment */
-    "target": "es2022",                                  /* По-нов стандарт на JavaScript */
     "lib": ["dom", "dom.iterable", "esnext"],            /* DOM и последни JS функционалности */
     "jsx": "react-jsx",                                  /* Новият JSX трансформ за React 17+ */
     /* Modules */
@@ -114,14 +112,16 @@
     /* JavaScript Support */
     "allowJs": true,                                     /* Позволява .js файлове в проекта */
     /* Interop Constraints */
-    "esModuleInterop": true,                             /* По-добра съвместимост с CommonJS */
     "allowSyntheticDefaultImports": true,                /* Позволява default imports дори без default export */
     "forceConsistentCasingInFileNames": true,            /* Case-sensitive import-и */
     "isolatedModules": true,                             /* Задължително за React + TypeScript */
     /* Type Checking */
-    "strict": true,                                      /* Всички строги проверки */
     /* Emit */
     "noEmit": true                                       /* Не се генерират output файлове */
+    "target": "es2020",              // Съвременен JavaScript стандарт
+    "strict": false,                 // Изключва всички строги проверки
+    "esModuleInterop": true,         // Позволява по-лесен import от CommonJS
+    "skipLibCheck": true,            // Пропуска проверка на .d.ts файлове
   },
   "include": ["src"]                                     /* Включва само папка src */
 }

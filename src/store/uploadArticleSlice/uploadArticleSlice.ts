@@ -1,29 +1,37 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+
 //!production
 const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
 // const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
 
-// Async thunk за качване на секция с изображение
-export const uploadSection = createAsyncThunk('sections/upload', async (data, { rejectWithValue }) => {
+// Async thunk for uploading a section with an image
+export const uploadSection = createAsyncThunk('sections/upload', async (data: UpdatedForm, { rejectWithValue }) => {
  try {
   const response = await axios.post(`${url}/api/create/section`, data, {
    headers: { 'Content-Type': 'multipart/form-data' },
   });
   return response.data;
  } catch (error) {
-  return rejectWithValue(error.response.data || 'Error uploading section');
+  return rejectWithValue((error as any).response?.data || ('Error uploading section' as string));
  }
 });
 
 const sectionsSlice = createSlice({
  name: 'uploadArticle',
  initialState: {
-  sections: [],
+  sections: [] as Array<{
+   id: number;
+   title: string;
+   content: string;
+   position: string;
+   image: string;
+   status: boolean;
+  }>,
   loading: false,
-  error: null,
+  error: null as string | null,
  },
  reducers: {},
  extraReducers: (builder) => {
@@ -38,9 +46,18 @@ const sectionsSlice = createSlice({
    })
    .addCase(uploadSection.rejected, (state, action) => {
     state.loading = false;
-    state.error = action.payload;
+    state.error = action.payload as string;
    });
  },
 });
 
 export default sectionsSlice.reducer;
+
+interface UpdatedForm {
+ article_id: number;
+ title: string;
+ content: string;
+ position: string;
+ image: File | null;
+ status: boolean;
+}

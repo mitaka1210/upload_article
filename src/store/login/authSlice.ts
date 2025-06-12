@@ -1,14 +1,24 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-//!production
 const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
-//!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
-// Async Thunks за логин
-export const login = createAsyncThunk('auth/login', async ({ username, password, role }, { rejectWithValue }) => {
+interface LoginParams {
+ username: string;
+ password: string;
+ role: string;
+}
+
+interface CheckAuthParams {
+ language: string;
+}
+
+interface User {
+ username: string;
+ role: string;
+}
+
+export const login = createAsyncThunk('auth/login', async ({ username, password, role }: LoginParams, { rejectWithValue }) => {
  try {
-  console.log('pesho', url);
   const response = await fetch(`${url}/api/login`, {
    method: 'POST',
    headers: { 'Content-Type': 'application/json' },
@@ -23,21 +33,21 @@ export const login = createAsyncThunk('auth/login', async ({ username, password,
    throw new Error(data.message || 'Login failed');
   }
 
-  localStorage.setItem('token', data.token); // Съхранява токена
-  localStorage.setItem('role', data.role); // Съхранява токена
-  localStorage.setItem('username', data.username); // Съхранява токена
+  localStorage.setItem('token', data.token);
+  localStorage.setItem('role', data.role);
+  localStorage.setItem('username', data.username);
 
   return data;
  } catch (error) {
-  return rejectWithValue(error.message);
+  return rejectWithValue((error as Error).message);
  }
 });
 
-export const checkAuth = createAsyncThunk('auth/checkAuth', async ({ language }, { rejectWithValue }) => {
+export const checkAuth = createAsyncThunk('auth/checkAuth', async ({ language }: CheckAuthParams, { rejectWithValue }) => {
  try {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No token found');
-  console.log('pesho', language);
+
   const response = await fetch(`${url}/api/check-auth?lang=${language}`, {
    headers: { Authorization: token },
   });
@@ -49,23 +59,23 @@ export const checkAuth = createAsyncThunk('auth/checkAuth', async ({ language },
 
   return data;
  } catch (error) {
-  return rejectWithValue(error.message);
+  return rejectWithValue((error as Error).message);
  }
 });
 
 const authSlice = createSlice({
  name: 'auth',
  initialState: {
-  user: null,
+  user: null as User | null,
   isAuthenticated: false,
   loading: false,
-  error: null,
+  error: null as string | null,
  },
  reducers: {
   logout: (state) => {
    state.user = null;
    state.isAuthenticated = false;
-   localStorage.removeItem('token'); // Премахва токена
+   localStorage.removeItem('token');
   },
  },
  extraReducers: (builder) => {
@@ -81,7 +91,7 @@ const authSlice = createSlice({
    })
    .addCase(login.rejected, (state, action) => {
     state.loading = false;
-    state.error = action.payload;
+    state.error = action.payload as string | null;
    })
    .addCase(checkAuth.pending, (state) => {
     state.loading = true;
@@ -94,7 +104,7 @@ const authSlice = createSlice({
    .addCase(checkAuth.rejected, (state, action) => {
     state.loading = false;
     state.isAuthenticated = false;
-    state.error = action.payload;
+    state.error = action.payload as string | null;
    });
  },
 });

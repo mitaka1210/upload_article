@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import './confirmDeleteDialog.scss';
 
-const ConfirmDeleteDialog = ({ onClose }) => {
- const dialogRef = useRef(null);
+const ConfirmDeleteDialog = ({ onClose }: { onClose: (action: string) => void }) => {
+ const dialogRef = useRef<HTMLDialogElement>(null);
  const [isOpen, setIsOpen] = useState(true);
+ const [getRole, setGetRole] = useState('');
  useEffect(() => {
-  console.log('pesho', onClose);
- }, []);
+  setGetRole(localStorage.getItem('role'));
+ }, [getRole]);
 
  // Функция за затваряне на диалога
  const closeDialog = () => {
@@ -21,8 +21,9 @@ const ConfirmDeleteDialog = ({ onClose }) => {
  const deleteDialog = () => {
   onClose('delete'); // Извиква родителската функция за затваряне
  };
+
  // Затваряне при клик извън съдържанието на <dialog>
- const closeOnClickOutside = (event) => {
+ const closeOnClickOutside = (event: React.MouseEvent<HTMLDialogElement>) => {
   if (event.target === dialogRef.current) {
    closeDialog();
   }
@@ -30,25 +31,29 @@ const ConfirmDeleteDialog = ({ onClose }) => {
 
  return (
   <div className="input-width-100">
-   <dialog ref={dialogRef} className="show-hide-dialog dialog-content flex-vertical-container align-content-center align-items-center text-align-center padding-15" onClick={closeOnClickOutside} style={{ display: isOpen ? 'block' : 'none' }}>
-    <h6>⚠️ Нямате прав12312312а!</h6>
-    <p>Нямате достатъчно права, за да изпълните тази операция.</p>
-    <div>
-     <button className="access-denied-btn" onClick={deleteDialog}>
+   <dialog ref={dialogRef} className="show-hide-dialog change-width-snackbar dialog-content flex-vertical-container align-content-center align-items-center text-align-center padding-15" onClick={closeOnClickOutside} style={{ display: isOpen ? 'block' : 'none' }}>
+    {getRole !== 'super_admin' ? (
+     <div>
+      <h6>⚠️ Нямате права!</h6>
+      <p>Нямате достатъчно права, за да изпълните тази операция.</p>
+     </div>
+    ) : (
+     <div>
+      <h6>⚠️ Сигурни ли сте?</h6>
+      <p>Тази операция ще изтрие статията завинаги.</p>
+     </div>
+    )}
+    <div className="flex-horizontal-container-raw  gap-25">
+     <button className="access-denied-btn input-width-100" onClick={deleteDialog}>
       Да, сигурен съм
      </button>
-     <button className="access-denied-btn" onClick={closeDialog}>
+     <button className="access-denied-btn input-width-100" onClick={closeDialog}>
       Затвори
      </button>
     </div>
    </dialog>
   </div>
  );
-};
-
-// Добави PropTypes валидация
-ConfirmDeleteDialog.propTypes = {
- onClose: PropTypes.func, // onClose трябва да бъде function
 };
 
 export default ConfirmDeleteDialog;

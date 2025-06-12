@@ -8,83 +8,100 @@ import AccessDeniedDialog from '../dialogs/no-privilegest/accessDeniedDialog';
 import ConfirmDeleteDialog from '../dialogs/you-sure-delete-article/confirmDeleteDialog';
 import Snackbar from '../dialogs/show-error/show-error';
 
+interface RootState {
+ articlesSections: {
+  isLoading: boolean;
+  status: string;
+  data: {
+   isLoading: boolean;
+   title: string;
+   create_article_date: string;
+   create_article_time: string;
+  }[];
+ };
+}
+
+interface Section {
+ id: number;
+ title: string;
+ create_article_date: string;
+ create_article_time: string;
+}
+
 const ListArticles = () => {
- //? properties
  let err = '';
- //react-redux and react
  const dispatch = useDispatch();
- const status = useSelector((state) => state.articlesSections.status);
+ const status = useSelector((state: RootState) => state.articlesSections.status);
+ const articlesInfo = useSelector((state: RootState) => state.articlesSections.data);
  const [showDialog, setShowDialog] = useState(false);
  const [dialog, setDialog] = useState(false);
  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
  const [articleId, setArticleId] = useState(0);
  const [snackbarOpen, setSnackbarOpen] = useState(false);
- const [snackbarMsg, setSnackbarMsg] = useState('');
- // storage
+ const [snackbarMsg, setSnackbarMsg] = useState({ message: '' });
+ const [statusDelete, setStatusDelete] = useState('error');
  const role = localStorage.getItem('role');
- useEffect(() => {
-  getTodos();
- }, [1]);
- const articlesInfo = useSelector((state) => state.articlesSections.data);
  const navigate = useNavigate();
 
- const editSection = (section) => {
+ useEffect(() => {
+  getTodos();
+ }, []);
+
+ const editSection = (section: Section) => {
   let articleId = section.id;
   if (role === 'admin' || role === 'super_admin') {
    navigate(`/update-section/${articleId}`);
   } else {
-   setDialog(true); // Задаваме true, за да покажем диалога
-   setShowDialog(true); // Показва диалога
+   setDialog(true);
+   setShowDialog(true);
   }
  };
 
- //delete article function
- const deleteTodo = async (id) => {
+ const deleteTodo = async (id: number) => {
   setArticleId(id);
-  console.log('pesho', id);
   if (role === 'admin' || role === 'user') {
-   setDialog(true); // Задаваме true, за да покажем диалога
-   setShowDialog(true); // Показва диалога
+   setDialog(true);
+   setShowDialog(true);
   } else {
    try {
-    console.log('pesho', showDeleteDialog);
-
-    setShowConfirmDialog(true); // Показва диалога за потвърждение
-    setShowDeleteDialog(true); // Показва диалога за потвърждение
-    console.log('pesho', showDeleteDialog);
-    // Първо изчакай `updateSection`
-    // await dispatch(deleteArticle(id)).unwrap();
-    // // След това извикай `fetchArticles`
-    // await dispatch(fetchArticles()).unwrap();
-    // Ако всичко е наред, пренасочи към началната страница
-    // navigate('/home');
+    setShowConfirmDialog(true);
+    setShowDeleteDialog(true);
    } catch (error) {
     console.error('Error:', error);
    }
   }
  };
- const openAgain = (data) => {
-  console.log('pesho', articleId);
-  setShowConfirmDialog(false); // Затваря диалога за потвърждение
-  setShowDeleteDialog(false); // Затваря диалога за потвърждение
+
+ const openAgain = (data: string) => {
+  setShowConfirmDialog(false);
+  setShowDeleteDialog(false);
   if (data === 'delete') {
-   dispatch(deleteArticle(data))
+   dispatch<any>(deleteArticle(articleId))
     .unwrap()
-    .then(() => {
-     dispatch(fetchArticles());
+    .then((response: any) => {
+     console.log('pesho', response);
+     // Show success snackbar
+     setSnackbarMsg({ message: response?.message || 'Article deleted successfully!' });
+     setStatusDelete('success');
+     setSnackbarOpen(true);
+     dispatch<any>(fetchArticles());
     })
-    .catch((error) => {
+    .catch((error: string) => {
+     console.log('err', error);
      setSnackbarMsg(error);
+     setStatusDelete('error');
+     setSnackbarOpen(true);
      console.error('Error deleting article:', error);
     });
   } else {
-   setShowDialog(false); // Затваря диалога
+   setShowDialog(false);
   }
  };
+
  const getTodos = () => {
   if (status === 'idle') {
-   dispatch(fetchArticles());
+   dispatch<any>(fetchArticles());
   } else if (status === 'loading') {
    // TODO add logic
   } else if (status === 'succeeded') {
@@ -94,15 +111,12 @@ const ListArticles = () => {
   }
  };
 
- //TODO трябва да се оправи async заявките да се изчака отговора че са получени данните преди да се заредят в data.data.map
-
+ // @ts-ignore
  return (
   <div>
-   {showDialog && <AccessDeniedDialog onClose={() => setShowDialog(false)} />} {/* Подава функцията за затваряне */}
+   {showDialog && <AccessDeniedDialog onClose={() => setShowDialog(false)} />}
    {showDeleteDialog && <ConfirmDeleteDialog onClose={(data) => openAgain(data)} />}
-   {<Snackbar message={snackbarMsg} open={snackbarOpen} onClose={() => setSnackbarOpen(false)} />}
-   {/* Подава
-    функцията за затваряне */}
+   {<Snackbar message={snackbarMsg} status={status} open={snackbarOpen} onClose={() => setSnackbarOpen(false)} />}
    {articlesInfo.isLoading ? (
     <div>
      <h1>Loading........{err}</h1>
@@ -119,7 +133,7 @@ const ListArticles = () => {
       </tr>
      </thead>
      <tbody>
-      {articlesInfo.map((section, index) => {
+      {articlesInfo.map((section: Section, index: number) => {
        return (
         <tr key={index}>
          <td style={{ position: 'relative', top: '25px' }}>{section.title}</td>

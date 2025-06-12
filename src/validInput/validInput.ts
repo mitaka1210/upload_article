@@ -1,59 +1,44 @@
-//! ERROR input default state
-
-export const validateInput = (username, password, first_name, lastName, email, confirmPassword) => {
+export const validateInput = (username: string, password: string, first_name: string, lastName: string, email: string, confirmPassword: string): { isValid: boolean; errors: Record<string, string> } => {
  let isValid = true;
- // Изчистване на всички грешки първо
- let setUsernameError = '';
- let setFirstNameError = '';
- let setLastNameError = '';
- let setEmailError = '';
- let setPasswordError = '';
- let setConfirmPasswordError = '';
+ const errors: Record<string, string> = {};
 
- // Проверка дали всички полета са попълнени
  if (!username) {
-  setUsernameError('Username is required');
+  errors.username = 'Username is required';
   isValid = false;
  }
  if (!first_name) {
-  setFirstNameError('First name is required');
+  errors.first_name = 'First name is required';
   isValid = false;
  }
  if (!lastName) {
-  setLastNameError('Last name is required');
+  errors.lastName = 'Last name is required';
   isValid = false;
  }
  if (!email) {
-  setEmailError('Email is required');
+  errors.email = 'Email is required';
   isValid = false;
+ } else {
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailPattern.test(email)) {
+   errors.email = 'Please enter a valid email';
+   isValid = false;
+  }
  }
  if (!password) {
-  setPasswordError('Password is required');
+  errors.password = 'Password is required';
+  isValid = false;
+ } else if (password.length < 6) {
+  errors.password = 'Password must be at least 6 characters';
   isValid = false;
  }
+
  if (!confirmPassword) {
-  setConfirmPasswordError('Confirm password is required');
+  errors.confirmPassword = 'Confirm password is required';
+  isValid = false;
+ } else if (password !== confirmPassword) {
+  errors.confirmPassword = 'Passwords do not match';
   isValid = false;
  }
 
- // Проверка дали паролите съвпадат
- if (password !== confirmPassword) {
-  setConfirmPasswordError('Passwords do not match');
-  isValid = false;
- }
-
- // Проверка за минимална дължина на паролата
- if (password && password.length < 6) {
-  setPasswordError('Password must be at least 6 characters');
-  isValid = false;
- }
-
- // Проверка за валиден имейл
- const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
- if (email && !emailPattern.test(email)) {
-  setEmailError('Please enter a valid email');
-  isValid = false;
- }
-
- return isValid;
+ return { isValid, errors };
 };

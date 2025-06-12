@@ -1,31 +1,38 @@
-// Async action за изтриване на секция
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { deleteArticle } from '../deleteArticle/deleteArticleSlice';
-//!production
+
 const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
-//!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
-// Async action за изтриване
-export const deleteSection = createAsyncThunk('sections/deleteSection', async (data, { rejectWithValue }) => {
+interface DeleteSectionData {
+ articleId: string;
+ sectionId: number;
+}
+
+interface Section {
+ id: number;
+ articleId: string;
+ position: number;
+}
+
+export const deleteSection = createAsyncThunk<Section, DeleteSectionData, { rejectValue: string }>('sections/deleteSection', async (data: DeleteSectionData, { rejectWithValue }) => {
  let article_id = data.articleId;
  let position = data.sectionId;
  try {
   return await axios.delete(`${url}/api/delete/section/${article_id}/${position}`);
  } catch (err) {
-  return rejectWithValue(err.response.data);
+  return rejectWithValue((err as any).response.data);
  }
 });
 
 const deleteArticlesSlice = createSlice({
  name: 'deleteArticlesSections',
  initialState: {
-  articles: [],
-  sections: [],
+  articles: [] as any[],
+  sections: [] as Section[],
   status: 'idle', // idle | loading | succeeded | failed
   loading: false,
-  error: null,
+  error: null as string | null,
  },
  reducers: {},
  extraReducers: (builder) => {
@@ -35,16 +42,15 @@ const deleteArticlesSlice = createSlice({
     state.status = 'loading';
     state.error = null;
    })
-   // Изтриване на секция
    .addCase(deleteSection.fulfilled, (state, action) => {
     state.loading = false;
     state.status = 'succeeded';
-    state.sections = state.sections.filter((section) => section.id !== action.payload.id);
+    state.sections = state.sections.filter((section: Section) => section.id !== (action.payload as Section).id);
    })
    .addCase(deleteSection.rejected, (state, action) => {
     state.loading = false;
     state.status = 'failed';
-    state.error = action.payload;
+    state.error = action.payload as string;
    });
  },
 });

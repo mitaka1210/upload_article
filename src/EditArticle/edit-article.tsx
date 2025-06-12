@@ -4,30 +4,45 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import './edit.scss';
+// @ts-ignore
 import deleteSectionImg from '../assets/delete-svgrepo-com.svg';
 import { deleteSection } from '../store/deleteArticleSection/deleteArticleSectionSlice';
+import { AppDispatch, RootState } from '../store/storeState/store';
 
 const EditTodo = () => {
  const { articleId } = useParams();
- const dispatch = useDispatch();
- const articlesInfo = useSelector((state) => state.articlesSections.data);
- const info = useSelector((state) => state.articlesSections.status);
+ const dispatch = useDispatch<AppDispatch>();
+ const articlesInfo = useSelector((state: RootState) => state.articlesSections.data);
+ const info = useSelector((state: RootState) => state.articlesSections.status);
  const [imageName, setImageName] = useState('');
  const [showArticle, setShowArticle] = useState(false);
- const [, setSection] = useState([]);
+ const [, setSection] = useState<{ position: number; content: string; title: string }[]>([]);
  const navigate = useNavigate();
- let sections = {};
+ let articleStructure: {
+  id: number;
+  article_id: string | undefined;
+  title: string;
+  image: string;
+  status: boolean;
+  section: { position: number; content: string; title: string }[];
+ } = {
+  id: 0,
+  article_id: undefined,
+  title: '',
+  image: '',
+  status: false,
+  section: [],
+ };
 
  useEffect(() => {
   articlesStatus();
- }, [articleId, info]); // Задължително да използваш [id], за да се извиква при промяна
- // на ID.
+ }, [articleId, info]);
 
  const [formData, setFormData] = useState({
   id: articleId,
   article_id: articleId,
   title: '',
-  image: '',
+  image: '' as string | File,
   status: false,
   section: [
    {
@@ -37,29 +52,32 @@ const EditTodo = () => {
    },
   ],
  });
- // TODO add logic for  info === 'loading'
+
  const articlesStatus = () => {
   if (info === 'idle') {
    dispatch(fetchArticles());
   } else if (info === 'succeeded') {
    let sectionId = Number(articleId);
-   articlesInfo.forEach((section) => {
+   articlesInfo.forEach((section: any) => {
     if (section.id === sectionId) {
-     sections = section;
-     setSection(sections.section);
-     setFormData(sections);
-     setShowArticle(sections.status);
+     articleStructure = section;
+     setSection(articleStructure.section);
+     setFormData({
+      ...articleStructure,
+      id: articleStructure.id?.toString(),
+     });
+     setShowArticle(articleStructure.status);
     }
    });
   }
-  // TODO add logic for info === 'failed'
  };
- const handleChange = (e) => {
+
+ const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
   const { name, value } = e.target;
 
   if (name.startsWith('section[')) {
    const sectionIndex = parseInt(name.split('[')[1].split(']')[0]);
-   const sectionName = name.split('.')[1]; // пример: section[0].position
+   const sectionName = name.split('.')[1];
 
    setFormData((prev) => {
     const updatedSections = [...prev.section];
@@ -70,15 +88,15 @@ const EditTodo = () => {
     return { ...prev, section: updatedSections };
    });
   } else {
-   const { name, value } = e.target;
    setFormData((prevData) => ({
     ...prevData,
-    [name]: value, // Актуализираме полето по неговото име
+    [name]: value,
    }));
   }
  };
- const handleImageChange = (e) => {
-  const file = e.target.files[0];
+
+ const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
   if (file) {
    const truncatedName = truncateString(file.name, 30);
    setImageName(truncatedName);
@@ -88,28 +106,26 @@ const EditTodo = () => {
    }));
   }
  };
- //delete article function
- const deleteSectionFromArticle = async (sectionId) => {
+
+ const deleteSectionFromArticle = async (sectionId: number) => {
   try {
-   // Първо изчакай `updateSection`
    await dispatch(
     deleteSection({
-     articleId: articleId,
+     articleId: articleId as string,
      sectionId: sectionId,
     })
    ).unwrap();
-   // След това извикай `fetchArticles`
    await dispatch(fetchArticles()).unwrap();
-   // Ако всичко е наред, презареди страницата
   } catch (error) {
    console.error('Error:', error);
   }
  };
- const checkBoxValue = () => {
-  if (showArticle) setShowArticle(false);
-  else setShowArticle(true);
+
+ const checkBoxValue = (isChecked: boolean) => {
+  setShowArticle(isChecked);
  };
- const handleSubmit = async (e) => {
+
+ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault();
   const copy = structuredClone({
    ...formData,
@@ -117,27 +133,24 @@ const EditTodo = () => {
    status: showArticle,
   });
   try {
-   // Първо изчакай `updateSection`
-   await dispatch(updateSection(copy)).unwrap();
-
-   // След това извикай `fetchArticles`
+   // @ts-ignore
+   await dispatch(updateSection(copy as { image: string | File; status: boolean; id: string | undefined; article_id: string | undefined; title: string; section: { position: number; content: string; title: string }[] })).unwrap();
    await dispatch(fetchArticles()).unwrap();
-
-   // Ако всичко е наред, пренасочи към началната страница
    navigate('/home');
   } catch (error) {
    console.error('Error:', error);
   }
  };
- const truncateString = (str, num) => {
+
+ const truncateString = (str: string, num: number): string => {
   if (str.length <= num) {
    return str;
   } else {
    return str.slice(0, num) + '...';
   }
  };
+
  const handleAddSection = () => {
-  console.log('pesho23123', articlesInfo);
   setFormData((prevData) => ({
    ...prevData,
    section: [
@@ -158,7 +171,7 @@ const EditTodo = () => {
    ) : (
     <div className="edit-form-bgr">
      <div className="flex-vertical-container align-items-center edit-header">
-      <h3 className={showArticle ? 'add-color-green' + ' remove-margin-bottom' : 'add-color-orange remove-margin-bottom'}>{showArticle ? 'Статия е' + ' побликувана' : 'Статията не' + ' е побликувана'}</h3>
+      <h3 className={showArticle ? 'add-color-green remove-margin-bottom' : 'add-color-orange remove-margin-bottom'}>{showArticle ? 'Статия е побликувана' : 'Статията не е побликувана'}</h3>
       <div className="show-article">
        <input
         type="checkbox"
@@ -166,8 +179,7 @@ const EditTodo = () => {
         checked={showArticle}
         onChange={(e) => {
          const isChecked = e.target.checked;
-         console.log('Checkbox is checked:', isChecked);
-         checkBoxValue(isChecked); // Извикайте функцията си с новата стойност
+         checkBoxValue(isChecked);
         }}
        />
        <label htmlFor="check">
@@ -181,43 +193,31 @@ const EditTodo = () => {
       <div className="text-align-center">
        <p>{formData.title}</p>
       </div>
-      <div
-       className="flex-horizontal-container-raw
-       signup__field justify-content-center margin-15"
-      >
+      <div className="flex-horizontal-container-raw signup__field justify-content-center margin-15">
        <input type="text" className="signup__input margin-top-15" name="title" value={formData.title || ''} onChange={handleChange} placeholder="Задължително" required />
        <label className="signup__label">Редактиране на заглавието</label>
       </div>
-
       <div className="flex-vertical-container input-width-100">
-       {formData.section.map((section, index) => {
-        return (
-         <div className="section-title-content flex-vertical-container margin-15" key={index}>
-          <div className="signup__field">
-           <input type="text" className="signup__input margin-top-15" name={`section[${index}].title`} value={section.title || ''} onChange={handleChange} placeholder="Задължително" required />
-           <label className="signup__label" htmlFor="email">
-            редактиране на заглавието на секцията {index + 1}
-           </label>
-          </div>
-          <h6>Съдържание към секцията {index + 1}</h6>
-          <textarea name={`section[${index}].content`} value={section.content || ''} onChange={handleChange} placeholder="Content" className="add-textarea-height padding-20" />
-          <br />
-          <br />
-          <div className="delete_section" onClick={() => deleteSectionFromArticle(section.position)}>
-           <img src={deleteSectionImg} alt="delete" />
-          </div>
+       {formData.section.map((section, index) => (
+        <div className="section-title-content flex-vertical-container margin-15" key={index}>
+         <div className="signup__field">
+          <input type="text" className="signup__input margin-top-15" name={`section[${index}].title`} value={section.title || ''} onChange={handleChange} placeholder="Задължително" required />
+          <label className="signup__label" htmlFor="email">
+           редактиране на заглавието на секцията {index + 1}
+          </label>
          </div>
-        );
-       })}
+         <h6>Съдържание към секцията {index + 1}</h6>
+         <textarea name={`section[${index}].content`} value={section.content || ''} onChange={handleChange} placeholder="Content" className="add-textarea-height padding-20" />
+         <br />
+         <br />
+         <div className="delete_section" onClick={() => deleteSectionFromArticle(section.position)}>
+          <img src={deleteSectionImg} alt="delete" />
+         </div>
+        </div>
+       ))}
       </div>
-      {/*upload button*/}
       <div className="file file--uploading">
        <input id="input-file-edit" onChange={handleImageChange} type="file" />
-       {/*<label htmlFor="input-file" className="input-file">*/}
-       {/* <img src={upload} alt="upload" />*/}
-       {/* <p>Качване на снимка към статия</p>*/}
-       {/*</label>*/}
-       {/*<p className="upload-image-name-edit">{image_name}</p>*/}
       </div>
       <button onClick={handleSubmit} type="submit" className="edit-send-button">
        Запази промените

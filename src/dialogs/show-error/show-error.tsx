@@ -1,31 +1,52 @@
 import React, { useEffect, useRef } from 'react';
-import './Snackbar.scss';
+import './show-error.scss';
 
-const Snackbar = ({ message, open, onClose }) => {
- const progressRef = useRef();
+interface SnackbarProps {
+ message: { message: string };
+ open: boolean;
+ status: string;
+ onClose: () => void;
+}
+
+const Snackbar: React.FC<SnackbarProps> = ({ message, status, open, onClose }) => {
+ const progressRef = useRef<HTMLDivElement>(null);
 
  useEffect(() => {
   if (open) {
-   progressRef.current.style.width = '0%';
+   if (progressRef.current) {
+    progressRef.current.style.width = '0%';
+   }
    setTimeout(() => {
-    progressRef.current.style.transition = 'width 3s linear';
-    progressRef.current.style.width = '100%';
+    if (progressRef.current) {
+     progressRef.current.style.transition = 'width 3s linear';
+     progressRef.current.style.width = '100%';
+    }
    }, 10);
    const timer = setTimeout(onClose, 3000);
    return () => {
     clearTimeout(timer);
-    progressRef.current.style.transition = '';
-    progressRef.current.style.width = '0%';
+    if (progressRef.current) {
+     progressRef.current.style.transition = '';
+     progressRef.current.style.width = '0%';
+    }
    };
   }
  }, [open, onClose]);
 
  return (
-  <div className={`snackbar${open ? ' show' : ''}`}>
-   <span>{message}</span>
-   <button onClick={onClose}>OK</button>
-   <div className="snackbar-progress" ref={progressRef}></div>
-  </div>
+  {status === 'error' ? (
+   <div className={`snackbar${open ? ' show' : ''}`}>
+    <span>{message.message}</span>
+    <button onClick={onClose}>OK</button>
+    <div className="snackbar-progress" ref={progressRef}></div>
+   </div>
+  ) : (
+   <div className={`snackbar${open ? ' show' : ''}`}>
+    <span>{message.message}</span>
+    <button onClick={onClose}>OK</button>
+    <div className="snackbar-progress" ref={progressRef}></div>
+   </div>
+  )}
  );
 };
 
