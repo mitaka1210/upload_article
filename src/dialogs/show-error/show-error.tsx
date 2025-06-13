@@ -10,8 +10,10 @@ interface SnackbarProps {
 
 const Snackbar: React.FC<SnackbarProps> = ({ message, status, open, onClose }) => {
  const progressRef = useRef<HTMLDivElement>(null);
+ const [differentSnackBar, setDifferentSnackBar] = React.useState('');
 
  useEffect(() => {
+  setDifferentSnackBar(status);
   if (open) {
    if (progressRef.current) {
     progressRef.current.style.width = '0%';
@@ -34,19 +36,21 @@ const Snackbar: React.FC<SnackbarProps> = ({ message, status, open, onClose }) =
  }, [open, onClose]);
 
  return (
-  {status === 'error' ? (
-   <div className={`snackbar${open ? ' show' : ''}`}>
-    <span>{message.message}</span>
-    <button onClick={onClose}>OK</button>
-    <div className="snackbar-progress" ref={progressRef}></div>
-   </div>
-  ) : (
-   <div className={`snackbar${open ? ' show' : ''}`}>
-    <span>{message.message}</span>
-    <button onClick={onClose}>OK</button>
-    <div className="snackbar-progress" ref={progressRef}></div>
-   </div>
-  )}
+  <>
+   {differentSnackBar === 'error' ? (
+    <div className={`snackbar error${open ? ' show' : ''}`}>
+     <span>{message.message}</span>
+     <button onClick={onClose}>OK</button>
+     <div className="snackbar-progress" ref={progressRef}></div>
+    </div>
+   ) : (
+    <div className={`snackbar success${open ? ' show' : ''}`}>
+     <span>{message.message}</span>
+     <button onClick={onClose}>OK</button>
+     <div className="snackbar-progress" ref={progressRef}></div>
+    </div>
+   )}
+  </>
  );
 };
 
