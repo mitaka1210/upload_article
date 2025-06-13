@@ -7,7 +7,7 @@ dotenv.config({
   path:
     process.env.NODE_ENV === "production"
       ? ".env.production"
-      : ".env.development",
+      : ".env.production",
 });
 const pool = new Pool({
   user: process.env.DB_USER,
