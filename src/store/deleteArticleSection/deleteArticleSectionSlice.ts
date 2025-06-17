@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { deleteArticle } from '../deleteArticle/deleteArticleSlice';
 
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+const url = `${import.meta.env.VITE_API_URL_PROD}`;
 
 interface DeleteSectionData {
  articleId: string;

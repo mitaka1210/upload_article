@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { changeUserRole } from '../store/change_role/adminSlice';
 import { useDispatch } from 'react-redux';
 import { useGetUsersQuery } from '../store/getAllUsers/getAllUsersSlice';
@@ -9,7 +9,8 @@ const RoleManager = () => {
  const [selectedUser, setSelectedUser] = useState(null);
  const [newRole, setNewRole] = useState('');
  const { data, isLoading, error } = useGetUsersQuery();
- console.log('pesho', token);
+
+ useEffect(() => {}, []);
  const handleChangeRole = () => {
   if (!selectedUser || !newRole) return;
 

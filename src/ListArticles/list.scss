@@ -115,3 +115,21 @@ $red: #e74c3c;
   box-shadow: 0 0 40px 40px $red inset;
  }
 }
+.table{
+ width: 100%;
+ max-width: 100%;
+ margin-bottom: 1rem;
+ background-color: transparent;
+ text-align: center !important;
+ margin-top: 3rem;
+}
+.table tr {
+ display: flex;
+ vertical-align: bottom;
+ border-bottom: 2px solid #dee2e6;
+ justify-content: space-around;
+}
+
+.table td {
+ width: 100%;
+}

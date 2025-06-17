@@ -1,7 +1,7 @@
 // src/api/axiosConfig.js
 import axios from 'axios';
 
-const url = process.env.REACT_APP_API_URL_PROD;
+const url = import.meta.env.VITE_API_URL_PROD;
 const axiosInstance = axios.create({
  baseURL: `${url}`,
  withCredentials: true, // ако използваш cookies

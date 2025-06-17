@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import customBaseQuery from '../../api/customBaseQuery';
 
-export const api = createApi({
+export const getListOfUsers = createApi({
  reducerPath: 'api',
  baseQuery: customBaseQuery,
  endpoints: (builder) => ({
@@ -11,4 +11,4 @@ export const api = createApi({
  }),
 });
 
-export const { useGetUsersQuery } = api;
+export const { useGetUsersQuery } = getListOfUsers;

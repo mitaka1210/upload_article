@@ -1,11 +1,12 @@
 // src/api/customBaseQuery.js
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+/* eslint-disable no-undef */
 //!production
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+// const url = `${import.meta.env.VITE_API_URL_PROD}`;
 
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+const url = `${import.meta.env.VITE_API_URL}`;
 const baseQuery = fetchBaseQuery({
  baseUrl: `${url}/api`,
  prepareHeaders: (headers) => {
@@ -21,12 +22,13 @@ const customBaseQuery = async (args, api, extraOptions) => {
  const result = await baseQuery(args, api, extraOptions);
 
  if (result?.error?.status === 401) {
-  // 🔥 401 Unauthorized -> Изчистване и пренасочване
+  // 🔥 401 Unauthorized -> Clear storage and redirect
   localStorage.clear();
   window.location.href = '/';
  }
 
  return result;
 };
+/* eslint-enable no-undef */
 
 export default customBaseQuery;

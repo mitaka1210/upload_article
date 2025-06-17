@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+const url = `${import.meta.env.VITE_API_URL_PROD}`;
 
 // getAll likesDislikes from server
 export const fetchLikesDislikes = createAsyncThunk('fetchLikesDislikes', async () => {

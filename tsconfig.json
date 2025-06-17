@@ -117,7 +117,7 @@
     "isolatedModules": true,                             /* Задължително за React + TypeScript */
     /* Type Checking */
     /* Emit */
-    "noEmit": true                                       /* Не се генерират output файлове */
+    "noEmit": true,                                     /* Не се генерират output файлове */
     "target": "es2020",              // Съвременен JavaScript стандарт
     "strict": false,                 // Изключва всички строги проверки
     "esModuleInterop": true,         // Позволява по-лесен import от CommonJS

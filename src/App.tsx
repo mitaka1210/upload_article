@@ -2,9 +2,8 @@ import React from 'react';
 import './reusable.scss';
 import './typography.scss';
 import { Navigate, Route, Routes } from 'react-router-dom'; // components
-import Read from './components/Read';
 import Home from './Home/Home';
-import LoginPage from './Login/Login.tsx';
+import LoginPage from './Login/Login';
 import EditArticle from './EditArticle/edit-article';
 import RoleManager from './roleManager/roleManager';
 
@@ -15,7 +14,6 @@ function App() {
     <Route path="/" element={<Navigate to="/login" replace />} />
     <Route path="/login" element={<LoginPage />} name="Login" />
     <Route path="/home" element={<Home />} name="Home" />
-    <Route path="/read" element={<Read />} name="Read" />
     <Route path="/change-role" element={<RoleManager />} name="RoleManager" />
     <Route path="/update-section/:articleId" element={<EditArticle />} />
    </Routes>

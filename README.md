@@ -42,7 +42,7 @@ docker-compose up --build
 
 4.Достъп до:
   * Frontend: http://localhost:3000
-  * nodemon index.js
+  * nodemon index.tsx
     - Backend API: http://localhost:3400
 ├── client/            # React приложение (Frontend)
 ├── server/            # Express приложение (Backend)

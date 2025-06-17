@@ -6,6 +6,7 @@ import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
 import { addArticle } from '../store/add-new-article/addNewArticleSlice';
 import { uploadSection } from '../store/uploadArticleSlice/uploadArticleSlice';
 import { AppDispatch, RootState } from '../store/storeState/store';
+// @ts-ignore
 import logOut from '../assets/sign-out-alt-4-svgrepo-com.svg';
 import { useNavigate } from 'react-router-dom';
 

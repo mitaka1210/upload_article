@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+//?prod
+// const url = `${import.meta.env.VITE_API_URL_PROD}`;
+//?dev
+const url = `${import.meta.env.VITE_API_URL}`;
 
 interface LoginParams {
  username: string;

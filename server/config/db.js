@@ -2,12 +2,13 @@ import pkg from "pg";
 import dotenv from "dotenv";
 
 const { Pool } = pkg;
-// Зареждане на подходящия .env файл
+/* eslint-disable no-undef */
+// Load the appropriate .env file
 dotenv.config({
   path:
     process.env.NODE_ENV === "production"
       ? ".env.production"
-      : ".env.production",
+      : ".env.development",
 });
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -16,11 +17,6 @@ const pool = new Pool({
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
 });
-// const pool = new Pool({
-//   user: "mitaka",
-//   password: "mitaka",
-//   host: "192.168.55.5",
-//   port: "5434",
-//   database: "postgres",
-// });
+/* eslint-enable no-undef */
+
 export default pool;

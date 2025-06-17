@@ -2,10 +2,10 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from '../../api/axiosConfig';
 
 //!production
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+const url = `${import.meta.env.VITE_API_URL_PROD}`;
 
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+// const url = `${import.meta.env.VITE_API_URL}`;
 // Интерфейс за параметрите на addArticle
 interface AddArticleParams {
  title: string;

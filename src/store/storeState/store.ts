@@ -10,7 +10,7 @@ import deleteArticlesSlice from '../deleteArticle/deleteArticleSlice';
 import authReducer from '../login/authSlice';
 import createAccountSlice from '../create_account/createAccountSlice';
 import adminSlice from '../change_role/adminSlice';
-import { api } from '../getAllUsers/getAllUsersSlice';
+import { getListOfUsers } from '../getAllUsers/getAllUsersSlice';
 
 const store = configureStore({
  reducer: {
@@ -25,9 +25,9 @@ const store = configureStore({
   auth: authReducer,
   createAccount: createAccountSlice,
   roleManager: adminSlice,
-  [api.reducerPath]: api.reducer,
+  [getListOfUsers.reducerPath]: getListOfUsers.reducer,
  },
- middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
+ middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(getListOfUsers.middleware),
 });
 
 export default store;

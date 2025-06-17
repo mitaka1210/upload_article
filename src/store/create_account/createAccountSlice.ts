@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 //!production
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+const url = `${import.meta.env.VITE_API_URL_PROD}`;
 
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+// const url = `${import.meta.env.VITE_API_URL}`;
 // Async thunk for creating an account
 export const createAccount = createAsyncThunk('account/createAccount', async (userData, thunkAPI) => {
  const response = await fetch(`${url}/api/create-account`, {

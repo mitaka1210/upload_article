@@ -26,7 +26,7 @@ const port = process.env.PORT || 5000;
 //    ```
 //
 // Този код създава POST заявка на `/upload`, която обработва качването и компресирането на изображения. Когато се изпълни успешно, връща съобщение за успех, а при грешка - съобщение за грешка.
-// За да стартирате сървъра, използвайте `node server/index.js` и използвайте Postman или друг инструмент за изпращане на POST заявки към `/upload`.
+// За да стартирате сървъра, използвайте `node server/index.tsx` и използвайте Postman или друг инструмент за изпращане на POST заявки към `/upload`.
 app.post("/upload", upload.single("image"), async (req, res) => {
   try {
     await compressImage(req.file.path);

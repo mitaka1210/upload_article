@@ -10,10 +10,9 @@ import Snackbar from '../dialogs/show-error/show-error';
 
 interface RootState {
  articlesSections: {
-  isLoading: boolean;
   status: string;
+  isLoading: boolean;
   data: {
-   isLoading: boolean;
    title: string;
    create_article_date: string;
    create_article_time: string;
@@ -32,6 +31,7 @@ const ListArticles = () => {
  let err = '';
  const dispatch = useDispatch();
  const status = useSelector((state: RootState) => state.articlesSections.status);
+ const isLoading = useSelector((state: RootState) => state.articlesSections.isLoading);
  const articlesInfo = useSelector((state: RootState) => state.articlesSections.data);
  const [showDialog, setShowDialog] = useState(false);
  const [dialog, setDialog] = useState(false);
@@ -46,7 +46,7 @@ const ListArticles = () => {
 
  useEffect(() => {
   getTodos();
- }, []);
+ }, [status]);
 
  const editSection = (section: Section) => {
   let articleId = section.id;
@@ -63,7 +63,7 @@ const ListArticles = () => {
   if (role === 'admin' || role === 'user') {
    setDialog(true);
    setShowDialog(true);
-  } else {
+  } else if (role === 'super_admin') {
    try {
     setShowConfirmDialog(true);
     setShowDeleteDialog(true);
@@ -80,20 +80,23 @@ const ListArticles = () => {
    dispatch<any>(deleteArticle(articleId))
     .unwrap()
     .then((response: any) => {
-     console.log('pesho', response);
      // Show success snackbar
      setSnackbarMsg({ message: response?.message || 'Article deleted successfully!' });
      setStatusDelete('success');
      setSnackbarOpen(true);
      dispatch<any>(fetchArticles());
     })
-    .catch((error: string) => {
-     console.log('err', error);
-     setSnackbarMsg(error);
-     setStatusDelete('error');
-     setSnackbarOpen(true);
-     console.error('Error deleting article:', error);
-    });
+    .catch(
+     (error: {
+      message: string; // Adjusted type to match the error structure
+     }) => {
+      console.log('err', error);
+      setSnackbarMsg(error.message ? { message: error.message } : { message: 'Error deleting article' });
+      setStatusDelete('error');
+      setSnackbarOpen(true);
+      console.error('Error deleting article:', error);
+     }
+    );
   } else {
    setShowDialog(false);
   }
@@ -106,6 +109,7 @@ const ListArticles = () => {
    // TODO add logic
   } else if (status === 'succeeded') {
    /* empty */
+   console.log('pesho', articlesInfo);
   } else if (status === 'failed') {
    // TODO add logic
   }
@@ -117,43 +121,45 @@ const ListArticles = () => {
    {showDialog && <AccessDeniedDialog onClose={() => setShowDialog(false)} />}
    {showDeleteDialog && <ConfirmDeleteDialog onClose={(data) => openAgain(data)} />}
    {<Snackbar message={snackbarMsg} status={status} open={snackbarOpen} onClose={() => setSnackbarOpen(false)} />}
-   {articlesInfo.isLoading ? (
+   {isLoading ? (
     <div>
      <h1>Loading........{err}</h1>
     </div>
    ) : (
-    <table className="table mt-5 text-center">
-     <thead>
-      <tr>
-       <th>Header</th>
-       <th>Date</th>
-       <th>Time</th>
-       <th>Edit</th>
-       <th>Delete</th>
-      </tr>
-     </thead>
-     <tbody>
-      {articlesInfo.map((section: Section, index: number) => {
-       return (
-        <tr key={index}>
-         <td style={{ position: 'relative', top: '25px' }}>{section.title}</td>
-         <td style={{ position: 'relative', top: '25px' }}>{section.create_article_date}</td>
-         <td style={{ position: 'relative', top: '25px' }}>{section.create_article_time}</td>
-         <td>
-          <button onClick={() => editSection(section)} className="custom-btn  btn-5">
-           <span>Edit</span>
-          </button>
-         </td>
-         <td className="flex-horizontal-container-raw justify-content-center">
-          <button onClick={() => deleteTodo(section.id)} className="btn first edit-btn">
-           Delete
-          </button>
-         </td>
-        </tr>
-       );
-      })}
-     </tbody>
-    </table>
+    <div>
+     <table className="table">
+      <thead>
+       <tr>
+        <th>Header</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Edit</th>
+        <th>Delete</th>
+       </tr>
+      </thead>
+      <tbody>
+       {articlesInfo.map((section: Section, index: number) => {
+        return (
+         <tr key={index}>
+          <td style={{ position: 'relative', top: '25px' }}>{section.title}</td>
+          <td style={{ position: 'relative', top: '25px' }}>{section.create_article_date}</td>
+          <td style={{ position: 'relative', top: '25px' }}>{section.create_article_time}</td>
+          <td>
+           <button onClick={() => editSection(section)} className="custom-btn btn-5">
+            <span>Edit</span>
+           </button>
+          </td>
+          <td className="flex-horizontal-container-raw justify-content-center">
+           <button onClick={() => deleteTodo(section.id)} className="btn first edit-btn">
+            Delete
+           </button>
+          </td>
+         </tr>
+        );
+       })}
+      </tbody>
+     </table>
+    </div>
    )}
   </div>
  );

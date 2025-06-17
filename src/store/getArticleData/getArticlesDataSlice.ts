@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 //!production
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+const url = `${import.meta.env.VITE_API_URL_PROD}`;
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+// const url = `${import.meta.env.VITE_API_URL}`;
 
 export const fetchArticles = createAsyncThunk('getArticles', async () => {
  return fetch(`${url}/api/articles`)
