@@ -14,9 +14,9 @@ COPY . .
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 # Реално билдваме в указаната среда
-RUN npm run build:prod
+RUN npm run build
 
 # Излагане на Nginx порта
 EXPOSE 3500
 
-CMD ["npm", "start"]
+CMD ["vite", "preview", "--port", "3500"]
