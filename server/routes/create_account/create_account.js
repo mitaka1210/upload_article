@@ -8,7 +8,6 @@ const router = express.Router();
 
 // Secret key for JWT
 const JWT_SECRET = "your_secret_key"; // Смени това с реална тайна стойност
-console.log("pesho test123", pool);
 // Endpoint to create a new account
 router.post(
   "/",
@@ -18,7 +17,7 @@ router.post(
     body("first_name").notEmpty().withMessage("First name is required"),
     body("lastName").notEmpty().withMessage("Last name is required"),
     body("email").isEmail().withMessage("Valid email is required"),
-    body("role").notEmpty().withMessage("Username is required"),
+    body("role").notEmpty().withMessage("Role is required"),
     body("password")
       .isLength({ min: 3 })
       .withMessage("Password must be at least 6 characters long"),
