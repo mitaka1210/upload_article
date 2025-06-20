@@ -54,10 +54,27 @@ router.post("/:id", upload.single("image"), async (req, res) => {
     for (const sec of section) {
       const existingSec = currentSectionsMap[sec.position];
       // Проверка за разлика (това сравнява съдържанието, заглавието и изображението)
-      if (
+      if (!existingSec) {
+        // Няма съществуваща секция — добавяме нова
+        let position = 1;
+        console.log(`Inserting new section at position ${sec.position}`);
+        const insertQuery = `
+      INSERT INTO sections (article_id, position, title, content, image_url)
+      VALUES ($1, $2, $3, $4, $5)
+    `;
+        const insertValues = [
+          article_id,
+          position,
+          sec.title,
+          sec.content,
+          image_url, // може да е null
+        ];
+        await pool.query(insertQuery, insertValues);
+      } else if (
         existingSec.title !== sec.title ||
         existingSec.content !== sec.content ||
-        existingSec.image_url !== image_url
+        existingSec.image_url !== image_url ||
+        existingSec.position === sec.position
       ) {
         console.log(`Updating section with position ${sec.position}`);
 
@@ -68,7 +85,7 @@ router.post("/:id", upload.single("image"), async (req, res) => {
                     image_url = $3
                 WHERE article_id = $4
                   AND position = $5
-		  `;
+		          `;
         const sectionValues = [
           sec.title,
           sec.content,
@@ -77,6 +94,21 @@ router.post("/:id", upload.single("image"), async (req, res) => {
           sec.position,
         ];
         await pool.query(sectionQuery, sectionValues);
+      } else {
+        // Няма съществуваща секция — добавяме нова
+        console.log(`Inserting new section at position ${sec.position}`);
+        const insertQuery = `
+      INSERT INTO sections (article_id, position, title, content, image_url)
+      VALUES ($1, $2, $3, $4, $5)
+    `;
+        const insertValues = [
+          article_id,
+          sec.position,
+          sec.title,
+          sec.content,
+          image_url, // може да е null
+        ];
+        await pool.query(insertQuery, insertValues);
       }
     }
 
