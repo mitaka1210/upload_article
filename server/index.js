@@ -21,7 +21,7 @@ import usersRoute from "./routes/users_list/usersList.js";
 import path from "path";
 
 const app = express();
-const PORT = process.env.PORT || 3400;
+const PORT = process.env.PORT || 3500;
 
 app.use(
   cors({

@@ -11,6 +11,8 @@ const config = {
     "http://192.168.55.47:3333",
     "http://localhost:3333",
     "http://localhost:3000",
+    "http://localhost:3500",
+    "http://localhost:3001",
     "https://upload.d-dimitrov.eu",
     "https://share.d-dimitrov.eu",
   ],
