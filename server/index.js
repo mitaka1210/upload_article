@@ -2,7 +2,7 @@
 
 import express from "express";
 import cors from "cors";
-import corsOptions from "./config/cors.js";
+import config from "./config/cors.js";
 import articlesGetAllRouter from "./routes/like_articles_by_id/articles.js";
 import createArticle from "./routes/add_new_section/create-article.js";
 import articlesCreateArticlesRouter from "./routes/create_articles/create_articles.js";
@@ -21,9 +21,20 @@ import usersRoute from "./routes/users_list/usersList.js";
 import path from "path";
 
 const app = express();
-const PORT = process.env.PORT || 3400;
+const PORT = process.env.PORT || 3500;
 
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || config.allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 // Routes

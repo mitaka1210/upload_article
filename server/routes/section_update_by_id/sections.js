@@ -47,36 +47,37 @@ router.post("/:id", upload.single("image"), async (req, res) => {
     // Създаване на map за текущите секции по position
     const currentSectionsMap = currentSectionsResult.rows.reduce((acc, sec) => {
       acc[sec.position] = sec;
+      console.log("pesho", acc);
       return acc;
     }, {});
 
     // Обхождаме новите секции и актуализираме само при разлики
     for (const sec of section) {
+        // Проверка дали позицията е зададена
       const existingSec = currentSectionsMap[sec.position];
+      console.log("pesho", existingSec);
       // Проверка за разлика (това сравнява съдържанието, заглавието и изображението)
-      if (!existingSec) {
+      if (existingSec === undefined) {
         // Няма съществуваща секция — добавяме нова
-        let position = 1;
-        console.log(`Inserting new section at position ${sec.position}`);
+        console.log(`Inserting new section at position no ${sec.position}`);
         const insertQuery = `
       INSERT INTO sections (article_id, position, title, content, image_url)
       VALUES ($1, $2, $3, $4, $5)
     `;
         const insertValues = [
           article_id,
-          position,
+          sec.position,
           sec.title,
           sec.content,
           image_url, // може да е null
         ];
         await pool.query(insertQuery, insertValues);
       } else if (
-        existingSec.title !== sec.title ||
-        existingSec.content !== sec.content ||
-        existingSec.image_url !== image_url ||
-        existingSec.position === sec.position
+        existingSec.title === sec.title ||
+        existingSec.content === sec.content ||
+        existingSec.image_url === image_url
       ) {
-        console.log(`Updating section with position ${sec.position}`);
+        console.log(`Updating section with position yes ${sec.position}`);
 
         const sectionQuery = `
                 UPDATE sections
@@ -94,21 +95,6 @@ router.post("/:id", upload.single("image"), async (req, res) => {
           sec.position,
         ];
         await pool.query(sectionQuery, sectionValues);
-      } else {
-        // Няма съществуваща секция — добавяме нова
-        console.log(`Inserting new section at position ${sec.position}`);
-        const insertQuery = `
-      INSERT INTO sections (article_id, position, title, content, image_url)
-      VALUES ($1, $2, $3, $4, $5)
-    `;
-        const insertValues = [
-          article_id,
-          sec.position,
-          sec.title,
-          sec.content,
-          image_url, // може да е null
-        ];
-        await pool.query(insertQuery, insertValues);
       }
     }
 

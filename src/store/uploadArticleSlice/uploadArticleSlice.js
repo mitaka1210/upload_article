@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 //!production
-const url = `${process.env.REACT_APP_API_URL_PROD}`;
+// const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
 
 // Async thunk за качване на секция с изображение
 export const uploadSection = createAsyncThunk('sections/upload', async (data, { rejectWithValue }) => {
