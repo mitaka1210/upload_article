@@ -31,7 +31,7 @@ const EditTodo = () => {
   status: false,
   section: [
    {
-    position: 0,
+    position: 1,
     content: '',
     title: '',
    },
@@ -111,11 +111,18 @@ const EditTodo = () => {
  };
  const handleSubmit = async (e) => {
   e.preventDefault();
+  console.log('pesho', formData);
+  formData.section.forEach((section) => {
+   if (!section.position) {
+    section.position = formData.section.indexOf(section) + 1; // Уверяваме се, че позицията е зададена
+   }
+  });
   const copy = structuredClone({
    ...formData,
    image: formData.image,
    status: showArticle,
   });
+  console.log('pesho', copy);
   try {
    // Първо изчакай `updateSection`
    await dispatch(updateSection(copy)).unwrap();
@@ -143,7 +150,7 @@ const EditTodo = () => {
    section: [
     ...prevData.section,
     {
-     position: prevData.section.length,
+     position: prevData.section.length + 1, // Увеличаваме позицията с 1
      title: '',
      content: '',
     },
