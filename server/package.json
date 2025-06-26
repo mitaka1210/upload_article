@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "dev": "NODE_ENV=development nodemon index.js",
+    "prod": "NODE_ENV=production nodemon index.js",
     "start": "node index.js"
   },
   "author": "",
