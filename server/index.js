@@ -32,11 +32,16 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
   }),
 );
 app.use(express.json());
-
+// Обработка на OPTIONS заявки
+app.options("*", (req, res) => {
+  res.sendStatus(200);
+});
 // Routes
 app.use("/api/articles", articlesGetAllRouter);
 app.use("/api/create/section", createArticle);
@@ -58,8 +63,12 @@ const uploadPath = path.join(process.cwd(), "upload"); // Работи в Docker
 app.use("/uploads", express.static(uploadPath));
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ error: "Internal Server Error" });
+  console.error("Error:", err.message);
+  if (err.message === "Not allowed by CORS") {
+    res.status(403).json({ error: "CORS Error: Origin not allowed" });
+  } else {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 app.listen(PORT, () => {
