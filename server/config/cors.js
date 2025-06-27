@@ -15,6 +15,7 @@ const config = {
     "http://localhost:3001",
     "https://upload.d-dimitrov.eu",
     "https://share.d-dimitrov.eu",
+    "https://upload-article.vercel.app", // <- добави този домейн
   ],
 };
 
