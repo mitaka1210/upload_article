@@ -16,7 +16,8 @@ const config = {
     "https://upload.d-dimitrov.eu",
     "https://share.d-dimitrov.eu",
     "https://upload-article.vercel.app",
-    "https://mitaka-website-stage.vercel.app",
+    "https://eng-dimitrov.vercel.app",
+    "https://d-dimitrov.vercel.app",
     "https://eng.d-dimitrov.eu",
   ],
 };
