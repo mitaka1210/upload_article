@@ -63,6 +63,7 @@ const uploadPath = path.join(process.cwd(), "upload"); // Работи в Docker
 app.use("/uploads", express.static(uploadPath));
 // Error handling middleware
 app.use((err, req, res, next) => {
+  console.log("NODE_ENV:", process.env.NODE_ENV);
   console.error("Error:", err.message);
   if (err.message === "Not allowed by CORS") {
     res.status(403).json({ error: "CORS Error: Origin not allowed" });
@@ -72,5 +73,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
+  console.log("NODE_ENV:", process.env.NODE_ENV);
   console.log(`Server running on port ${PORT}`);
 });

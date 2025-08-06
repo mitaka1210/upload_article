@@ -7,7 +7,7 @@ dotenv.config({
   path:
     process.env.NODE_ENV === "production"
       ? ".env.production"
-      : ".env.production",
+      : ".env.development",
 });
 const pool = new Pool({
   user: process.env.DB_USER,
@@ -16,11 +16,5 @@ const pool = new Pool({
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
 });
-// const pool = new Pool({
-//   user: "mitaka",
-//   password: "mitaka",
-//   host: "192.168.55.5",
-//   port: "5434",
-//   database: "postgres",
-// });
+console.log("NODE_ENV:", pool);
 export default pool;
