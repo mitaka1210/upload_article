@@ -7,6 +7,7 @@ import Home from './Home/Home';
 import LoginPage from './Login/Login.jsx';
 import EditArticle from './EditArticle/edit-article';
 import RoleManager from './roleManager/roleManager';
+import NewsLetterAdminPanel from './newsletterAdminPanel/newsletterAdminPanel';
 
 function App() {
  return (
@@ -17,6 +18,7 @@ function App() {
     <Route path="/home" element={<Home />} name="Home" />
     <Route path="/read" element={<Read />} name="Read" />
     <Route path="/change-role" element={<RoleManager />} name="RoleManager" />
+    <Route path="/newsletter-admin-panel" element={<NewsLetterAdminPanel />} name="NewsLetterAdminPanel" />
     <Route path="/update-section/:articleId" element={<EditArticle />} />
    </Routes>
   </div>

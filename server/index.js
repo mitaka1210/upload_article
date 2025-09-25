@@ -2,6 +2,7 @@
 
 import express from "express";
 import cors from "cors";
+import bodyParser from "body-parser";
 import config from "./config/cors.js";
 import articlesGetAllRouter from "./routes/like_articles_by_id/articles.js";
 import createArticle from "./routes/add_new_section/create-article.js";
@@ -18,9 +19,13 @@ import changeRole from "./routes/change_role/change_role.js";
 import getAllLikeDislike from "./routes/get_all_like_dislike/get_all_like_dislike.js";
 import addLikeOrDislike from "./routes/add_like_dislike/add_like_dislike.js";
 import usersRoute from "./routes/users_list/usersList.js";
+import newsletterRoute from "./routes/newsletter/newsletter.js";
+import broadcast from "./routes/newsLetterBroadCast/newsLetterBroadCast.js";
+import subscribers from "./routes/newsLetterSubscribers/newsLetterSubscribers.js";
+import broadcastTest from "./routes/newsLetterBroadCastTEST/newsLetterBroadCastTEST.js";
 import path from "path";
-
 const app = express();
+app.use(bodyParser.json());
 const PORT = process.env.PORT || 3400;
 
 app.use(
@@ -58,11 +63,16 @@ app.use("/api/reset-password", resetPasswordRouter);
 app.use("/api/request-new-password", requestNewPassword);
 app.use("/api/change-role", changeRole);
 app.use("/api/users", usersRoute);
+app.use("/api/newsletter", newsletterRoute);
+app.use("/api/broadcast", broadcast);
+app.use("/api/subscribers", subscribers);
+app.use("/api/broadcast-test", broadcastTest);
 // Добави преди `app.listen()`
 const uploadPath = path.join(process.cwd(), "upload"); // Работи в Docker
 app.use("/uploads", express.static(uploadPath));
 // Error handling middleware
 app.use((err, req, res, next) => {
+  console.log("NODE_ENV:", process.env.NODE_ENV);
   console.error("Error:", err.message);
   if (err.message === "Not allowed by CORS") {
     res.status(403).json({ error: "CORS Error: Origin not allowed" });
@@ -72,5 +82,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
+  console.log("NODE_ENV:", process.env.NODE_ENV);
   console.log(`Server running on port ${PORT}`);
 });
