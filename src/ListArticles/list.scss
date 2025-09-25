@@ -28,7 +28,10 @@
   4px 4px 5px 0px rgba(0, 0, 0, 0.1);
  outline: none;
 }
-
+.btn-6 {
+  @extend .btn-5;
+  width: 230px !important;
+}
 .btn-5 {
  width: 130px;
  height: 40px;
