@@ -63,6 +63,11 @@ const SectionUpload = () => {
    navigate(`/change-role`);
   }
  }
+ const sendTestEmailSubscribers = async () => {
+     if(role === 'super_admin'){
+         navigate(`/newsletter-admin-panel`);
+     }
+ }
  const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault ();
   
@@ -124,6 +129,12 @@ const SectionUpload = () => {
       <button onClick={() => changePrivileges()} className="custom-btn  btn-5">
        <span>change role</span>
       </button> : null
+    }
+    {
+       role === 'super_admin' ?
+       <button onClick={() => sendTestEmailSubscribers()} className="custom-btn  btn-6">
+           <span>newsletter-admin-panel</span>
+       </button> : null
     }
    </div>
    <div className={blockAdding ? 'container' : 'container block-adding-article'} >

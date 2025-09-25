@@ -13,6 +13,8 @@ const config = {
     "http://localhost:3000",
     "http://localhost:3500",
     "http://localhost:3001",
+    "http://localhost:3003",
+    "http://localhost:3002",
     "https://upload.d-dimitrov.eu",
     "https://share.d-dimitrov.eu",
     "https://upload-article.vercel.app",
