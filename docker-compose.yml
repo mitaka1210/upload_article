@@ -39,6 +39,7 @@ services:
     volumes:
       - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
     restart: always
+
 networks:
   default:
     external:
