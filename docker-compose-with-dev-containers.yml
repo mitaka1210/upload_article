@@ -39,6 +39,46 @@ services:
     volumes:
       - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
     restart: always
+
+  # === DEV BACKEND ===
+  backend-dev:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    container_name: upload-be-dev
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=192.168.55.5
+      - DB_PORT=5434
+      - DB_USER=mitaka
+      - DB_PASSWORD=mitaka
+      - DB_NAME=dev_db
+      - ALLOWED_ORIGIN=http://localhost:3000
+    volumes:
+      - ./server:/app
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
+      - ./.env.production:/app/.env.production
+      - ./.env.development:/app/.env.development
+    restart: always
+
+  # === DEV FRONTEND ===
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    container_name: upload-fe-dev
+    depends_on:
+      - backend-dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
+    restart: always
+
 networks:
   default:
     external:
