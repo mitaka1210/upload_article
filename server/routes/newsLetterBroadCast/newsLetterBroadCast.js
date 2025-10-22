@@ -23,7 +23,6 @@ router.post("/", async (req, res) => {
       <div style="margin-top: 20px; text-align: center;">
         <a href="https://eng.d-dimitrov.eu" style="color: #0070f3; text-decoration: none;">🔗 Read more (ENG)</a><br/>
         <br/>
-        <br/>
         <a href="https://engineer.d-dimitrov.eu/" style="color: #0070f3; text-decoration: none;">🔗 Прочети още (BG)</a>
       </div>
 
