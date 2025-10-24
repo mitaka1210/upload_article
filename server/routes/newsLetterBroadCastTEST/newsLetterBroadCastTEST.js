@@ -1,6 +1,7 @@
 import express from "express";
-const router = express.Router();
 import { sendNewsletter } from "../../utils/mailer.js";
+
+const router = express.Router();
 
 router.post("/", async (req, res) => {
   const { to, title, content } = req.body;
@@ -9,7 +10,7 @@ router.post("/", async (req, res) => {
   <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
     <div style="max-width: 600px; margin: auto; background-color: #ffffff; padding: 20px; border-radius: 8px;">
       <div style="text-align: center;">
-        <img src="https://yourdomain.com/images/newsletter-icon.png" alt="New article added" width="64" />
+        <img src="https://upload.d-dimitrov.eu/images/newsletter_icon.png" alt="New article added" width="64" />
         <h2 style="color: #333;">📣 ${title}</h2>
       </div>
 
@@ -17,7 +18,6 @@ router.post("/", async (req, res) => {
 
       <div style="margin-top: 20px; text-align: center;">
         <a href="https://eng.d-dimitrov.eu" style="color: #0070f3; text-decoration: none;">🔗 Read more (ENG)</a><br/>
-        <br/>
         <br/>
         <a href="https://engineer.d-dimitrov.eu/" style="color: #0070f3; text-decoration: none;">🔗 Прочети още (BG)</a>
       </div>
