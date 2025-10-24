@@ -7,7 +7,7 @@ const NewsletterAdmin = () => {
  const [status, setStatus] = useState('idle');
  const [testEmail, setTestEmail] = useState('dimitard185@gmail.com');
  const [testStatus, setTestStatus] = useState('idle');
- const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+ const url = `${process.env.REACT_APP_API_URL_PROD}`;
  useEffect(() => {
   fetch(`${url}/api/subscribers`)
    .then((res) => res.json())
