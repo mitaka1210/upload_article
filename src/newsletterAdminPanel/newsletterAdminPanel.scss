@@ -3,14 +3,23 @@
   margin: auto;
   padding: 2rem;
 }
-input, textarea {
+.newsLetter-admin-panel-text-area {
   width: 100%;
   margin-bottom: 1rem;
   padding: 0.6rem;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
-button {
+.newsLetter-admin-panel-text-input{
+  & input {
+    width: 100%;
+    margin-bottom: 1rem;
+    padding: 0.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+}
+.newsLetter-admin-panel {
   background: #0070f3;
   color: white;
   padding: 0.6rem 1.2rem;

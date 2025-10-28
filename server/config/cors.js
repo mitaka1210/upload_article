@@ -21,6 +21,7 @@ const config = {
     "https://eng-dimitrov.vercel.app",
     "https://d-dimitrov.vercel.app",
     "https://eng.d-dimitrov.eu",
+    "https://stage-upload-article.vercel.app",
   ],
 };
 
