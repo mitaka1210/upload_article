@@ -1,47 +1,33 @@
-import React, { useState, useEffect } from 'react';
+// javascript
+import React, { useEffect, useState } from 'react';
 import './newsletterAdminPanel.scss';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchSubscribers, selectNewsletter, sendBroadcast, sendTestBroadcast } from '../store/news-letter-send/news-letter-slice';
+
 const NewsletterAdmin = () => {
- const [subscribers, setSubscribers] = useState([]);
+ const dispatch = useDispatch();
+ const newsletterState = useSelector(selectNewsletter);
+
+ // guard against undefined selector result and provide sane defaults
+ const { subscribers = [], fetchStatus = 'idle', sendStatus = 'idle', testStatus = 'idle', error = null } = newsletterState || {};
+
  const [title, setTitle] = useState('');
  const [content, setContent] = useState('');
- const [status, setStatus] = useState('idle');
  const [testEmail, setTestEmail] = useState('dimitard185@gmail.com');
- const [testStatus, setTestStatus] = useState('idle');
- const url = `${process.env.REACT_APP_API_URL_PROD}`;
+
  useEffect(() => {
-  fetch(`${url}/api/subscribers`)
-   .then((res) => res.json())
-   .then((data) => setSubscribers(data.emails));
- }, []);
+  if (fetchStatus === 'idle') {
+   dispatch(fetchSubscribers());
+  }
+ }, [dispatch, fetchStatus]);
 
  const handleSend = async () => {
-  setStatus('sending');
-  try {
-   const res = await fetch(`${url}/api/broadcast`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, content }),
-   });
-   if (res.ok) setStatus('sent');
-   else throw new Error();
-  } catch {
-   setStatus('error');
-  }
+  await dispatch(sendBroadcast({ title, content }));
  };
 
  const handleTestSend = async () => {
-  setTestStatus('sending');
-  try {
-   const res = await fetch(`${url}/api/broadcast-test`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ to: testEmail, title, content }),
-   });
-   if (res.ok) setTestStatus('sent');
-   else throw new Error();
-  } catch {
-   setTestStatus('error');
-  }
+  console.log('pesho');
+  await dispatch(sendTestBroadcast({ to: testEmail, title, content }));
  };
 
  return (
@@ -56,26 +42,33 @@ const NewsletterAdmin = () => {
        <li key={i}>{email}</li>
       ))}
      </ul>
+     {fetchStatus === 'loading' && <p>Loading subscribers...</p>}
+     {fetchStatus === 'failed' && <p className="error">Failed to load subscribers: {error}</p>}
     </section>
 
     <section>
      <h2>Нова кампания</h2>
-     <input type="text" placeholder="Заглавие" value={title} onChange={(e) => setTitle(e.target.value)} />
-     <textarea placeholder="Съдържание" value={content} onChange={(e) => setContent(e.target.value)} />
-     <button onClick={handleSend} disabled={status === 'sending'}>
-      {status === 'sending' ? 'Изпращане...' : 'Изпрати бюлетина'}
+     <div className="newsLetter-admin-panel-text-input">
+      <input type="text" placeholder="Заглавие" value={title} onChange={(e) => setTitle(e.target.value)} />
+     </div>
+     <textarea placeholder="Съдържание" className="newsLetter-admin-panel-text-area" value={content} onChange={(e) => setContent(e.target.value)} />
+     <button className="newsLetter-admin-panel" onClick={handleSend} disabled={sendStatus === 'sending'}>
+      {sendStatus === 'sending' ? 'Изпращане...' : 'Изпрати бюлетина'}
      </button>
-     {status === 'sent' && <p className="success">✅ Изпратено успешно!</p>}
-     {status === 'error' && <p className="error">❌ Грешка при изпращане.</p>}
+     {sendStatus === 'sent' && <p className="success">✅ Изпратено успешно!</p>}
+     {sendStatus === 'error' && <p className="error">❌ Грешка при изпращане: {error}</p>}
     </section>
+
     <section>
      <h2>📤 Изпрати тестово</h2>
-     <input type="email" placeholder="Тестов имейл" value={testEmail} onChange={(e) => setTestEmail(e.target.value)} />
-     <button onClick={handleTestSend} disabled={testStatus === 'sending'}>
+     <div className="newsLetter-admin-panel-text-input">
+      <input type="email" placeholder="Тестов имейл" value={testEmail} onChange={(e) => setTestEmail(e.target.value)} />
+     </div>
+     <button className="newsLetter-admin-panel" onClick={handleTestSend} disabled={testStatus === 'sending'}>
       {testStatus === 'sending' ? 'Изпращане...' : 'Изпрати тестово'}
      </button>
      {testStatus === 'sent' && <p className="success">✅ Изпратено успешно!</p>}
-     {testStatus === 'error' && <p className="error">❌ Грешка при изпращане.</p>}
+     {testStatus === 'error' && <p className="error">❌ Грешка при изпращане: {error}</p>}
     </section>
    </div>
   </>
