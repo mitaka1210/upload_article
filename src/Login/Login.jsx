@@ -19,6 +19,7 @@ const LoginPage = () => {
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const navigate = useNavigate();
  const [user, setUser] = useState(null);
+ const [showPassword, setShowPassword] = useState(false);
  useEffect(() => {
   const signUpButton = document.getElementById('signUp');
   const signInButton = document.getElementById('signIn');
@@ -105,16 +106,53 @@ const LoginPage = () => {
          </a>
         </div>
         <span className="add-color-white">or use your account</span>
-        <div>
+
+        <div className="input-row" style={{ position: 'relative' }}>
          <label className="add-color-white login-input margin-top-15">Username</label>
-         <input type="text" value={username} name="username" onChange={(e) => setUsername(e.target.value)} />
+         <input type="text" value={username} name="username" onChange={(e) => setUsername(e.target.value)} style={{ paddingRight: '36px' }} />
+         {username && (
+          <button
+           type="button"
+           onClick={() => setUsername('')}
+           aria-label="Clear username"
+           style={{
+            position: 'absolute',
+            right: '8px',
+            bottom: '1px',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '18px',
+           }}
+          >
+           ✖️
+          </button>
+         )}
          {errors.username && <p style={{ color: 'red' }}>{errors.username}</p>}
         </div>
-        <div className="margin-15">
+
+        <div className="margin-15" style={{ position: 'relative' }}>
          <label className="add-color-white">Password</label>
-         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+         <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} style={{ paddingRight: '36px' }} />
+         <button
+          type="button"
+          onClick={() => setShowPassword((s) => !s)}
+          aria-label={showPassword ? 'Hide password' : 'Show password'}
+          style={{
+           position: 'absolute',
+           right: '8px',
+           top: '34px',
+           background: 'transparent',
+           border: 'none',
+           cursor: 'pointer',
+           fontSize: '18px',
+          }}
+         >
+          {showPassword ? '🙉' : '🙈'}
+         </button>
          {errors.password && <p style={{ color: 'red' }}>{errors.password}</p>}
         </div>
+
         {isLoggedIn && <p style={{ color: 'red' }}>{error}</p>}
         <button className="btn-login-page" onClick={handleClickSignIn} type="submit" disabled={loading}>
          {loading ? 'Logging in...' : 'Login'}
