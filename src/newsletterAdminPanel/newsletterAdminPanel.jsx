@@ -26,6 +26,7 @@ const NewsletterAdmin = () => {
  };
 
  const handleTestSend = async () => {
+  console.log('pesho');
   await dispatch(sendTestBroadcast({ to: testEmail, title, content }));
  };
 
