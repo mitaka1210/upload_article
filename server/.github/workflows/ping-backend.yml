@@ -1,0 +1,14 @@
+name: Keep Render Awake
+
+on:
+  schedule:
+    - cron: "*/10 * * * *" # На всеки 10 минути
+  workflow_dispatch: {} # Ръчен старт по желание
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render backend
+        run: |
+          curl -I upload-article.onrender.com/api/articles || true
