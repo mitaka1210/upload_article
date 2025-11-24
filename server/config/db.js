@@ -15,6 +15,10 @@ const pool = new Pool({
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
+  ssl: {
+    require: true,
+    rejectUnauthorized: false,
+  },
 });
 console.log("NODE_ENV:", pool);
 export default pool;
