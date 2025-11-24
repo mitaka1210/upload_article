@@ -37,3 +37,8 @@ node_modules/*
 .idea/dataSources.local.xml
 /.idea
 .env*
+server/.env.development
+server/.env.production
+server/.env.development
+.env.production
+.env.development
