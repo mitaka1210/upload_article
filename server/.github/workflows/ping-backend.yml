@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Ping Render backend
         run: |
-          curl -I upload-article.onrender.com/api/articles || true
+          curl -I https://upload-be.onrender.com/api/articles || true
