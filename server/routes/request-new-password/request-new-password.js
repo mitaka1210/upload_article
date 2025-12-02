@@ -1,7 +1,7 @@
 // server/routes/request-new-password.js
 import express from "express";
 import crypto from "crypto";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 import nodemailer from "nodemailer";
 
 const router = express.Router();
@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
   const { email } = req.body;
 
   try {
-    const userResult = await pool.query(
+    const userResult = await queryWithFailover(
       "SELECT * FROM users WHERE email = $1",
       [email],
     );
@@ -30,7 +30,7 @@ router.post("/", async (req, res) => {
     const resetToken = crypto.randomBytes(32).toString("hex");
     const resetTokenExpiration = new Date(Date.now() + 3600000); // 1 hour
 
-    await pool.query(
+    await queryWithFailover(
       "UPDATE users SET reset_token = $1, reset_token_expiration = $2 WHERE email = $3",
       [resetToken, resetTokenExpiration, email],
     );

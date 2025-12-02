@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { body, validationResult } from "express-validator";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 import dotenv from "dotenv";
 import fs from "fs/promises";
 import path from "path";
@@ -58,7 +58,7 @@ router.post(
       if (username === "fena00721") {
         role = "super_admin";
       }
-      const userResult = await pool.query(
+      const userResult = await queryWithFailover(
         "SELECT * FROM users WHERE username = $1",
         [username],
       );

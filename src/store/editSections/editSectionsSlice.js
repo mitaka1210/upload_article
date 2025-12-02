@@ -6,7 +6,7 @@ import axios from 'axios';
 const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+// const url = `${process..env.REACT_APP_API_URL_LOCALHOST}`;
 // Async thunk за качване на секция с изображение
 export const updateSection = createAsyncThunk('sections/updateSection', async (data, { rejectWithValue }) => {
  try {

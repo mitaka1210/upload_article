@@ -20,8 +20,8 @@ services:
     volumes:
       - ./server:/app
       - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
-      - ./.env.production:/app/.env.production
-      - ./.env.development:/app/.env.development
+      - ./....env.production:/app/....env.production
+      - ./....env.development:/app/....env.development
     restart: always
 
   # === PROD FRONTEND ===
@@ -59,8 +59,8 @@ services:
     volumes:
       - ./server:/app
       - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
-      - ./.env.production:/app/.env.production
-      - ./.env.development:/app/.env.development
+      - ./....env.production:/app/....env.production
+      - ./....env.development:/app/....env.development
     restart: always
 
   # === DEV FRONTEND ===

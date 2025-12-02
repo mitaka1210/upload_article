@@ -26,7 +26,7 @@ const store = configureStore({
   auth: authReducer,
   createAccount: createAccountSlice,
   roleManager: adminSlice,
-  newsletterSlice: newsletterSlice,
+  newsletter: newsletterSlice,
   [api.reducerPath]: api.reducer,
  },
  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),

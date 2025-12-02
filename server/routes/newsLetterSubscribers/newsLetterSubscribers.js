@@ -1,10 +1,11 @@
 import express from "express";
 const router = express.Router();
-import { sendNewsletter } from "../../utils/mailer.js";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 
 router.get("/", async (req, res) => {
-  const result = await pool.query("SELECT email FROM newsletter_subscribers");
+  const result = await queryWithFailover(
+    "SELECT email FROM newsletter_subscribers",
+  );
   res.json({ emails: result.rows.map((r) => r.email) });
 });
 

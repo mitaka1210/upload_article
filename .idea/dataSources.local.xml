@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="WS-243.23654.157">
+  <component name="dataSourceStorageLocal" created-in="WS-252.28238.10">
     <data-source name="dev_db@192.168.55.5" uuid="2c0dab12-efda-479e-b10f-28e38b27e853">
       <database-info product="PostgreSQL" version="16.5 (Debian 16.5-1.pgdg120+1)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="16.5" exact-driver-version="42.7">
         <identifier-quote-string>&quot;</identifier-quote-string>
@@ -23,6 +23,21 @@
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
       <user-name>mitaka</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+    </data-source>
+    <data-source name="neondb@ep-holy-dust-a4lx2gm2-pooler.us-east-1.aws.neon.tech" uuid="23c79325-8757-4fb6-be66-5501d79bd933">
+      <database-info product="PostgreSQL" version="17.6 (0d47993)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="17.6" exact-driver-version="42.7">
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>neondb_owner</user-name>
       <schema-mapping>
         <introspection-scope>
           <node kind="database" qname="@">
