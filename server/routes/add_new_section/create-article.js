@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 import upload from "../../middlewares/upload.js";
 import compressImage from "../../utils/compress-img-before-save.js";
 
@@ -14,7 +14,7 @@ router.post("/", upload.single("image"), async (req, res) => {
       await compressImage(imagePath);
     }
 
-    const result = await pool.query(
+    const result = await queryWithFailover(
       `INSERT INTO sections (article_id, title, content, position, image_url)
           VALUES ($1, $2, $3, $4, $5) RETURNING *`,
       [article_id, title, content, position, imagePath],

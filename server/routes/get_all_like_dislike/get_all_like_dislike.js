@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get("/:article_id", async (req, res) => {
             WHERE article_id = $1;
         `;
 
-    const { rows } = await pool.query(query, [article_id]);
+    const { rows } = await queryWithFailover(query, [article_id]);
 
     res.json({
       article_id,

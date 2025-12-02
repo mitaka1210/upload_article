@@ -23,6 +23,7 @@ import newsletterRoute from "./routes/newsletter/newsletter.js";
 import broadcast from "./routes/newsLetterBroadCast/newsLetterBroadCast.js";
 import subscribers from "./routes/newsLetterSubscribers/newsLetterSubscribers.js";
 import broadcastTest from "./routes/newsLetterBroadCastTEST/newsLetterBroadCastTEST.js";
+import checkDBStatus from "./routes/health.js";
 import path from "path";
 const app = express();
 app.use(bodyParser.json());
@@ -67,6 +68,7 @@ app.use("/api/newsletter", newsletterRoute);
 app.use("/api/broadcast", broadcast);
 app.use("/api/subscribers", subscribers);
 app.use("/api/broadcast-test", broadcastTest);
+app.use("/db-status", checkDBStatus);
 // Добави преди `app.listen()`
 const uploadPath = path.join(process.cwd(), "upload"); // Работи в Docker
 app.use("/uploads", express.static(uploadPath));

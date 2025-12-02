@@ -15,5 +15,12 @@
       <jdbc-url>jdbc:postgresql://192.168.55.5:5435/prod_db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="neondb@ep-holy-dust-a4lx2gm2-pooler.us-east-1.aws.neon.tech" uuid="23c79325-8757-4fb6-be66-5501d79bd933">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://ep-holy-dust-a4lx2gm2-pooler.us-east-1.aws.neon.tech:5432/neondb</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

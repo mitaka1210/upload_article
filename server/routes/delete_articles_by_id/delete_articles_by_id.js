@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 
 const router = express.Router();
 // DELETE article by ID
@@ -8,7 +8,7 @@ router.delete("/:id", async (req, res) => {
 
   try {
     // Изтриване на статия
-    const deleteArticle = await pool.query(
+    const deleteArticle = await queryWithFailover(
       "DELETE FROM articles WHERE id = $1",
       [id],
     );

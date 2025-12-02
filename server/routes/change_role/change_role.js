@@ -1,7 +1,7 @@
 // changeRole.js
 import express from "express";
 import { body, validationResult } from "express-validator";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
@@ -19,7 +19,7 @@ const authenticateSuperAdmin = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [
+    const user = await queryWithFailover("SELECT * FROM users WHERE id = $1", [
       decoded.id,
     ]);
 
@@ -61,7 +61,7 @@ router.put(
         });
       }
 
-      const result = await pool.query(
+      const result = await queryWithFailover(
         "UPDATE users SET role = $1 WHERE username = $2",
         [newRole, username],
       );

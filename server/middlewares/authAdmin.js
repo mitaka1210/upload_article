@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import pool from "../config/db.js";
+import { queryWithFailover } from "../config/db.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -15,7 +15,7 @@ const authenticateAdmin = async (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    const user = await pool.query("SELECT * FROM users WHERE id = $1", [
+    const user = await queryWithFailover("SELECT * FROM users WHERE id = $1", [
       decoded.id,
     ]);
 

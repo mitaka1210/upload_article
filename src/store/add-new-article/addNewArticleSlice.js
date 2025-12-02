@@ -5,7 +5,7 @@ import axios from '../../api/axiosConfig';
 const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+// const url = `${process..env.REACT_APP_API_URL_LOCALHOST}`;
 
 // Async action за добавяне на статия
 export const addArticle = createAsyncThunk('articles/addArticle', async ({ title, status }) => {
