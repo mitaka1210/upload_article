@@ -29,7 +29,6 @@ const NewsletterAdmin = () => {
   console.log('pesho');
   await dispatch(sendTestBroadcast({ to: testEmail, title, content }));
  };
-
  return (
   <>
    <div className="admin-panel">

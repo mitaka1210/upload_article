@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 import upload from "../../middlewares/upload.js";
 
 const router = express.Router();
@@ -18,7 +18,7 @@ router.post("/:id", upload.single("image"), async (req, res) => {
 
   try {
     // Започваме транзакция
-    await pool.query("BEGIN");
+    await queryWithFailover("BEGIN");
 
     // Актуализираме основната статия
     const articleQuery = `
@@ -28,7 +28,7 @@ router.post("/:id", upload.single("image"), async (req, res) => {
           WHERE id = $3 RETURNING *;
 	 `;
     const articleValues = [title, status, article_id];
-    const articleResult = await pool.query(articleQuery, articleValues);
+    const articleResult = await queryWithFailover(articleQuery, articleValues);
 
     if (articleResult.rows.length === 0) {
       throw new Error("Article not found.");
@@ -40,9 +40,10 @@ router.post("/:id", upload.single("image"), async (req, res) => {
           FROM sections
           WHERE article_id = $1;
 	 `;
-    const currentSectionsResult = await pool.query(currentSectionsQuery, [
-      article_id,
-    ]);
+    const currentSectionsResult = await queryWithFailover(
+      currentSectionsQuery,
+      [article_id],
+    );
 
     // Създаване на map за текущите секции по position
     const currentSectionsMap = currentSectionsResult.rows.reduce((acc, sec) => {
@@ -53,7 +54,7 @@ router.post("/:id", upload.single("image"), async (req, res) => {
 
     // Обхождаме новите секции и актуализираме само при разлики
     for (const sec of section) {
-        // Проверка дали позицията е зададена
+      // Проверка дали позицията е зададена
       const existingSec = currentSectionsMap[sec.position];
       console.log("pesho", existingSec);
       // Проверка за разлика (това сравнява съдържанието, заглавието и изображението)
@@ -71,7 +72,7 @@ router.post("/:id", upload.single("image"), async (req, res) => {
           sec.content,
           image_url, // може да е null
         ];
-        await pool.query(insertQuery, insertValues);
+        await queryWithFailover(insertQuery, insertValues);
       } else if (
         existingSec.title === sec.title ||
         existingSec.content === sec.content ||
@@ -94,12 +95,12 @@ router.post("/:id", upload.single("image"), async (req, res) => {
           article_id,
           sec.position,
         ];
-        await pool.query(sectionQuery, sectionValues);
+        await queryWithFailover(sectionQuery, sectionValues);
       }
     }
 
     // Комитваме транзакцията
-    await pool.query("COMMIT");
+    await queryWithFailover("COMMIT");
 
     res.json({
       message: "Article and sections updated successfully.",
@@ -108,7 +109,7 @@ router.post("/:id", upload.single("image"), async (req, res) => {
     console.error("Error updating article or sections:", error);
 
     // Ролбек при грешка
-    await pool.query("ROLLBACK");
+    await queryWithFailover("ROLLBACK");
     res.status(500).json({ error: "Internal server error." });
   }
 });

@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 const router = express.Router();
 
 router.post("/", async (req, res) => {
@@ -11,7 +11,7 @@ router.post("/", async (req, res) => {
 
   try {
     // Check if email exists
-    const result = await pool.query(
+    const result = await queryWithFailover(
       "SELECT id FROM newsletter_subscribers WHERE email = $1",
       [email],
     );
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
     }
 
     // Insert new email
-    await pool.query("INSERT INTO newsletter_subscribers(email) VALUES($1)", [
+    await queryWithFailover("INSERT INTO newsletter_subscribers(email) VALUES($1)", [
       email,
     ]);
     return res

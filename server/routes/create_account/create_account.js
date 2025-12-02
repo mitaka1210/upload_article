@@ -2,7 +2,7 @@ import express from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { body, validationResult } from "express-validator";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 
 const router = express.Router();
 
@@ -32,7 +32,7 @@ router.post(
 
     try {
       // Check if the username already exists
-      const usernameExists = await pool.query(
+      const usernameExists = await queryWithFailover(
         "SELECT * FROM users WHERE username = $1",
         [username],
       );
@@ -42,7 +42,7 @@ router.post(
           .json({ message: "User with this username already exists" });
       }
       // Check if the user already exists
-      const userEmailExists = await pool.query(
+      const userEmailExists = await queryWithFailover(
         "SELECT * FROM users WHERE email = $1",
         [email],
       );
@@ -56,7 +56,7 @@ router.post(
       const hashedPassword = await bcrypt.hash(password, 10);
 
       // Insert the new user into the database
-      const newUser = await pool.query(
+      const newUser = await queryWithFailover(
         "INSERT INTO users (username, first_name, last_name, email,role, password)" +
           " VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
         [username, first_name, lastName, email, role, hashedPassword],

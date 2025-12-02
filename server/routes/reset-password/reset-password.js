@@ -1,7 +1,7 @@
 // server/routes/reset-password.js
 import express from "express";
 import bcrypt from "bcrypt";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 
 const router = express.Router();
 
@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
   const { token, newPassword } = req.body;
 
   try {
-    const userResult = await pool.query(
+    const userResult = await queryWithFailover(
       "SELECT * FROM users WHERE reset_token = $1 AND reset_token_expiration > NOW()",
       [token],
     );
@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
     const user = userResult.rows[0];
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await pool.query(
+    await queryWithFailover(
       "UPDATE users SET password = $1, reset_token = NULL, reset_token_expiration = NULL WHERE id = $2",
       [hashedPassword, user.id],
     );

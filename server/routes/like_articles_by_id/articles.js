@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.get("/", async (req, res) => {
                    LEFT JOIN sections s ON a.id = s.article_id
           ORDER BY a.id, s.position;
 	 `;
-    const result = await pool.query(articlesQuery);
+    const result = await queryWithFailover(articlesQuery);
 
     // Групиране на данните
     let articles = [];

@@ -5,7 +5,7 @@ import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 const url = `${process.env.REACT_APP_API_URL_PROD}`;
 
 //!development
-// const url = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+// const url = `${process..env.REACT_APP_API_URL_LOCALHOST}`;
 const baseQuery = fetchBaseQuery({
  baseUrl: `${url}/api`,
  prepareHeaders: (headers) => {

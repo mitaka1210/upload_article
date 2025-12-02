@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ router.delete("/:article_id/:position", async (req, res) => {
   const { article_id, position } = req.params;
   try {
     // Delete article by articleId and sectionId
-    const deleteArticle = await pool.query(
+    const deleteArticle = await queryWithFailover(
       "DELETE FROM sections WHERE article_id = $1 AND position = $2",
       [article_id, position],
     );

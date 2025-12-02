@@ -1,5 +1,5 @@
 import express from "express";
-import pool from "../../config/db.js";
+import { queryWithFailover } from "../../config/db.js";
 
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const { title, status } = req.body;
-    const result = await pool.query(
+    const result = await queryWithFailover(
       "INSERT INTO articles (title,status) VALUES ($1, $2) RETURNING *",
       [title, status],
     );

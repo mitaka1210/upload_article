@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 const baseUrl = `${process.env.REACT_APP_API_URL_PROD}`;
 //!development
 /*
-const baseUrl = `${process.env.REACT_APP_API_URL_LOCALHOST}`;
+const baseUrl = `${process..env.REACT_APP_API_URL_LOCALHOST}`;
 */
 export const fetchSubscribers = createAsyncThunk('newsletter/fetchSubscribers', async (_, { rejectWithValue }) => {
  try {
