@@ -3,14 +3,21 @@ import jwt from "jsonwebtoken";
 import { fileURLToPath } from "url";
 import fs from "fs/promises";
 import path from "path";
+import dotenv from "dotenv";
 
 const router = express.Router();
-const SECRET_KEY = process.env.SECRET_KEY;
+// Зареждане на .env файловете (за DB връзки и Telegram API ключове)
+dotenv.config({
+  path:
+    process.env.NODE_ENV === "production"
+      ? ".env.production"
+      : ".env.development",
+});
 
+const SECRET_KEY = process.env.SECRET_KEY;
 if (!SECRET_KEY) {
   throw new Error("SECRET_KEY is not defined in the environment variables.");
 }
-
 const getLocale = (req) => req.query.lang || "bg";
 
 router.get("/", async (req, res) => {

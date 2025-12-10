@@ -24,10 +24,11 @@ import broadcast from "./routes/newsLetterBroadCast/newsLetterBroadCast.js";
 import subscribers from "./routes/newsLetterSubscribers/newsLetterSubscribers.js";
 import broadcastTest from "./routes/newsLetterBroadCastTEST/newsLetterBroadCastTEST.js";
 import checkDBStatus from "./routes/health.js";
+import dotenv from "dotenv";
 import path from "path";
 const app = express();
 app.use(bodyParser.json());
-const PORT = process.env.PORT || 3400;
+const PORT = 3400;
 
 app.use(
   cors({

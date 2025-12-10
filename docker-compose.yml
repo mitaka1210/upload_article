@@ -9,19 +9,11 @@ services:
       args:
         NODE_ENV: production
     container_name: upload-be-prod
-    environment:
-      - NODE_ENV=production
-      - DB_HOST=192.168.55.5
-      - DB_PORT=5435
-      - DB_USER=mitaka
-      - DB_PASSWORD=mitaka
-      - DB_NAME=prod_db
-      - ALLOWED_ORIGIN=https://upload.d-dimitrov.eu
+    env_file:
+      - ./prod.secret.env # Новият файл със секретни данни
     volumes:
       - ./server:/app
       - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
-      - ./....env.production:/app/....env.production
-      - ./....env.development:/app/....env.development
     restart: always
 
   # === PROD FRONTEND ===
