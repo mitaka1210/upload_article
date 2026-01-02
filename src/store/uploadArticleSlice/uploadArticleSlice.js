@@ -9,6 +9,14 @@ const url = `${process.env.REACT_APP_API_URL_PROD}`;
 // Async thunk за качване на секция с изображение
 export const uploadSection = createAsyncThunk('sections/upload', async (data, { rejectWithValue }) => {
  try {
+  const formData = new FormData();
+  formData.append('article_id', data.article_id);
+  formData.append('title', data.title);
+  formData.append('content', data.content);
+  formData.append('position', data.position);
+
+  if (data.image) formData.append('image', data.image); // Снимка секция
+  if (data.main_image) formData.append('main_image', data.main_image); // Главна снимка
   const response = await axios.post(`${url}/api/create/section`, data, {
    headers: { 'Content-Type': 'multipart/form-data' },
   });

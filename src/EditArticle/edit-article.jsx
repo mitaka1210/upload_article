@@ -3,6 +3,8 @@ import { updateSection } from '../store/editSections/editSectionsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { fetchArticles } from '../store/getArticleData/getArticlesDataSlice';
+import upload from '../assets/cloud-computing.png';
+import download from '../assets/download.png';
 import './edit.scss';
 import deleteSectionImg from '../assets/delete-svgrepo-com.svg';
 import { deleteSection } from '../store/deleteArticleSection/deleteArticleSectionSlice';
@@ -10,9 +12,10 @@ import { deleteSection } from '../store/deleteArticleSection/deleteArticleSectio
 const EditTodo = () => {
  const { articleId } = useParams();
  const dispatch = useDispatch();
+ const API_URL = process.env.REACT_APP_API_URL_PROD;
  const articlesInfo = useSelector((state) => state.articlesSections.data);
  const info = useSelector((state) => state.articlesSections.status);
- const [imageName, setImageName] = useState('');
+ const [image_name, setImageName] = useState('');
  const [showArticle, setShowArticle] = useState(false);
  const [, setSection] = useState([]);
  const navigate = useNavigate();
@@ -77,15 +80,20 @@ const EditTodo = () => {
    }));
   }
  };
- const handleImageChange = (e) => {
+ const handleSectionImageChange = (e, index) => {
   const file = e.target.files[0];
   if (file) {
-   const truncatedName = truncateString(file.name, 30);
-   setImageName(truncatedName);
-   setFormData((prevData) => ({
-    ...prevData,
-    image: file,
-   }));
+   const previewUrl = URL.createObjectURL(file); // Генерираме временен линк
+
+   setFormData((prev) => {
+    const updatedSections = [...prev.section];
+    updatedSections[index] = {
+     ...updatedSections[index],
+     section_image: file, // Файлът за изпращане към BE
+     sectionPreview: previewUrl, // Временният линк за незабавно показване
+    };
+    return { ...prev, section: updatedSections };
+   });
   }
  };
  //delete article function
@@ -111,40 +119,55 @@ const EditTodo = () => {
  };
  const handleSubmit = async (e) => {
   e.preventDefault();
-  console.log('pesho', formData);
-  formData.section.forEach((section) => {
-   if (!section.position) {
-    section.position = formData.section.indexOf(section) + 1; // Уверяваме се, че позицията е зададена
-   }
-  });
-  const copy = structuredClone({
-   ...formData,
-   image: formData.image,
-   status: showArticle,
-  });
-  console.log('pesho', copy);
-  try {
-   // Първо изчакай `updateSection`
-   await dispatch(updateSection(copy)).unwrap();
 
-   // След това извикай `fetchArticles`
+  const data = new FormData();
+
+  // 1. Добавяме основните данни за статията
+  data.append('id', articleId);
+  data.append('title', formData.title);
+  data.append('status', showArticle); // Булева стойност
+  data.append('oldMainImage', formData.mainImage || ''); // Използваме за триене в BE
+
+  // 2. Проверка за нова главна снимка
+  if (formData.image instanceof File) {
+   data.append('image', formData.image);
+  }
+
+  // 3. Подготовка и добавяне на секциите
+  const processedSections = formData.section.map((sec, index) => {
+   const position = sec.position || index + 1;
+
+   // Ако има избран нов файл за секцията, го добавяме в FormData
+   if (sec.section_image instanceof File) {
+    data.append('section_image', sec.section_image);
+    // Маркираме, че тази секция има нов файл, за да знае BE кога да трие стария
+    return { ...sec, position, hasNewImage: true };
+   }
+
+   return { ...sec, position, hasNewImage: false };
+  });
+
+  // Добавяме масива със секции като стринг (BE ще го парсне с JSON.parse)
+  data.append('section', JSON.stringify(processedSections));
+
+  try {
+   // Изпращаме `data` (FormData), а не `copy` (Object)
+   await dispatch(updateSection(data)).unwrap();
+
    await dispatch(fetchArticles()).unwrap();
 
-   // Ако всичко е наред, пренасочи към началната страница
+   // Почистване на паметта от Blob URL-ите
+   if (formData.preview) URL.revokeObjectURL(formData.preview);
+   formData.section.forEach((sec) => {
+    if (sec.sectionPreview) URL.revokeObjectURL(sec.sectionPreview);
+   });
+
    navigate('/home');
   } catch (error) {
    console.error('Error:', error);
   }
  };
- const truncateString = (str, num) => {
-  if (str.length <= num) {
-   return str;
-  } else {
-   return str.slice(0, num) + '...';
-  }
- };
  const handleAddSection = () => {
-  console.log('pesho23123', articlesInfo);
   setFormData((prevData) => ({
    ...prevData,
    section: [
@@ -158,6 +181,46 @@ const EditTodo = () => {
   }));
  };
 
+ const handleImageChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+   const previewUrl = URL.createObjectURL(file); // Генерираме временен линк за преглед
+
+   setFormData((prevData) => ({
+    ...prevData,
+    image: file, // Това отива в FormData за бекенда
+    preview: previewUrl, // Това се използва за <img> тага
+   }));
+
+   // По желание: съкращаване на името за визуализация
+   const truncatedName = file.name.length > 30 ? file.name.substring(0, 30) + '...' : file.name;
+   setImageName(truncatedName);
+  }
+ };
+ const handleDownload = async (imageUrl, fileName) => {
+  try {
+   const response = await fetch(imageUrl);
+   const blob = await response.blob();
+   const url = window.URL.createObjectURL(blob);
+   const link = document.createElement('a');
+   link.href = url;
+
+   // Вземаме оригиналното име на файла от пътя
+   const name = fileName.split('/').pop();
+   link.setAttribute('download', name);
+
+   document.body.appendChild(link);
+   link.click();
+
+   // Почистване
+   link.parentNode.removeChild(link);
+   window.URL.revokeObjectURL(url);
+  } catch (error) {
+   console.error('Грешка при сваляне:', error);
+   // Ако не успее, поне я отвори в нов таб
+   window.open(imageUrl, '_blank');
+  }
+ };
  return (
   <>
    {info === 'loading' ? (
@@ -187,6 +250,31 @@ const EditTodo = () => {
       <h5 className="center-header text-align-center">Редактиране на статия:</h5>
       <div className="text-align-center">
        <p>{formData.title}</p>
+       {(formData.preview || formData.images_id) && (
+        <div className="current-image-preview">
+         <p>{formData.preview ? 'Нова главна снимка (преглед):' : 'Текуща главна снимка:'}</p>
+         <img
+          src={formData.preview ? formData.preview : `${API_URL}${formData.images_id}`}
+          alt="Main"
+          style={{
+           width: '150px',
+           borderRadius: '8px',
+           border: formData.preview ? '2px solid #2196f3' : 'none',
+          }}
+         />
+        </div>
+       )}
+
+       <div className="flex-horizontal-container-raw justify-content-center margin-top-15">
+        <div className="file file--uploading">
+         {/* Уникално ID за главната снимка */}
+         <input id="input-file-main" onChange={handleImageChange} type="file" style={{ display: 'none' }} />
+         <label htmlFor="input-file-main" className="input-file border-radius-20">
+          <img src={upload} alt="upload" />
+          <p className="remove-margin-bottom">Смени главна снимка</p>
+         </label>
+        </div>
+       </div>
       </div>
       <div
        className="flex-horizontal-container-raw
@@ -210,6 +298,24 @@ const EditTodo = () => {
           <textarea name={`section[${index}].content`} value={section.content || ''} onChange={handleChange} placeholder="Content" className="add-textarea-height padding-20" />
           <br />
           <br />
+          {/* Показване на текущата снимка на секцията (ако има) */}
+          {(section.sectionPreview || section.imageUrl) && <img src={section.sectionPreview ? section.sectionPreview : `${API_URL}${section.imageUrl}`} className="images-section-size" alt="Section-image" style={{ border: section.sectionPreview ? '2px solid #4caf50' : 'none' }} />}{' '}
+          <div className="flex-horizontal-container-raw justify-content-center flex-gap">
+           <div className="file file--uploading">
+            <input id={`file-section-${index}`} onChange={(e) => handleSectionImageChange(e, index)} type="file" style={{ display: 'none' }} />
+            <label htmlFor={`file-section-${index}`} className="input-file border-radius-20">
+             <img src={upload} alt="upload" />
+             <p className="remove-margin-bottom">Качи файл</p>
+            </label>
+           </div>
+           <div className="input-file download-button-style" onClick={() => handleDownload(`${API_URL}${section.imageUrl}`, formData.images_id)}>
+            <label htmlFor="input-file-edit" className="input-file text-align-center justify-content-center align-items-center">
+             <img src={download} alt="download" style={{ height: '24px', width: '24px' }} />
+             <p className="remove-margin-bottom">Свали файл</p>
+            </label>
+           </div>
+          </div>
+          <hr className="hr-edit" />
           <div className="delete_section" onClick={() => deleteSectionFromArticle(section.position)}>
            <img src={deleteSectionImg} alt="delete" />
           </div>
@@ -218,14 +324,6 @@ const EditTodo = () => {
        })}
       </div>
       {/*upload button*/}
-      <div className="file file--uploading">
-       <input id="input-file-edit" onChange={handleImageChange} type="file" />
-       {/*<label htmlFor="input-file" className="input-file">*/}
-       {/* <img src={upload} alt="upload" />*/}
-       {/* <p>Качване на снимка към статия</p>*/}
-       {/*</label>*/}
-       {/*<p className="upload-image-name-edit">{image_name}</p>*/}
-      </div>
       <button onClick={handleSubmit} type="submit" className="edit-send-button">
        Запази промените
       </button>
