@@ -1,116 +1,117 @@
 import express from "express";
 import { queryWithFailover } from "../../config/db.js";
 import upload from "../../middlewares/upload.js";
+import fs from "fs";
+import path from "path";
 
 const router = express.Router();
 
-// POST заявка за добавяне на секция с изображение
-router.post("/:id", upload.single("image"), async (req, res) => {
-  const article_id = parseInt(req.params.id, 10); // ID на статията
-  const { title, section, status } = req.body;
-  const image_url = req.file ? `/upload/${req.file.originalname}` : null;
-  // Проверка дали секциите са предоставени
-  if (!section || !Array.isArray(section)) {
-    return res.status(400).json({
-      error: "Section array is required.",
-    });
+// Функция за изтриване на файл
+const deleteFile = (filePath) => {
+  if (!filePath) return;
+  const absolutePath = path.join(process.cwd(), filePath);
+  if (fs.existsSync(absolutePath)) {
+    fs.unlinkSync(absolutePath);
+    console.log(`Изтрит файл: ${absolutePath}`);
   }
+};
 
-  try {
-    // Започваме транзакция
-    await queryWithFailover("BEGIN");
+// Променяме на .fields, за да хващаме главна снимка и масив от снимки за секции
+router.post(
+  "/:id",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "section_image", maxCount: 10 },
+  ]),
+  async (req, res) => {
+    const article_id = parseInt(req.params.id, 10);
+    const { title, section, status, oldMainImage } = req.body;
 
-    // Актуализираме основната статия
-    const articleQuery = `
-          UPDATE articles
-          SET title  = COALESCE($1, title),
-              status = COALESCE($2, status)
-          WHERE id = $3 RETURNING *;
-	 `;
-    const articleValues = [title, status, article_id];
-    const articleResult = await queryWithFailover(articleQuery, articleValues);
-
-    if (articleResult.rows.length === 0) {
-      throw new Error("Article not found.");
+    // 1. ПАРСВАНЕ: FormData праща масива като STRING, трябва ни като OBJECT
+    let sectionsArray = [];
+    try {
+      sectionsArray =
+        typeof section === "string" ? JSON.parse(section) : section;
+    } catch (e) {
+      return res.status(400).json({ error: "Invalid section data format" });
     }
 
-    // Извличаме съществуващите секции за тази статия
-    const currentSectionsQuery = `
-          SELECT id, title, content, position, image_url
-          FROM sections
-          WHERE article_id = $1;
-	 `;
-    const currentSectionsResult = await queryWithFailover(
-      currentSectionsQuery,
-      [article_id],
-    );
+    try {
+      await queryWithFailover("BEGIN");
 
-    // Създаване на map за текущите секции по position
-    const currentSectionsMap = currentSectionsResult.rows.reduce((acc, sec) => {
-      acc[sec.position] = sec;
-      console.log("pesho", acc);
-      return acc;
-    }, {});
-
-    // Обхождаме новите секции и актуализираме само при разлики
-    for (const sec of section) {
-      // Проверка дали позицията е зададена
-      const existingSec = currentSectionsMap[sec.position];
-      console.log("pesho", existingSec);
-      // Проверка за разлика (това сравнява съдържанието, заглавието и изображението)
-      if (existingSec === undefined) {
-        // Няма съществуваща секция — добавяме нова
-        console.log(`Inserting new section at position no ${sec.position}`);
-        const insertQuery = `
-      INSERT INTO sections (article_id, position, title, content, image_url)
-      VALUES ($1, $2, $3, $4, $5)
-    `;
-        const insertValues = [
-          article_id,
-          sec.position,
-          sec.title,
-          sec.content,
-          image_url, // може да е null
-        ];
-        await queryWithFailover(insertQuery, insertValues);
-      } else if (
-        existingSec.title === sec.title ||
-        existingSec.content === sec.content ||
-        existingSec.image_url === image_url
-      ) {
-        console.log(`Updating section with position yes ${sec.position}`);
-
-        const sectionQuery = `
-                UPDATE sections
-                SET title     = $1,
-                    content   = $2,
-                    image_url = $3
-                WHERE article_id = $4
-                  AND position = $5
-		          `;
-        const sectionValues = [
-          sec.title,
-          sec.content,
-          image_url, // image_url е nullable
-          article_id,
-          sec.position,
-        ];
-        await queryWithFailover(sectionQuery, sectionValues);
+      // 2. ГЛАВНА СНИМКА (images_id)
+      let mainImageUrl = oldMainImage;
+      // ПРОВЕРКА: Само ако има качен НОВ файл 'image'
+      if (req.files["image"] && req.files["image"].length > 0) {
+        // Изтриваме физически стария файл само ако има нов
+        if (oldMainImage) deleteFile(oldMainImage);
+        mainImageUrl = `/upload/${req.files["image"][0].filename}`;
       }
+
+      const articleQuery = `
+          UPDATE articles
+          SET title = COALESCE($1, title),
+              status = $2,
+              main_image_url = $3   -- Променено от mainimage на images_id
+          WHERE id = $4 RETURNING *;
+    `;
+      await queryWithFailover(articleQuery, [
+        title,
+        status === "true",
+        mainImageUrl,
+        article_id,
+      ]);
+
+      // 3. СЕКЦИИ
+      const sectionFiles = req.files["section_image"] || [];
+      let fileCounter = 0;
+
+      for (const sec of sectionsArray) {
+        let currentSectionImage = sec.imageUrl;
+
+        // Ако фронтендът е казал, че има нова снимка (hasNewImage: true)
+        if (sec.hasNewImage && sectionFiles[fileCounter]) {
+          if (sec.imageUrl) deleteFile(sec.imageUrl); // Изтриваме старата секционна снимка
+          currentSectionImage = `/upload/${sectionFiles[fileCounter].filename}`;
+          fileCounter++;
+        }
+
+        const updateSectionQuery = `
+        UPDATE sections
+        SET title = $1, content = $2, section_image_url = $3
+        WHERE article_id = $4 AND position = $5
+      `;
+        const result = await queryWithFailover(updateSectionQuery, [
+          sec.title,
+          sec.content,
+          currentSectionImage,
+          article_id,
+          sec.position,
+        ]);
+
+        // Ако няма такава секция (rowCount === 0), правим INSERT
+        if (result.rowCount === 0) {
+          const insertQuery = `
+          INSERT INTO sections (article_id, position, title, content,section_image_url)
+          VALUES ($1, $2, $3, $4, $5)
+        `;
+          await queryWithFailover(insertQuery, [
+            article_id,
+            sec.position,
+            sec.title,
+            sec.content,
+            currentSectionImage,
+          ]);
+        }
+      }
+
+      await queryWithFailover("COMMIT");
+      res.json({ message: "Успешно обновяване!" });
+    } catch (error) {
+      await queryWithFailover("ROLLBACK");
+      console.error("ГРЕШКА:", error);
+      res.status(500).json({ error: error.message });
     }
-
-    // Комитваме транзакцията
-    await queryWithFailover("COMMIT");
-
-    res.json({
-      message: "Article and sections updated successfully.",
-    });
-  } catch (error) {
-    console.error("Error updating article or sections:", error);
-
-    // Ролбек при грешка
-    await queryWithFailover("ROLLBACK");
-    res.status(500).json({ error: "Internal server error." });
-  }
-});
+  },
+);
 export default router;

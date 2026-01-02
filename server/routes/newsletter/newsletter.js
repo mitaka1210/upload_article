@@ -22,9 +22,10 @@ router.post("/", async (req, res) => {
     }
 
     // Insert new email
-    await queryWithFailover("INSERT INTO newsletter_subscribers(email) VALUES($1)", [
-      email,
-    ]);
+    await queryWithFailover(
+      "INSERT INTO newsletter_subscribers(email) VALUES($1)",
+      [email],
+    );
     return res
       .status(200)
       .json({ message: "Subscription successful", email: email });

@@ -318,6 +318,28 @@
  transform: translateY(-7px);
 }
 
+.images-section-size {
+ width: 100%;
+ max-width: 300px;
+ display: block;
+ margin: 10px 0;
+}
+.download-button-style {
+ background-color: #4caf50;
+ color: white;
+ display: flex;
+ border-radius: 20px;
+ cursor: pointer;
+ justify-content: center;
+ padding: 10px;
+ &:hover {
+  background-color: #45a049;
+ }
+}
+
+.gap-10 {
+ gap: 10px;
+}
 @keyframes flugedIn {
  from {
   height: 20px;

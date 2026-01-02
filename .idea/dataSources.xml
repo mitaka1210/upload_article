@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="dev_db@192.168.55.5" uuid="2c0dab12-efda-479e-b10f-28e38b27e853">
+    <data-source source="LOCAL" name="dev_db@192.168.100.100" uuid="2c0dab12-efda-479e-b10f-28e38b27e853">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://192.168.55.5:5434/dev_db</jdbc-url>
+      <jdbc-url>jdbc:postgresql://192.168.100.100:5434/dev_db</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.host.port" />
+        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.container.port" />
+      </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="prod_db@192.168.55.5" uuid="ad04cefa-c520-4ea2-882a-2f499e05db18">
+    <data-source source="LOCAL" name="prod_db@192.168.100.100" uuid="ad04cefa-c520-4ea2-882a-2f499e05db18">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://192.168.55.5:5435/prod_db</jdbc-url>
+      <jdbc-url>jdbc:postgresql://192.168.100.100:5435/prod_db</jdbc-url>
+      <jdbc-additional-properties>
+        <property name="com.intellij.clouds.kubernetes.db.host.port" />
+        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
+        <property name="com.intellij.clouds.kubernetes.db.container.port" />
+      </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="neondb@ep-holy-dust-a4lx2gm2-pooler.us-east-1.aws.neon.tech" uuid="23c79325-8757-4fb6-be66-5501d79bd933">

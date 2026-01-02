@@ -41,18 +41,19 @@ const articlesSlice = createSlice({
    state.isLoading = true;
   });
   builder.addCase(fetchArticles.fulfilled, (state, action) => {
+   console.log('pesho', action);
    state.isLoading = false;
    let articlesArr = [];
    state.status = 'succeeded';
    for (let i = 0; i < action.payload.length; i++) {
     // let createArticle = new Date(action.payload[i].createData).toDateString();
-    let createArticle = new Date(action.payload[i].createData).toLocaleString(undefined, {
+    let createArticle = new Date(action.payload[i].createdAt).toLocaleString(undefined, {
      year: 'numeric',
      month: '2-digit',
      day: '2-digit',
      weekday: 'long',
     });
-    let createTime = new Date(action.payload[i].createData).toLocaleString(undefined, {
+    let createTime = new Date(action.payload[i].createdAt).toLocaleString(undefined, {
      hour: '2-digit',
      hour12: false, //AM or PM
      minute: '2-digit',
@@ -63,7 +64,7 @@ const articlesSlice = createSlice({
      create_article_time: createTime,
      id: action.payload[i].id,
      title: action.payload[i].title,
-     images_id: action.payload[i].images,
+     images_id: action.payload[i].mainImage,
      section: action.payload[i].sections,
     });
    }
