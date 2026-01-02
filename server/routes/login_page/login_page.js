@@ -73,7 +73,7 @@ router.post(
       const isMatch = await bcrypt.compare(password, user.password);
       if (!isMatch) {
         const failedAttempts = user.failed_attempts + 1;
-        await pool.query(
+        await queryWithFailover(
           "UPDATE users SET failed_attempts = $1, blocked = $2 WHERE username = $3",
           [failedAttempts, failedAttempts >= 5, username],
         );
@@ -90,7 +90,7 @@ router.post(
         }
       }
 
-      await pool.query(
+      await queryWithFailover(
         "UPDATE users SET failed_attempts = 0 WHERE username = $1",
         [username],
       );
@@ -105,7 +105,7 @@ router.post(
        VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
       `;
       const values = [user.username, user.password, user.role];
-      await pool.query(query, values);
+      await queryWithFailover(query, values);
       res.json({ token, role: user.role, username: user.username });
     } catch (err) {
       console.error("Error during login:", err);

@@ -25,6 +25,9 @@ import subscribers from "./routes/newsLetterSubscribers/newsLetterSubscribers.js
 import broadcastTest from "./routes/newsLetterBroadCastTEST/newsLetterBroadCastTEST.js";
 import checkDBStatus from "./routes/health.js";
 import path from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 3400;
@@ -70,9 +73,7 @@ app.use("/api/subscribers", subscribers);
 app.use("/api/broadcast-test", broadcastTest);
 app.use("/db-status", checkDBStatus);
 // Добави преди `app.listen()`
-const uploadPath = path.join(process.cwd(), "upload"); // Работи в Docker
-app.use("/uploads", express.static(uploadPath));
-// Error handling middleware
+app.use("/upload", express.static(path.join(__dirname, "upload"))); // Error handling middleware
 app.use((err, req, res, next) => {
   console.log("NODE_ENV:", process.env.NODE_ENV);
   console.error("Error:", err.message);

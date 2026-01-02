@@ -8,14 +8,16 @@ const url = `${process.env.REACT_APP_API_URL_PROD}`;
 //!development
 // const url = `${process..env.REACT_APP_API_URL_LOCALHOST}`;
 // Async thunk за качване на секция с изображение
-export const updateSection = createAsyncThunk('sections/updateSection', async (data, { rejectWithValue }) => {
+export const updateSection = createAsyncThunk('sections/updateSection', async (formData, { rejectWithValue }) => {
  try {
-  const response = await axios.post(`${url}/api/edit/article/${data.id}`, data, {
-   headers: { 'Content-Type': 'multipart/form-data' },
-  });
+  // Извличаме ID-то от FormData обекта
+  const articleId = formData.get('id');
+
+  const response = await axios.post(`${url}/api/edit/article/${articleId}`, formData);
+
   return response.data;
  } catch (error) {
-  return rejectWithValue(error.response.data || 'Error uploading section');
+  return rejectWithValue(error.response?.data || 'Error uploading section');
  }
 });
 const editSectionsSlice = createSlice({
@@ -35,6 +37,7 @@ const editSectionsSlice = createSlice({
     state.isLoading = true;
    })
    .addCase(updateSection.fulfilled, (state, action) => {
+    console.log('pesho', action.payload);
     state.status = 'succeeded';
     state.isLoading = false;
     state.section.push(action.payload);

@@ -18,10 +18,10 @@ services:
       - DB_NAME=prod_db
       - ALLOWED_ORIGIN=https://upload.d-dimitrov.eu
     volumes:
-      - ./server:/app
-      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
-      - ./....env.production:/app/....env.production
-      - ./....env.development:/app/....env.development
+    - ./server:/app
+    - ./server/.env.production:/app/.env.production
+    - ./server/.env.development:/app/.env.development
+    - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
     restart: always
 
   # === PROD FRONTEND ===
