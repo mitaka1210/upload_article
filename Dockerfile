@@ -1,22 +1,17 @@
-# Frontend Dockerfile
+# Stage 1: Build
 FROM node:18 AS build
-
-# Работна директория за билд процеса
 WORKDIR /app
-
-# Копираме package.json и инсталираме зависимостите
-COPY package.json package-lock.json ./
+COPY package*.json ./
 RUN npm install
-
-# Копираме кода и билдваме React приложението
+COPY .env.production .env.production
 COPY . .
-# Добавяме аргумент за NODE_ENV
-ARG NODE_ENV
-ENV NODE_ENV=${NODE_ENV}
-# Реално билдваме в указаната среда
 RUN npm run build
 
-# Излагане на Nginx порта
-EXPOSE 3500
-
-CMD ["npm", "start"]
+# Stage 2: Production environment
+FROM nginx:alpine
+# Копираме билднатите файлове
+COPY --from=build /app/build /usr/share/nginx/html
+# Копираме nginx конфигурацията
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

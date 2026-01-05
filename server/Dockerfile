@@ -20,4 +20,4 @@ EXPOSE 3400
 ARG NODE_ENV
 ENV NODE_ENV=${NODE_ENV}
 # Стартиране на сървъра с nodemon
-CMD ["npx", "nodemon", "index.js"]
+CMD ["npm", "run", "prod"]
