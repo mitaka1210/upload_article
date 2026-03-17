@@ -24,5 +24,4 @@ const config = {
     "https://stage-upload-article.vercel.app",
   ],
 };
-
 export default config;

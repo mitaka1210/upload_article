@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.e1d6dcfc.css",
+    "main.js": "/static/js/main.bccd99f8.js",
+    "static/media/bgr-login-page.jpg": "/static/media/bgr-login-page.4fe3c629dc0f42150c9f.jpg",
+    "static/media/delete-svgrepo-com.svg": "/static/media/delete-svgrepo-com.4fe8ccc367e360735fd11b40f52fdc4a.svg",
+    "index.html": "/index.html",
+    "static/media/google-svgrepo-com.svg": "/static/media/google-svgrepo-com.762ddcc62008fa70d0e41797c75061bb.svg",
+    "static/media/sign-out-alt-4-svgrepo-com.svg": "/static/media/sign-out-alt-4-svgrepo-com.f752ec7b0f5f5364f83b623ba9322981.svg",
+    "main.e1d6dcfc.css.map": "/static/css/main.e1d6dcfc.css.map",
+    "main.bccd99f8.js.map": "/static/js/main.bccd99f8.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e1d6dcfc.css",
+    "static/js/main.bccd99f8.js"
+  ]
+}
