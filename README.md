@@ -298,22 +298,28 @@ docker-compose -f docker-compose.prod.yml exec app [migration-command]
 
 ### Automated Deployment (CI/CD)
 ```yaml
-# Example GitHub Actions workflow
-name: Deploy to Production
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Deploy to server
-      run: |
-        ssh user@d-dimitrov.eu "cd /path/to/upload_article && git pull && docker-compose -f docker-compose.prod.yml up -d --build"
+# Trigger: push to master or workflow_dispatch
+# Workflow file: .github/workflows/deploy.yml
+# Jobs: ci -> deploy -> healthcheck_and_rollback -> notify
 ```
+
+Required repository secrets:
+
+- `SSH_HOST`
+- `SSH_USER`
+- `SSH_KEY`
+- `SSH_PORT`
+- `SERVER_APP_PATH` (absolute path on the server)
+- `APP_HEALTHCHECK_URL` (for example `https://upload.d-dimitrov.eu/api/health`)
+- `TELEGRAM_TO`
+- `TELEGRAM_TOKEN`
+
+Rollback runbook:
+
+1. Pipeline stores the current SHA to `.last_stable_sha` before deploy.
+2. If health check fails after deploy retries, pipeline checks out `.last_stable_sha`.
+3. Containers are rebuilt with `docker compose up -d --build`.
+4. If post-rollback health check still fails, the workflow remains failed and sends Telegram failure notification.
 
 ## 📝 API Documentation
 
