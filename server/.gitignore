@@ -24,7 +24,5 @@ node_modules/*
 .idea/sqldialects.xml
 .idea/dataSources.local.xml
 .env*
-server/.env.development
-server/.env.production
 .env.production
 .env.development

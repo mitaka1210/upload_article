@@ -18,6 +18,7 @@ services:
     - /app/node_modules
     - ./server/.env.production:/app/.env.production
     - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
+    - /ssd/docker/share_upload_images:/app/upload
     restart: always
 
   # === PROD FRONTEND ===
@@ -38,6 +39,7 @@ services:
       - NODE_ENV=production
     volumes:
       - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
+      - /ssd/docker/share_upload_images:/app/upload
     restart: always
 
 networks:
