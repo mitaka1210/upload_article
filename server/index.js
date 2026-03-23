@@ -73,7 +73,7 @@ app.use("/api/subscribers", subscribers);
 app.use("/api/broadcast-test", broadcastTest);
 app.use("/db-status", checkDBStatus);
 // Добави преди `app.listen()`
-app.use("/upload", express.static(path.join(__dirname, "upload"))); // Error handling middleware
+app.use("/upload", express.static("/app/upload"));
 app.use((err, req, res, next) => {
   console.log("NODE_ENV:", process.env.NODE_ENV);
   console.error("Error:", err.message);
