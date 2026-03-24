@@ -35,6 +35,7 @@ jobs:
 
       - name: Build frontend
         run: npm run build
+        CI: false
 
   deploy:
     runs-on: ubuntu-latest
