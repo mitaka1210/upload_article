@@ -64,7 +64,8 @@ const ListArticles = () => {
   setShowConfirmDialog(false); // Затваря диалога за потвърждение
   setShowDeleteDialog(false); // Затваря диалога за потвърждение
   if (data === 'delete') {
-   dispatch(deleteArticle(data)).unwrap()
+   dispatch(deleteArticle(data))
+    .unwrap()
     .then(() => {
      dispatch(fetchArticles());
     })
