@@ -24,13 +24,6 @@ const SectionUpload = () => {
  const getAllArticles = useSelector((state) => state.articlesSections.data);
  // storage
  const role = localStorage.getItem('role');
- const userName = localStorage.getItem('username');
- const users = [
-  {
-   role: role,
-   userName: userName,
-  },
- ];
  useEffect(() => {
   if (role !== 'admin' && role !== 'super_admin') {
    setBlockAdding(false);

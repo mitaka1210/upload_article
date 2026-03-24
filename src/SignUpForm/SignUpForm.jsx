@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 import { createAccount } from '../store/create_account/createAccountSlice';
 
@@ -157,6 +158,10 @@ const SignUpForm = ({ onAccountCreated }) => {
    </button>
   </form>
  );
+};
+
+SignUpForm.propTypes = {
+ onAccountCreated: PropTypes.func,
 };
 
 export default SignUpForm;

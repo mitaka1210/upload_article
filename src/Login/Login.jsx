@@ -18,7 +18,7 @@ const LoginPage = () => {
  const { loading, error } = useSelector((state) => state.auth);
  const [isLoggedIn, setIsLoggedIn] = useState(false);
  const navigate = useNavigate();
- const [user, setUser] = useState(null);
+ const [, setUser] = useState(null);
  const [showPassword, setShowPassword] = useState(false);
  useEffect(() => {
   const signUpButton = document.getElementById('signUp');

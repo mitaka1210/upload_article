@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import google from '../assets/google-svgrepo-com.svg';
 import '../components/login.scss';
 const Form = ({ username, setUsername, password, setPassword, handleLogin, loading, error }) => {
@@ -47,6 +48,16 @@ const Form = ({ username, setUsername, password, setPassword, handleLogin, loadi
    </div>
   </div>
  );
+};
+
+Form.propTypes = {
+ username: PropTypes.string,
+ setUsername: PropTypes.func,
+ password: PropTypes.string,
+ setPassword: PropTypes.func,
+ handleLogin: PropTypes.func,
+ loading: PropTypes.bool,
+ error: PropTypes.string,
 };
 
 export default Form;

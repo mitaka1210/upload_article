@@ -5,12 +5,32 @@ import pluginPrettier from "eslint-plugin-prettier";
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
+  // 1. Глобални игнорирания (трябва да са в самостоятелен обект без други ключове)
+  {
+    ignores: [
+      "**/node_modules/",
+      "server/node_modules/",
+      "build/",
+      "server/build/",
+      "dist/",
+      "**/*.log",
+      "assets/",
+      "docs-AI/",
+    ],
+  },
+  // 2. Основна конфигурация
   {
     files: ["**/*.{js,mjs,cjs,jsx}"],
     languageOptions: {
       globals: {
-        ...globals.browser, // Browser environment
-        ...globals.node, // Node.js environment
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    // Добавяме това, за да оправим Warning-а от скрийншота ти
+    settings: {
+      react: {
+        version: "detect",
       },
     },
   },
@@ -22,6 +42,7 @@ export default [
     },
     rules: {
       "prettier/prettier": "error",
+      "react/react-in-jsx-scope": "off", // Обикновено е нужно за нови React версии
     },
   },
 ];

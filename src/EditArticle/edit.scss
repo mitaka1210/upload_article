@@ -155,12 +155,33 @@
  transform: rotate(270deg);
  position: absolute;
  z-index: 9;
- top: 10em;
+ top: clamp(8rem, 22vh, 14rem);
  display: flex;
  justify-content: center;
  align-items: center;
  flex-flow: row;
- left: 34em;
+ left: clamp(18rem, 72vw, 53rem);
+}
+
+@media (max-width: 1500px) {
+ .show-article {
+  top: clamp(7rem, 18vh, 10rem);
+  left: clamp(12rem, 67vw, 16rem);
+ }
+}
+
+@media (max-width: 1024px) {
+ .show-article {
+  top: clamp(7rem, 17vh, 10rem);
+  left: clamp(6rem, 67vw, 7rem);;
+ }
+}
+
+@media (max-width: 768px) {
+ .show-article {
+  top: clamp(6rem, 16vh, 7rem);
+  left: clamp(2rem, 62vw, 2rem);
+ }
 }
 
 #check {

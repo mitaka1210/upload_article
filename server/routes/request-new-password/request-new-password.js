@@ -26,7 +26,6 @@ router.post("/", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const user = userResult.rows[0];
     const resetToken = crypto.randomBytes(32).toString("hex");
     const resetTokenExpiration = new Date(Date.now() + 3600000); // 1 hour
 

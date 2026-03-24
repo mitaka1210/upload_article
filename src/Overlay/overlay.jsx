@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const Overlay = ({ onSignInClick, onSignUpClick }) => {
- console.log('pesho Overlay', onSignInClick, onSignUpClick);
-
  return (
   <div className="overlay-container-login">
    <div className="overlay">
@@ -23,6 +22,11 @@ const Overlay = ({ onSignInClick, onSignUpClick }) => {
    </div>
   </div>
  );
+};
+
+Overlay.propTypes = {
+ onSignInClick: PropTypes.func,
+ onSignUpClick: PropTypes.func,
 };
 
 export default Overlay;
