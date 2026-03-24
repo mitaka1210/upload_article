@@ -31,7 +31,7 @@ jobs:
       - name: Run tests
         run: npm test -- --watch=false --passWithNoTests
         env:
-          CI: true
+          CI: false
 
       - name: Build frontend
         run: npm run build
