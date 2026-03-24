@@ -24,10 +24,6 @@ import broadcast from "./routes/newsLetterBroadCast/newsLetterBroadCast.js";
 import subscribers from "./routes/newsLetterSubscribers/newsLetterSubscribers.js";
 import broadcastTest from "./routes/newsLetterBroadCastTEST/newsLetterBroadCastTEST.js";
 import checkDBStatus from "./routes/health.js";
-import path from "path";
-import { fileURLToPath } from "url";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const app = express();
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 3400;
@@ -74,7 +70,7 @@ app.use("/api/broadcast-test", broadcastTest);
 app.use("/db-status", checkDBStatus);
 // Добави преди `app.listen()`
 app.use("/upload", express.static("/app/upload"));
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   console.log("NODE_ENV:", process.env.NODE_ENV);
   console.error("Error:", err.message);
   if (err.message === "Not allowed by CORS") {

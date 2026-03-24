@@ -15,7 +15,7 @@ const EditTodo = () => {
  const API_URL = process.env.REACT_APP_API_URL_PROD;
  const articlesInfo = useSelector((state) => state.articlesSections.data);
  const info = useSelector((state) => state.articlesSections.status);
- const [image_name, setImageName] = useState('');
+ const [, setImageName] = useState('');
  const [showArticle, setShowArticle] = useState(false);
  const [, setSection] = useState([]);
  const navigate = useNavigate();

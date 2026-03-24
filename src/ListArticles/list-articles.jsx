@@ -14,8 +14,8 @@ const ListArticles = () => {
  const dispatch = useDispatch();
  const status = useSelector((state) => state.articlesSections.status);
  const [showDialog, setShowDialog] = useState(false);
- const [dialog, setDialog] = useState(false);
- const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+ const [, setDialog] = useState(false);
+ const [, setShowConfirmDialog] = useState(false);
  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
  // storage
  const role = localStorage.getItem('role');
@@ -36,18 +36,14 @@ const ListArticles = () => {
  };
 
  //delete article function
- const deleteTodo = async (id) => {
-  console.log('pesho');
+ const deleteTodo = async () => {
   if (role === 'admin' || role === 'user') {
    setDialog(true); // Задаваме true, за да покажем диалога
    setShowDialog(true); // Показва диалога
   } else {
    try {
-    console.log('pesho', showDeleteDialog);
-
     setShowConfirmDialog(true); // Показва диалога за потвърждение
     setShowDeleteDialog(true); // Показва диалога за потвърждение
-    console.log('pesho', showDeleteDialog);
     // Първо изчакай `updateSection`
     // await dispatch(deleteArticle(id)).unwrap();
     // // След това извикай `fetchArticles`
@@ -60,11 +56,11 @@ const ListArticles = () => {
   }
  };
  const openAgain = (data) => {
-  console.log('pesho', data);
   setShowConfirmDialog(false); // Затваря диалога за потвърждение
   setShowDeleteDialog(false); // Затваря диалога за потвърждение
   if (data === 'delete') {
-   dispatch(deleteArticle(data)).unwrap()
+   dispatch(deleteArticle(data))
+    .unwrap()
     .then(() => {
      dispatch(fetchArticles());
     })

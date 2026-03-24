@@ -63,7 +63,7 @@ const createAccountSlice = createSlice({
    .addCase(createAccount.pending, (state) => {
     state.status = 'loading';
    })
-   .addCase(createAccount.fulfilled, (state, action) => {
+   .addCase(createAccount.fulfilled, (state) => {
     state.status = 'succeeded';
     state.userName = '';
     state.firstName = '';

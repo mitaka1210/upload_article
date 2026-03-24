@@ -35,7 +35,7 @@ const likesSlice = createSlice({
   },
  },
  extraReducers: (builder) => {
-  builder.addCase(fetchLikesDislikes.pending, (state, action) => {
+  builder.addCase(fetchLikesDislikes.pending, (state) => {
    state.status = 'loading';
    state.isLoading = true;
   });
