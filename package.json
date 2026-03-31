@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@firebase/app": "^0.14.10",
+    "@firebase/util": "^1.15.0",
     "@reduxjs/toolkit": "^2.3.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.1",
@@ -10,7 +12,7 @@
     "@types/react": "^18.3.12",
     "@types/react-router-dom": "^5.3.3",
     "axios": "1.11.0",
-    "firebase": "^11.3.0",
+    "firebase": "^12.11.0",
     "prop-types": "^15.8.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
