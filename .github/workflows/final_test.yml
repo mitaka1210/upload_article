@@ -2,7 +2,7 @@ name: FINAL_RUNNER_TEST
 
 on:
   push:
-    branches: [master, develop]
+    branches: [master]
   workflow_dispatch:
 
 jobs:
@@ -12,11 +12,10 @@ jobs:
       - name: Git Pull and Deploy
         run: |
           cd /ssd/docker/upload_articles/upload_article
-          # Игнорираме проверката на Known Hosts, за да не гърми Runner-а
-          export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
+          # Вече не ни трябва GIT_SSH_COMMAND, защото сме на HTTPS
           git pull origin master
           
-          # Пускаме Docker (build-ваме наново само ако има промени)
+          # Пускаме Docker
           docker compose up -d --build
           
-          echo "🚀 Митак, проектът е обновен успешно!"
+          echo "🚀 Всичко е готово, Митак!"
