@@ -1,4 +1,4 @@
-name: FINAL_RUNNER_TEST
+name: Production Deploy (Self-Hosted)
 
 on:
   push:
@@ -9,13 +9,41 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Git Pull and Deploy
+      - name: Git Pull Latest Changes
         run: |
           cd /ssd/docker/upload_articles/upload_article
-          # Вече не ни трябва GIT_SSH_COMMAND, защото сме на HTTPS
+          # Използваме вече конфигурирания токен (който настроихме ръчно на сървъра)
           git pull origin master
-          
-          # Пускаме Docker
+
+      - name: Install Dependencies
+        run: |
+          cd /ssd/docker/upload_articles/upload_article
+          npm install
+
+      - name: Build Frontend
+        run: |
+          cd /ssd/docker/upload_articles/upload_article
+          # CI=false предотвратява спиране на билда при предупреждения (warnings)
+          CI=false npm run build
+
+      - name: Docker Compose Deploy
+        run: |
+          cd /ssd/docker/upload_articles/upload_article
+          docker compose pull
           docker compose up -d --build
-          
-          echo "🚀 Всичко е готово, Митак!"
+
+      - name: Health Check
+        run: |
+          echo "Checking app health..."
+          # Изчакваме малко, за да стартират контейнерите
+          sleep 10
+          for i in 1 2 3 4 5; do
+            if curl -fsS http://localhost:8080 > /dev/null; then
+              echo "✅ Браво, Митак! Приложението е ОНЛАЙН!"
+              exit 0
+            fi
+            echo "Опит $i: Приложението още не е готово, чакам..."
+            sleep 10
+          done
+          echo "❌ Health check failed!"
+          exit 1
