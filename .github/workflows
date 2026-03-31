@@ -2,7 +2,7 @@ name: Direct Deploy
 
 on:
   push:
-    branches: [master]
+    branches: [master, develop]
   workflow_dispatch:
 
 jobs:
