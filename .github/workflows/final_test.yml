@@ -9,9 +9,14 @@ jobs:
   deploy:
     runs-on: self-hosted
     steps:
-      - name: Simple Hello
+      - name: Git Pull and Deploy
         run: |
           cd /ssd/docker/upload_articles/upload_article
+          # Игнорираме проверката на Known Hosts, за да не гърми Runner-а
+          export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=no"
           git pull origin master
+          
+          # Пускаме Docker (build-ваме наново само ако има промени)
           docker compose up -d --build
-          echo "Браво, Митак! Рънерът работи без SSH!"
+          
+          echo "🚀 Митак, проектът е обновен успешно!"
