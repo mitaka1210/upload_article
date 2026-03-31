@@ -14,11 +14,9 @@ services:
     env_file:
       - ./server/.env.production  # Docker ще зареди променливите автоматично
     volumes:
-    - ./server:/app
     - /app/node_modules
     - ./server/.env.production:/app/.env.production
-    - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
-    - /ssd/docker/share_upload_images:/app/upload
+    - /ssd/docker/upload_articles/upload_article/upload:/app/upload
     restart: always
 
   # === PROD FRONTEND ===
@@ -38,7 +36,6 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
-      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
       - /ssd/docker/share_upload_images:/app/upload
     restart: always
 
