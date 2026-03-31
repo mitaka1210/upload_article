@@ -1,18 +1,17 @@
-name: Direct Deploy
+name: FINAL_RUNNER_TEST
 
 on:
   push:
-    branches: [master]
+    branches: [master, develop]
   workflow_dispatch:
 
 jobs:
-  deploy-job:
+  deploy:
     runs-on: self-hosted
     steps:
-      - name: Git Pull and Deploy
+      - name: Simple Hello
         run: |
           cd /ssd/docker/upload_articles/upload_article
           git pull origin master
-          npm install
-          CI=false npm run build
           docker compose up -d --build
+          echo "Браво, Митак! Рънерът работи без SSH!"
