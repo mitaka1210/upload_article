@@ -1,0 +1,79 @@
+name: Direct Deploy to Project Folder
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  deploy-job:
+    # ТОВА Е НАЙ-ВАЖНОТО: Казва на GitHub да ползва твоя инсталиран рънер
+    runs-on: self-hosted
+    
+    steps:
+      - name: Git Pull Latest Changes
+        run: |
+          cd /ssd/docker/upload_articles/upload_article
+          git pull origin master
+
+      - name: Install Dependencies
+        run: |
+          cd /ssd/docker/upload_articles/upload_article
+          npm install
+
+      - name: Run Lint
+        run: |
+          cd /ssd/docker/upload_articles/upload_article
+          CI=false npm run lint
+
+      - name: Build Frontend
+        run: |
+          cd /ssd/docker/upload_articles/upload_article
+          CI=false npm run build
+
+      - name: Docker Compose Deploy
+        run: |
+          cd /ssd/docker/upload_articles/upload_article
+          docker compose pull
+          docker compose up -d --build
+
+      - name: Health Check
+        id: health_check
+        run: |
+          echo "Checking application health on port 3500..."
+          sleep 20
+          SUCCESS=false
+          
+          # Пробваме 6 пъти през 10 секунди
+          for i in {1..6}; do
+            # ПРОМЯНА: Използваме порт 3500, както се вижда на снимката ти
+            if curl -fsS http://localhost:3500 > /dev/null; then
+              echo "✅ Браво, Митак! Frontend-ът е ОНЛАЙН на порт 3500!"
+              SUCCESS=true
+              break
+            fi
+            echo "Опит $i: Сървърът на порт 3500 още не отговаря..."
+            sleep 10
+          done
+          
+          if [ "$SUCCESS" = false ]; then
+            echo "❌ Health check FAILED на порт 3500!"
+            docker compose logs --tail=50
+            exit 1
+          fi
+
+  notify:
+    # Известията могат да се пращат от стандартен GitHub сървър
+    runs-on: ubuntu-latest
+    needs: deploy-job
+    if: always()
+    steps:
+      - name: Send Telegram Notification
+        uses: appleboy/telegram-action@v1.0.0
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ${{ needs.deploy-job.result == 'success' && '✅' || '❌' }} Deployment: ${{ github.repository }}
+            Status: ${{ needs.deploy-job.result }}
+            Commit: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
