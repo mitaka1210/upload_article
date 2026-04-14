@@ -69,8 +69,9 @@ app.use("/api/subscribers", subscribers);
 app.use("/api/broadcast-test", broadcastTest);
 app.use("/db-status", checkDBStatus);
 // Добави преди `app.listen()`
-app.use("/upload", express.static("/app/upload"));
-app.use((err, req, res) => {
+const uploadPath = process.env.NODE_ENV === "production" ? "/app/upload" : "./upload";
+app.use("/upload", express.static(uploadPath));
+app.use((err, req, res, next) => {
   console.log("NODE_ENV:", process.env.NODE_ENV);
   console.error("Error:", err.message);
   if (err.message === "Not allowed by CORS") {

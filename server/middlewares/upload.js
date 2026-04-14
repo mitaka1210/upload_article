@@ -1,7 +1,7 @@
 import multer from "multer";
 import { extname } from "node:path";
 
-const storagePath = "/app/upload";
+const storagePath = process.env.NODE_ENV === "production" ? "/app/upload" : "./upload";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
