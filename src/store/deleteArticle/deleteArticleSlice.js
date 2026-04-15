@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from '../../api/axiosConfig';
+import { addToast } from '../toast/toastSlice';
 
 //!production
 const url = `${process.env.REACT_APP_API_URL_PROD}`;
@@ -8,11 +9,14 @@ const url = `${process.env.REACT_APP_API_URL_PROD}`;
 // const url = `${process..env.REACT_APP_API_URL_LOCALHOST}`;
 
 // Async action за изтриване
-export const deleteArticle = createAsyncThunk('articles/deleteArticle', async (articleId, { rejectWithValue }) => {
+export const deleteArticle = createAsyncThunk('articles/deleteArticle', async (articleId, { rejectWithValue, dispatch }) => {
  try {
   const response = await axios.delete(`${url}/api/delete/articles/${articleId}`);
+  dispatch(addToast({ message: 'Статията е изтрита успешно!', type: 'success' }));
   return response.data;
  } catch (err) {
+  const errorMessage = err.response?.data?.error || 'Грешка при изтриване на статията';
+  dispatch(addToast({ message: errorMessage, type: 'error' }));
   return rejectWithValue(err.response.data);
  }
 });

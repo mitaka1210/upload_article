@@ -7,10 +7,12 @@ import LoginPage from './Login/Login.jsx';
 import EditArticle from './EditArticle/edit-article';
 import RoleManager from './roleManager/roleManager';
 import NewsLetterAdminPanel from './newsletterAdminPanel/newsletterAdminPanel';
+import Toast from './Toast/Toast';
 
 function App() {
  return (
   <div>
+   <Toast />
    <Routes>
     <Route path="/" element={<Navigate to="/login" replace />} />
     <Route path="/login" element={<LoginPage />} name="Login" />
