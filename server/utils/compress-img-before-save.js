@@ -2,6 +2,8 @@ import sharp from "sharp";
 import fs from "fs";
 import path from "path";
 
+const DEV_SYNC_PATH = "/Users/mitaka/projects/PersonalProjects/d-dimitrov/public/article_images";
+
 const compressImage = async (filePath) => {
   try {
     const ext = path.extname(filePath).toLowerCase(); // Извличане на разширението
@@ -24,6 +26,18 @@ const compressImage = async (filePath) => {
     fs.renameSync(compressedPath, filePath); // Преименуване на компресираното изображение
 
     console.log(`Compressed image saved: ${filePath}`);
+
+    // Sync to d-dimitrov dev folder (only in development)
+    if (process.env.NODE_ENV !== "production") {
+      try {
+        const filename = path.basename(filePath);
+        const destPath = path.join(DEV_SYNC_PATH, filename);
+        fs.copyFileSync(filePath, destPath);
+        console.log(`Synced to dev folder: ${destPath}`);
+      } catch (syncError) {
+        console.error("Dev sync error (non-fatal):", syncError.message);
+      }
+    }
   } catch (error) {
     console.error("Sharp error:", error);
   }

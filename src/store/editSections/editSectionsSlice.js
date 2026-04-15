@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { addToast } from '../toast/toastSlice';
 
 //!production
 
@@ -8,16 +9,19 @@ const url = `${process.env.REACT_APP_API_URL_PROD}`;
 //!development
 // const url = `${process..env.REACT_APP_API_URL_LOCALHOST}`;
 // Async thunk за качване на секция с изображение
-export const updateSection = createAsyncThunk('sections/updateSection', async (formData, { rejectWithValue }) => {
+export const updateSection = createAsyncThunk('sections/updateSection', async (formData, { rejectWithValue, dispatch }) => {
  try {
   // Извличаме ID-то от FormData обекта
   const articleId = formData.get('id');
 
   const response = await axios.post(`${url}/api/edit/article/${articleId}`, formData);
 
+  dispatch(addToast({ message: 'Секцията е обновена успешно!', type: 'success' }));
   return response.data;
  } catch (error) {
-  return rejectWithValue(error.response?.data || 'Error uploading section');
+  const errorMessage = error.response?.data?.error || error.response?.data || 'Грешка при обновяване на секцията';
+  dispatch(addToast({ message: errorMessage, type: 'error' }));
+  return rejectWithValue(errorMessage);
  }
 });
 const editSectionsSlice = createSlice({

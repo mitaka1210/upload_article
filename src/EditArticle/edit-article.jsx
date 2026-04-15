@@ -126,7 +126,7 @@ const EditTodo = () => {
   data.append('id', articleId);
   data.append('title', formData.title);
   data.append('status', showArticle); // Булева стойност
-  data.append('oldMainImage', formData.mainImage || ''); // Използваме за триене в BE
+  data.append('oldMainImage', formData.images_id || ''); // Използваме за триене в BE
 
   // 2. Проверка за нова главна снимка
   if (formData.image instanceof File) {
