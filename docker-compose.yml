@@ -3,6 +3,7 @@ version: "3.8"
 services:
   # === PROD BACKEND ===
   backend-prod:
+    image: upload-be-prod:${APP_IMAGE_TAG:-latest}
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -21,6 +22,7 @@ services:
 
   # === PROD FRONTEND ===
   frontend-prod:
+    image: upload-fe-prod:${APP_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile
