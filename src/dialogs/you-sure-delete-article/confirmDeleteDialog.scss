@@ -12,7 +12,8 @@
  left: 50%;
  transform: translate(-50%, -50%);
 
- & .access-btn, .denied-btn{
+ & .access-btn,
+ .denied-btn {
   padding: 5px;
   border-radius: 21px;
   border: 2px solid red;

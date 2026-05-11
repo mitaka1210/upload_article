@@ -11,17 +11,17 @@
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| **Frontend** | React 18.3.1, Redux Toolkit 2.3.0, React Router v7, Axios 1.11.0, SASS |
-| **Backend** | Node.js 18, Express 4.19.2 |
-| **Database** | PostgreSQL (primary + Neon Cloud failover) |
-| **Auth** | JWT (jsonwebtoken), bcrypt, Firebase (Google/Facebook OAuth) |
-| **File Upload** | Multer 2.0.2, Sharp (image compression) |
-| **Email** | Nodemailer |
-| **Validation** | express-validator |
-| **Deployment** | Docker, Docker Compose, Nginx, GitHub Actions |
-| **Notifications** | Telegram Bot API |
+| Layer             | Technology                                                             |
+| ----------------- | ---------------------------------------------------------------------- |
+| **Frontend**      | React 18.3.1, Redux Toolkit 2.3.0, React Router v7, Axios 1.11.0, SASS |
+| **Backend**       | Node.js 18, Express 4.19.2                                             |
+| **Database**      | PostgreSQL (primary + Neon Cloud failover)                             |
+| **Auth**          | JWT (jsonwebtoken), bcrypt, Firebase (Google/Facebook OAuth)           |
+| **File Upload**   | Multer 2.0.2, Sharp (image compression)                                |
+| **Email**         | Nodemailer                                                             |
+| **Validation**    | express-validator                                                      |
+| **Deployment**    | Docker, Docker Compose, Nginx, GitHub Actions                          |
+| **Notifications** | Telegram Bot API                                                       |
 
 ---
 
@@ -88,64 +88,69 @@ upload_article/
 
 ### Routing (`src/App.js`)
 
-| Route | Component | Description |
-|-------|-----------|-------------|
-| `/` | Redirect | → `/login` |
-| `/login` | `LoginPage` | Login + Register |
-| `/home` | `Home` | Dashboard с управление на статии |
-| `/update-section/:articleId` | `EditArticle` | Редакция на секции |
-| `/change-role` | `RoleManager` | Управление на роли (admin) |
-| `/newsletter-admin-panel` | `NewsLetterAdminPanel` | Изпращане на newsletter |
+| Route                        | Component              | Description                      |
+| ---------------------------- | ---------------------- | -------------------------------- |
+| `/`                          | Redirect               | → `/login`                       |
+| `/login`                     | `LoginPage`            | Login + Register                 |
+| `/home`                      | `Home`                 | Dashboard с управление на статии |
+| `/update-section/:articleId` | `EditArticle`          | Редакция на секции               |
+| `/change-role`               | `RoleManager`          | Управление на роли (admin)       |
+| `/newsletter-admin-panel`    | `NewsLetterAdminPanel` | Изпращане на newsletter          |
 
 ### Key Components
 
 **`Login/Login.jsx`**
+
 - Dual-panel login/signup
 - Google OAuth via Firebase popup
 - Password visibility toggle
 - Form validation + error messages
 
 **`create-edit-article/create-edit-article.jsx`**
+
 - Създаване на нова статия
 - Добавяне на секции с: заглавие, съдържание, позиция, изображение
 - Upload на cover image за статията
 - Достъп само за `admin`/`super_admin`
 
 **`ListArticles/list-articles.jsx`**
+
 - Таблица с всички статии (Header, Дата, Час, Edit, Delete)
 - Role-based бутони за редакция/изтриване
 - Confirmation dialogs
 
 **`roleManager/`**
+
 - Списък с потребители
 - Смяна на роля (само super_admin)
 
 **`newsletterAdminPanel/`**
+
 - Broadcast форма
 - Изпращане на HTML имейл до всички абонати
 
 ### State Management (Redux Toolkit)
 
-| Slice | File | Отговорност |
-|-------|------|-------------|
-| `auth` | `store/login/authSlice.js` | Login, logout, token verification |
-| `articlesSections` | `store/getArticleData/` | Fetch articles |
-| `uploadArticle` | `store/uploadArticleSlice/` | POST section с файл |
-| `articlesHeader` | `store/...` | Създаване на article header |
-| `editSection` | `store/...` | PUT section |
-| `deleteArticle` | `store/...` | DELETE article |
-| `deleteSection` | `store/...` | DELETE section |
-| `createAccount` | `store/...` | POST register |
-| `roleManager` | `store/...` | GET/POST роли |
-| `newsletter` | `store/...` | Newsletter state |
-| `likes` | `store/...` | Like/dislike |
+| Slice              | File                        | Отговорност                       |
+| ------------------ | --------------------------- | --------------------------------- |
+| `auth`             | `store/login/authSlice.js`  | Login, logout, token verification |
+| `articlesSections` | `store/getArticleData/`     | Fetch articles                    |
+| `uploadArticle`    | `store/uploadArticleSlice/` | POST section с файл               |
+| `articlesHeader`   | `store/...`                 | Създаване на article header       |
+| `editSection`      | `store/...`                 | PUT section                       |
+| `deleteArticle`    | `store/...`                 | DELETE article                    |
+| `deleteSection`    | `store/...`                 | DELETE section                    |
+| `createAccount`    | `store/...`                 | POST register                     |
+| `roleManager`      | `store/...`                 | GET/POST роли                     |
+| `newsletter`       | `store/...`                 | Newsletter state                  |
+| `likes`            | `store/...`                 | Like/dislike                      |
 
 ### Auth Slice (`store/login/authSlice.js`)
 
 ```js
-login()      // POST /api/login → {token, role, username} → localStorage
-checkAuth()  // GET /api/check-auth?lang=bg → {isAuthenticated: bool}
-logout()     // Clear state + localStorage
+login(); // POST /api/login → {token, role, username} → localStorage
+checkAuth(); // GET /api/check-auth?lang=bg → {isAuthenticated: bool}
+logout(); // Clear state + localStorage
 ```
 
 ### Axios Config (`src/api/axiosConfig.js`)
@@ -167,80 +172,85 @@ logout()     // Clear state + localStorage
 
 #### Authentication
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/login` | Login → JWT token |
-| `POST` | `/api/create-account` | Регистрация |
-| `GET` | `/api/check-auth?lang=bg\|en` | Проверка на токен |
-| `POST` | `/api/request-new-password` | Изпращане на reset имейл |
-| `POST` | `/api/reset-password` | Смяна на парола |
+| Method | Endpoint                      | Description              |
+| ------ | ----------------------------- | ------------------------ |
+| `POST` | `/api/login`                  | Login → JWT token        |
+| `POST` | `/api/create-account`         | Регистрация              |
+| `GET`  | `/api/check-auth?lang=bg\|en` | Проверка на токен        |
+| `POST` | `/api/request-new-password`   | Изпращане на reset имейл |
+| `POST` | `/api/reset-password`         | Смяна на парола          |
 
 **Login логика** (`routes/login_page/login_page.js`):
+
 - bcrypt сравнение на паролата
 - Проследяване на неуспешни опити (max 5 → блокиране на акаунт)
 - JWT валидност: 1 час
 - Response: `{token, role, username}`
 
 **Register** (`routes/create_account/`):
+
 - Уникален username и email
 - bcrypt.hash(password, 10)
 - Response: `{message, user{id, username, email, role}, token}`
 
 #### Articles
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/articles` | Всички статии със секции |
-| `POST` | `/api/create/articles/header` | Нова статия (заглавие, статус) |
-| `POST` | `/api/create/section` | Добавяне на секция с изображение |
-| `PUT` | `/api/edit/article` | Редакция на секция |
-| `DELETE` | `/api/delete/articles/:id` | Изтриване на статия (cascade) |
-| `DELETE` | `/api/delete/section/:id` | Изтриване на секция |
+| Method   | Endpoint                      | Description                      |
+| -------- | ----------------------------- | -------------------------------- |
+| `GET`    | `/api/articles`               | Всички статии със секции         |
+| `POST`   | `/api/create/articles/header` | Нова статия (заглавие, статус)   |
+| `POST`   | `/api/create/section`         | Добавяне на секция с изображение |
+| `PUT`    | `/api/edit/article`           | Редакция на секция               |
+| `DELETE` | `/api/delete/articles/:id`    | Изтриване на статия (cascade)    |
+| `DELETE` | `/api/delete/section/:id`     | Изтриване на секция              |
 
 **GET `/api/articles`** — JOIN между `articles` и `sections`, форматирани дата/час.
 
 **POST `/api/create/section`** — multipart/form-data:
+
 - Полета: `article_id`, `title`, `content`, `position`, `image`, `main_image`
 - Sharp компресия преди запис
 - Обновява `main_image_url` на статията ако е подаден `main_image`
 
 #### Likes & Feedback
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/post/like-dislike` | Добавяне на like/dislike |
-| `GET` | `/api/get/all-like-dislike` | Всички feedback записи |
+| Method | Endpoint                    | Description              |
+| ------ | --------------------------- | ------------------------ |
+| `POST` | `/api/post/like-dislike`    | Добавяне на like/dislike |
+| `GET`  | `/api/get/all-like-dislike` | Всички feedback записи   |
 
 #### Users & Roles
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/users` | Списък с потребители |
+| Method | Endpoint           | Description                |
+| ------ | ------------------ | -------------------------- |
+| `GET`  | `/api/users`       | Списък с потребители       |
 | `POST` | `/api/change-role` | Смяна на роля (admin only) |
 
 #### Newsletter
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/newsletter` | Абониране с имейл |
-| `POST` | `/api/broadcast` | Изпращане до всички абонати |
-| `POST` | `/api/broadcast-test` | Тест broadcast (dev) |
+| Method | Endpoint              | Description                 |
+| ------ | --------------------- | --------------------------- |
+| `POST` | `/api/newsletter`     | Абониране с имейл           |
+| `POST` | `/api/broadcast`      | Изпращане до всички абонати |
+| `POST` | `/api/broadcast-test` | Тест broadcast (dev)        |
 
 #### Health
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/db-status` | Health check |
+| Method | Endpoint     | Description  |
+| ------ | ------------ | ------------ |
+| `GET`  | `/db-status` | Health check |
 
 ### Middlewares
 
 **`authAdmin.js`** — JWT Authentication:
+
 ```
 Authorization: Bearer <token>
 → jwt.verify → check role (admin|super_admin) → req.user
 ```
 
 **`upload.js`** — Multer config:
+
 - Storage: `/app/upload/`
 - Filename: `timestamp + ext`
 - Filter: JPEG, JPG, PNG
@@ -249,9 +259,11 @@ Authorization: Bearer <token>
 ### Utils
 
 **`compress-img-before-save.js`** — Sharp:
+
 - Компресира изображения преди запис в базата
 
 **`mailer.js`** — Nodemailer:
+
 - Gmail SMTP
 - Използва се за password reset и newsletter broadcast
 
@@ -262,6 +274,7 @@ Authorization: Bearer <token>
 ### Schema
 
 #### `articles`
+
 ```sql
 id             INT PRIMARY KEY AUTO-INCREMENT
 title          VARCHAR(255) NOT NULL
@@ -271,6 +284,7 @@ main_image_url VARCHAR(255)
 ```
 
 #### `sections`
+
 ```sql
 id                SERIAL PRIMARY KEY
 article_id        INT NOT NULL → articles.id (CASCADE DELETE)
@@ -282,6 +296,7 @@ section_image_url VARCHAR(255)
 ```
 
 #### `users`
+
 ```sql
 id              SERIAL PRIMARY KEY
 username        VARCHAR(255) UNIQUE NOT NULL
@@ -295,6 +310,7 @@ blocked         BOOLEAN DEFAULT FALSE
 ```
 
 #### `article_feedback`
+
 ```sql
 id         SERIAL PRIMARY KEY
 article_id INTEGER NOT NULL → articles.id
@@ -306,6 +322,7 @@ like_at    TIMESTAMP (Europe/Sofia)
 ```
 
 #### `user_logins`
+
 ```sql
 id         SERIAL PRIMARY KEY
 username   VARCHAR(50) NOT NULL
@@ -315,6 +332,7 @@ login_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ```
 
 #### `newsletter_subscribers`
+
 ```sql
 id    SERIAL PRIMARY KEY
 email VARCHAR(255) UNIQUE NOT NULL
@@ -343,25 +361,25 @@ queryWithFailover() // опитва primary → при грешка → failover
 
 ## Authentication
 
-| Feature | Implementation |
-|---------|---------------|
-| Password hashing | bcrypt (salt rounds: 10) |
-| Session | JWT (1h expiry), stored в localStorage |
-| Failed logins | Tracked in `users.failed_attempts`, max 5 → `blocked=true` |
-| Google OAuth | Firebase `signInWithPopup` → Google Provider |
-| Facebook OAuth | Firebase `signInWithRedirect` → Facebook Provider |
-| Password reset | Email с reset link → bcrypt hash на нова парола |
-| Multi-language errors | bg/en чрез `?lang=` query parameter |
+| Feature               | Implementation                                             |
+| --------------------- | ---------------------------------------------------------- |
+| Password hashing      | bcrypt (salt rounds: 10)                                   |
+| Session               | JWT (1h expiry), stored в localStorage                     |
+| Failed logins         | Tracked in `users.failed_attempts`, max 5 → `blocked=true` |
+| Google OAuth          | Firebase `signInWithPopup` → Google Provider               |
+| Facebook OAuth        | Firebase `signInWithRedirect` → Facebook Provider          |
+| Password reset        | Email с reset link → bcrypt hash на нова парола            |
+| Multi-language errors | bg/en чрез `?lang=` query parameter                        |
 
 ---
 
 ## Role-Based Access Control (RBAC)
 
-| Role | Права |
-|------|-------|
-| `user` | Четене на статии, like/dislike |
-| `manager` | — |
-| `admin` | Създаване/редакция/изтриване на статии |
+| Role          | Права                                              |
+| ------------- | -------------------------------------------------- |
+| `user`        | Четене на статии, like/dislike                     |
+| `manager`     | —                                                  |
+| `admin`       | Създаване/редакция/изтриване на статии             |
 | `super_admin` | Всичко + управление на роли + newsletter broadcast |
 
 Default роля при регистрация: `user`
@@ -435,10 +453,10 @@ server {
 
 ### Docker Compose (Production)
 
-| Service | Container | Port |
-|---------|-----------|------|
-| `backend-prod` | `upload-be-prod` | `3400:3400` |
-| `frontend-prod` | `upload-fe-prod` | `3500:80` |
+| Service         | Container        | Port        |
+| --------------- | ---------------- | ----------- |
+| `backend-prod`  | `upload-be-prod` | `3400:3400` |
+| `frontend-prod` | `upload-fe-prod` | `3500:80`   |
 
 Shared volume: `/ssd/docker/mitaka-website/mitaka-website/upload`  
 Network: `docker_network` (external)
@@ -448,6 +466,7 @@ Network: `docker_network` (external)
 Trigger: push to `master` или `workflow_dispatch`
 
 **Steps:**
+
 1. Git pull
 2. npm install + ESLint
 3. npm run build
@@ -515,21 +534,21 @@ https://upload-article.vercel.app
 
 ## Key File Paths
 
-| File | Path |
-|------|------|
-| React routing | `src/App.js` |
-| Redux store | `src/store/storeState/store.js` |
-| Auth slice | `src/store/login/authSlice.js` |
-| Axios config | `src/api/axiosConfig.js` |
-| Firebase OAuth | `src/firebase.js` |
-| Express server | `server/index.js` |
-| DB config (failover) | `server/config/db.js` |
-| CORS config | `server/config/cors.js` |
-| DB schema | `server/database/database.sql` |
-| JWT middleware | `server/middlewares/authAdmin.js` |
-| Upload middleware | `server/middlewares/upload.js` |
-| Image compression | `server/utils/compress-img-before-save.js` |
-| Mailer | `server/utils/mailer.js` |
-| Docker Compose | `docker-compose.yml` |
-| Nginx config | `nginx.conf` |
-| CI/CD workflow | `.github/workflows/` |
+| File                 | Path                                       |
+| -------------------- | ------------------------------------------ |
+| React routing        | `src/App.js`                               |
+| Redux store          | `src/store/storeState/store.js`            |
+| Auth slice           | `src/store/login/authSlice.js`             |
+| Axios config         | `src/api/axiosConfig.js`                   |
+| Firebase OAuth       | `src/firebase.js`                          |
+| Express server       | `server/index.js`                          |
+| DB config (failover) | `server/config/db.js`                      |
+| CORS config          | `server/config/cors.js`                    |
+| DB schema            | `server/database/database.sql`             |
+| JWT middleware       | `server/middlewares/authAdmin.js`          |
+| Upload middleware    | `server/middlewares/upload.js`             |
+| Image compression    | `server/utils/compress-img-before-save.js` |
+| Mailer               | `server/utils/mailer.js`                   |
+| Docker Compose       | `docker-compose.yml`                       |
+| Nginx config         | `nginx.conf`                               |
+| CI/CD workflow       | `.github/workflows/`                       |

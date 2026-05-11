@@ -39,7 +39,7 @@
     - Include EN fields in UPDATE statements
     - File: `server/routes/section_update_by_id/sections.js`
     - _Requirements: 2.4, 3.4, 6.2, 6.3_
-  - [ ]* 2.5 Write unit tests for `mapLang` helper and lang validation
+  - [ ]\* 2.5 Write unit tests for `mapLang` helper and lang validation
     - Test all 4 mapLang combinations (bg/en × filled/null-or-empty)
     - Test invalid lang param returns 400
     - Test missing lang defaults to bg

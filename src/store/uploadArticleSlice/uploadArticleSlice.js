@@ -19,7 +19,8 @@ export const uploadSection = createAsyncThunk('sections/upload', async (data, { 
 
   if (data.image) formData.append('image', data.image); // Снимка секция
   if (data.main_image) formData.append('main_image', data.main_image); // Главна снимка
-  const response = await axios.post(`${url}/api/create/section`, formData, { // Changed 'data' to 'formData'
+  const response = await axios.post(`${url}/api/create/section`, formData, {
+   // Changed 'data' to 'formData'
    headers: { 'Content-Type': 'multipart/form-data' },
   });
   dispatch(addToast({ message: 'Секцията е качена успешно!', type: 'success' }));

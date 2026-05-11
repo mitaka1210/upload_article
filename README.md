@@ -43,6 +43,7 @@
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)
 
 ### Frontend
+
 - **React** - Modern JavaScript library for building user interfaces
 - **Redux Toolkit (RTK)** - Efficient Redux logic with less boilerplate
 - **JavaScript/JSX** - Component-based architecture
@@ -50,6 +51,7 @@
 - **Docker** - Containerized frontend deployment
 
 ### Backend
+
 - **Node.js** - JavaScript runtime environment
 - **Express.js** - Fast, minimalist web framework
 - **JWT (JSON Web Tokens)** - Secure authentication system
@@ -58,17 +60,20 @@
 - **Docker** - Containerized backend deployment
 
 ### Database
+
 - **PostgreSQL** - Advanced open-source relational database
 - **pg** - PostgreSQL client for Node.js
 - **SQL** - Database queries and schema management
 
 ### DevOps & Infrastructure
+
 - **Docker & Docker Compose** - Containerization and orchestration
 - **Nginx Proxy Manager** - Reverse proxy and SSL management
 - **Cloudflare** - CDN, DNS management, and DDoS protection
 - **Linux Server** - Production hosting environment
 
 ### Development Tools
+
 - **Git & GitHub** - Version control and code repository
 - **VS Code** - Development environment
 - **Postman/Thunder Client** - API testing
@@ -77,11 +82,13 @@
 ## 🌐 Connect & Follow
 
 ### 🔗 Project Links
+
 - **🌍 Live Demo**: [upload.d-dimitrov.eu](https://upload.d-dimitrov.eu)
 - **📱 Main Website**: [d-dimitrov.eu](https://d-dimitrov.eu)
 - **💻 GitHub Repository**: [mitaka1210/upload_article](https://github.com/mitaka1210/upload_article)
 
 ### 👨‍💻 Developer Social Media
+
 - **GitHub**: [@mitaka1210](https://github.com/mitaka1210)
 - **LinkedIn**: [Connect on LinkedIn](https://linkedin.com/in/dimitar-dimitrov-dev)
 - **Twitter**: [@d_dimitrov_dev](https://twitter.com/d_dimitrov_dev)
@@ -89,11 +96,13 @@
 - **Instagram**: [@d.dimitrov.dev](https://instagram.com/d.dimitrov.dev)
 
 ### 📧 Contact Information
+
 - **Email**: contact@d-dimitrov.eu
 - **Business Email**: business@d-dimitrov.eu
 - **Technical Support**: support@d-dimitrov.eu
 
 ### 🤝 Professional Networks
+
 - **Stack Overflow**: [Profile](https://stackoverflow.com/users/your-profile)
 - **Dev.to**: [@ddimitrov](https://dev.to/ddimitrov)
 - **Medium**: [@dimitar.dimitrov](https://medium.com/@dimitar.dimitrov)
@@ -142,12 +151,14 @@ cd upload_article
 Create environment files for both client and server:
 
 **Client Environment (.env in client/ directory):**
+
 ```env
 REACT_APP_API_URL=http://localhost:3400/api
 REACT_APP_ENV=development
 ```
 
 **Server Environment (.env in server/ directory):**
+
 ```env
 # Database Configuration
 DB_HOST=postgres
@@ -184,6 +195,7 @@ docker-compose logs -f
 ```
 
 **Access Points:**
+
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:3400
 - **Database**: localhost:5432
@@ -225,6 +237,7 @@ docker-compose ps
 ### Database Management
 
 #### Development Database
+
 ```bash
 # Connect to development database
 docker exec -it postgres_dev psql -U your_username -d upload_article
@@ -234,6 +247,7 @@ docker exec postgres_dev pg_dump -U your_username upload_article > backup_dev.sq
 ```
 
 #### Production Database
+
 ```bash
 # Connect to production database
 docker exec -it postgres_prod psql -U your_username -d upload_article
@@ -245,6 +259,7 @@ docker exec postgres_prod pg_dump -U your_username upload_article > backup_prod.
 ## 📊 Monitoring & Logs
 
 ### View Application Logs
+
 ```bash
 # Development logs
 docker-compose -f docker-compose.dev.yml logs -f app
@@ -254,6 +269,7 @@ docker-compose -f docker-compose.prod.yml logs -f app
 ```
 
 ### Database Logs
+
 ```bash
 # Development database logs
 docker-compose -f docker-compose.dev.yml logs -f postgres_dev
@@ -263,6 +279,7 @@ docker-compose -f docker-compose.prod.yml logs -f postgres_prod
 ```
 
 ### System Monitoring
+
 ```bash
 # Check container status
 docker ps
@@ -285,6 +302,7 @@ df -h
 ## 🚀 Deployment Pipeline
 
 ### Manual Deployment
+
 ```bash
 # Pull latest changes
 git pull origin main
@@ -297,6 +315,7 @@ docker-compose -f docker-compose.prod.yml exec app [migration-command]
 ```
 
 ### Automated Deployment (CI/CD)
+
 ```yaml
 # Trigger: push to master or workflow_dispatch
 # Workflow file: .github/workflows/deploy.yml
@@ -340,6 +359,7 @@ docker-compose -f docker-compose.dev.yml exec app npm run test:integration
 ### Common Issues
 
 #### Container won't start
+
 ```bash
 # Check logs
 docker-compose logs [service-name]
@@ -349,6 +369,7 @@ docker-compose up -d --build [service-name]
 ```
 
 #### Database connection issues
+
 ```bash
 # Verify database container is running
 docker ps | grep postgres
@@ -358,6 +379,7 @@ docker logs postgres_dev
 ```
 
 #### SSL Certificate issues
+
 - Verify Cloudflare DNS settings
 - Check Nginx Proxy Manager configuration
 - Ensure domain propagation is complete
@@ -365,6 +387,7 @@ docker logs postgres_dev
 ## 📋 Maintenance
 
 ### Regular Tasks
+
 - [ ] Update Docker images monthly
 - [ ] Backup databases weekly
 - [ ] Monitor disk space usage
@@ -372,6 +395,7 @@ docker logs postgres_dev
 - [ ] Update SSL certificates (automated via Cloudflare)
 
 ### Database Maintenance
+
 ```bash
 # Vacuum database (production)
 docker exec postgres_prod psql -U your_username -d upload_article -c "VACUUM ANALYZE;"
@@ -395,16 +419,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support & Contact
 
 ### 🆘 Getting Help
+
 - **📋 Issues**: Create an issue on [GitHub Issues](https://github.com/mitaka1210/upload_article/issues)
 - **📚 Documentation**: Check this README and inline code comments
 - **💬 Discussions**: Use [GitHub Discussions](https://github.com/mitaka1210/upload_article/discussions) for questions
 
 ### 📬 Direct Contact
+
 - **Technical Issues**: support@d-dimitrov.eu
 - **Business Inquiries**: business@d-dimitrov.eu
 - **General Questions**: contact@d-dimitrov.eu
 
 ### 🌐 Online Presence
+
 - **Website**: [d-dimitrov.eu](https://d-dimitrov.eu)
 - **Portfolio**: [portfolio.d-dimitrov.eu](https://portfolio.d-dimitrov.eu)
 - **Blog**: [blog.d-dimitrov.eu](https://blog.d-dimitrov.eu)
@@ -426,4 +453,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [![Website](https://img.shields.io/website?url=https%3A//d-dimitrov.eu&style=for-the-badge)](https://d-dimitrov.eu)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/dimitar-dimitrov-dev)
 
-*Last updated: August 2025*
+_Last updated: August 2025_
