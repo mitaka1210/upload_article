@@ -75,7 +75,7 @@ jobs:
           done
 
           if [ "$SUCCESS" = true ]; then
-            echo "${{ github.sha }}" | sudo tee /ssd/docker/upload_articles/upload_article/.last_stable_sha > /dev/null
+            echo "${{ github.sha }}" > /ssd/docker/upload_articles/upload_article/.last_stable_sha
             echo "✅ Stable SHA saved: ${{ github.sha }}"
             echo "deploy_result=success" >> $GITHUB_OUTPUT
           else
