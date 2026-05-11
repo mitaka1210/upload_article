@@ -31,13 +31,13 @@ const ConfirmDeleteDialog = ({ onClose }) => {
  return (
   <div className="input-width-100">
    <dialog ref={dialogRef} className="show-hide-dialog dialog-content flex-vertical-container align-content-center align-items-center text-align-center padding-15" onClick={closeOnClickOutside} style={{ display: isOpen ? 'block' : 'none' }}>
-    <h6>⚠️ Нямате прав12312312а!</h6>
+    <h6>⚠️ Нямате права!</h6>
     <p>Нямате достатъчно права, за да изпълните тази операция.</p>
-    <div>
-     <button className="access-denied-btn" onClick={deleteDialog}>
+    <div className="flex-horizontal-container-raw justify-content-space-around">
+     <button className="access-btn" onClick={deleteDialog}>
       Да, сигурен съм
      </button>
-     <button className="access-denied-btn" onClick={closeDialog}>
+     <button className="denied-btn" onClick={closeDialog}>
       Затвори
      </button>
     </div>

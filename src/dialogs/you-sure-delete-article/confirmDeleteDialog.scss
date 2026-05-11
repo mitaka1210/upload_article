@@ -5,18 +5,19 @@
  background-color: #fff;
  border-radius: 5px;
  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
- width: 300px;
+ width: 600px;
  text-align: center;
  border: 2px solid #f00;
  top: 50%;
  left: 50%;
  transform: translate(-50%, -50%);
 
- & .access-denied-btn {
+ & .access-btn, .denied-btn{
   padding: 5px;
   border-radius: 21px;
   border: 2px solid red;
   background: chocolate;
   color: antiquewhite;
+  width: 150px;
  }
 }

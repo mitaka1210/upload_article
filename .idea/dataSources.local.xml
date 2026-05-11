@@ -32,7 +32,7 @@
       </schema-mapping>
     </data-source>
     <data-source name="neondb@ep-holy-dust-a4lx2gm2-pooler.us-east-1.aws.neon.tech" uuid="23c79325-8757-4fb6-be66-5501d79bd933">
-      <database-info product="PostgreSQL" version="17.6 (0d47993)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="17.6" exact-driver-version="42.7">
+      <database-info product="PostgreSQL" version="17.8 (ad62774)" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.7.3" dbms="POSTGRES" exact-version="17.8" exact-driver-version="42.7">
         <identifier-quote-string>&quot;</identifier-quote-string>
       </database-info>
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
