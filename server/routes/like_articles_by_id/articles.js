@@ -9,7 +9,7 @@ router.get("/", async (req, res) => {
   try {
     // Извличане на всички статии с техните секции
     const query = `
-      SELECT a.id, a.title, a.status, a.main_image_url, a.created_at,
+      SELECT a.id, a.title, a.status, a.main_image_url, a.created_at, a.category,
              s.id AS s_id, s.title AS s_title, s.content, s.position, s.section_image_url
       FROM articles a
       LEFT JOIN sections s ON a.id = s.article_id
@@ -23,6 +23,7 @@ router.get("/", async (req, res) => {
           id: row.id,
           title: row.title,
           status: row.status,
+          category: row.category, // Now 'row.category' will be populated
           mainImage: row.main_image_url, // Главна снимка
           createdAt: row.created_at,
           sections: [],

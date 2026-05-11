@@ -3,7 +3,9 @@ import dotenv from "dotenv";
 
 const { Pool } = pkg;
 
+let primaryFailed = false;
 let failoverNotified = false;
+let healthCheckInterval = null;
 
 async function sendTelegramAlert(message) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
@@ -41,6 +43,8 @@ const primaryPool = new Pool({
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
   ssl: false,
+  connectionTimeoutMillis: 5000,
+  idleTimeoutMillis: 10000,
 });
 
 const failoverPool = new Pool({
@@ -59,14 +63,53 @@ const neonDevPool = new Pool({
   database: process.env.NEON_DEV_NAME,
   ssl: { require: true, rejectUnauthorized: false },
 });
+
+primaryPool.on("error", (err) => console.error("primaryPool idle error:", err.message));
+failoverPool.on("error", (err) => console.error("failoverPool idle error:", err.message));
+neonDevPool.on("error", (err) => console.error("neonDevPool idle error:", err.message));
+
+function startHealthCheck() {
+  if (healthCheckInterval !== null) return;
+
+  const env = isProduction ? "PRODUCTION" : "DEVELOPMENT";
+
+  healthCheckInterval = setInterval(async () => {
+    try {
+      await primaryPool.query("SELECT 1");
+
+      primaryFailed = false;
+      failoverNotified = false;
+      clearInterval(healthCheckInterval);
+      healthCheckInterval = null;
+
+      console.log("Primary DB recovered. Routing restored to primary.");
+      sendTelegramAlert(
+        `✅ <b>DB Primary Recovered</b>\n\n` +
+          `Environment: ${env}\n` +
+          `Primary DB: ${process.env.DB_HOST}:${process.env.DB_PORT}\n` +
+          `Routing has been restored to primary database.`
+      );
+    } catch (_err) {
+      // Primary still down — wait for next interval
+    }
+  }, 30000);
+}
+
 export async function queryWithFailover(sql, params) {
   const failover = isProduction ? failoverPool : neonDevPool;
   const env = isProduction ? "PRODUCTION" : "DEVELOPMENT";
+
+  if (primaryFailed) {
+    return await failover.query(sql, params);
+  }
 
   try {
     return await primaryPool.query(sql, params);
   } catch (err) {
     console.error("Primary DB failed, switching to failover:", err.message);
+
+    primaryFailed = true;
+    startHealthCheck();
 
     if (!failoverNotified) {
       failoverNotified = true;

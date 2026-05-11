@@ -1,0 +1,113 @@
+# Implementation Plan
+
+---
+
+- [ ] 1. Database Migration
+  - [ ] 1.1 Add `title_en` column to articles table
+    - Run: `ALTER TABLE articles ADD COLUMN title_en VARCHAR(255);`
+    - Update `server/database/database.sql` to reflect the new column
+    - _Requirements: 2.2, 6.2_
+  - [ ] 1.2 Add `title_en` and `content_en` columns to sections table
+    - Run: `ALTER TABLE sections ADD COLUMN title_en VARCHAR(255);`
+    - Run: `ALTER TABLE sections ADD COLUMN content_en TEXT;`
+    - Update `server/database/database.sql` to reflect the new columns
+    - _Requirements: 3.2, 6.2_
+
+---
+
+- [ ] 2. Backend API
+  - [ ] 2.1 Add `mapLang` helper and `lang` param to GET /api/articles
+    - Extract `mapLang(bgValue, enValue, lang)` helper function
+    - Read `lang` query param from request, default to `'bg'`
+    - Validate: only `'bg'` or `'en'` accepted → 400 otherwise
+    - Apply `mapLang` to `title`, section `title`, section `content` in the JOIN result
+    - File: `server/routes/like_articles_by_id/articles.js`
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.3_
+  - [ ] 2.2 Accept `title_en` in POST /api/create/articles/header
+    - Read `title_en` from request body (optional, nullable)
+    - Include `title_en` in INSERT statement
+    - File: `server/routes/create_articles/create_articles.js`
+    - _Requirements: 2.2_
+  - [ ] 2.3 Accept `title_en` and `content_en` in POST /api/create/section
+    - Read `title_en`, `content_en` from FormData (optional, nullable)
+    - Include both in INSERT statement
+    - File: `server/routes/add_new_section/create-article.js`
+    - _Requirements: 3.2_
+  - [ ] 2.4 Accept EN fields in POST /api/edit/article/:id
+    - Read `title_en` from body for article title update
+    - Read `title_en`, `content_en` from each section object in the `section` JSON array
+    - Include EN fields in UPDATE statements
+    - File: `server/routes/section_update_by_id/sections.js`
+    - _Requirements: 2.4, 3.4, 6.2, 6.3_
+  - [ ]* 2.5 Write unit tests for `mapLang` helper and lang validation
+    - Test all 4 mapLang combinations (bg/en × filled/null-or-empty)
+    - Test invalid lang param returns 400
+    - Test missing lang defaults to bg
+    - Max 6 tests, keep file under 100 lines
+    - _Requirements: 4.3, 4.4, 5.1, 5.2, 5.3_
+
+---
+
+- [ ] 3. Frontend State
+  - [ ] 3.1 Create `languageSlice`
+    - File: `src/store/language/languageSlice.js`
+    - State: `{ activeLanguage: 'bg' | 'en' }`
+    - Action: `setLanguage(lang)` — updates state
+    - Initial state: read from `localStorage.getItem('activeLanguage')` or `'bg'`
+    - _Requirements: 1.2, 1.5_
+  - [ ] 3.2 Persist active language to localStorage
+    - In `setLanguage` reducer (or via middleware): call `localStorage.setItem('activeLanguage', lang)`
+    - File: `src/store/language/languageSlice.js`
+    - _Requirements: 1.4_
+  - [ ] 3.3 Register `languageSlice` in Redux store
+    - Add `language: languageReducer` to `src/store/storeState/store.js`
+    - _Requirements: 1.2_
+  - [ ] 3.4 Pass `lang` param in getArticlesDataSlice fetch
+    - Read `activeLanguage` from store state inside the thunk
+    - Append `?lang=${activeLanguage}` to the GET /api/articles request
+    - File: `src/store/getArticleData/getArticlesDataSlice.js`
+    - _Requirements: 4.1, 4.2_
+
+---
+
+- [ ] 4. Frontend UI
+  - [ ] 4.1 Create `LanguageToggle` component
+    - File: `src/components/LanguageToggle/LanguageToggle.jsx`
+    - Two buttons: "BG" and "EN", active class on selected
+    - On click: dispatch `setLanguage`, then dispatch `fetchArticles` (re-fetch with new lang)
+    - _Requirements: 1.1, 1.2, 1.3_
+  - [ ] 4.2 Add `LanguageToggle` to Home page header
+    - File: `src/Home/Home.jsx`
+    - Place toggle visibly in the header/navigation area
+    - _Requirements: 1.1_
+  - [ ] 4.3 Add EN fields to Create Article form
+    - File: `src/create-edit-article/create-edit-article.jsx`
+    - Add `title_en` input (optional, labelled "Title (EN)")
+    - Add `title_en`, `content_en` inputs per section (optional, labelled "Title EN" / "Content EN")
+    - Update form state and submit payload
+    - _Requirements: 2.1, 3.1_
+  - [ ] 4.4 Add EN fields to Edit Article form
+    - File: `src/EditArticle/edit-article.jsx`
+    - Add `title_en` input for article title (optional)
+    - Add `title_en`, `content_en` inputs per section (optional)
+    - Populate fields from existing article data on load
+    - Update submit payload
+    - _Requirements: 2.3, 2.4, 3.3, 3.4, 6.1, 6.2, 6.3_
+  - [ ] 4.5 Update Redux thunks to send EN fields
+    - `src/store/add-new-article/addNewArticleSlice.js` — include `title_en` in POST body
+    - `src/store/uploadArticleSlice/uploadArticleSlice.js` — append `title_en`, `content_en` to FormData
+    - `src/store/editSections/editSectionsSlice.js` — include EN fields in section JSON
+    - _Requirements: 2.2, 3.2, 2.4, 3.4_
+
+---
+
+- [ ] 5. Checkpoint — E2E Verification
+  - Run the application locally
+  - Create an article with BG title "Тест" and EN title "Test", add a section with BG and EN content
+  - Toggle to EN → article shows "Test" and EN section content
+  - Toggle to BG → article shows "Тест" and BG section content
+  - Create article with only BG content, toggle to EN → BG content shown as fallback (no blank)
+  - Reload the page → toggle stays on last selected language
+  - Verify: all existing articles without EN content still display correctly in BG mode
+  - Ensure all unit tests pass: `npm test`
+  - _Requirements: 1.1–1.5, 2.1–2.4, 3.1–3.4, 4.1–4.4, 5.1–5.3, 6.1–6.3_

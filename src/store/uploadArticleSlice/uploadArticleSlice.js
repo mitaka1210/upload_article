@@ -15,10 +15,11 @@ export const uploadSection = createAsyncThunk('sections/upload', async (data, { 
   formData.append('title', data.title);
   formData.append('content', data.content);
   formData.append('position', data.position);
+  formData.append('category', data.category); // Ensure category is appended
 
   if (data.image) formData.append('image', data.image); // Снимка секция
   if (data.main_image) formData.append('main_image', data.main_image); // Главна снимка
-  const response = await axios.post(`${url}/api/create/section`, data, {
+  const response = await axios.post(`${url}/api/create/section`, formData, { // Changed 'data' to 'formData'
    headers: { 'Content-Type': 'multipart/form-data' },
   });
   dispatch(addToast({ message: 'Секцията е качена успешно!', type: 'success' }));

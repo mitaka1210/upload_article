@@ -64,6 +64,7 @@ const articlesSlice = createSlice({
      create_article_time: createTime,
      id: action.payload[i].id,
      title: action.payload[i].title,
+     category: action.payload[i].category,
      images_id: action.payload[i].mainImage,
      section: action.payload[i].sections,
     });

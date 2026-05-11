@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import info from '../assets/more-info.png';
-
+import './more-info.scss';
 const InfoDiv = () => {
  const [isOpen, setIsOpen] = useState(false);
  const infoRef = useRef(null);
@@ -19,13 +19,13 @@ const InfoDiv = () => {
  }, []);
 
  return (
-  <div className="flex-horizontal-container-raw justify-content-center">
+  <div className="flex-vertical-container-raw justify-content-center">
    <button className="more-info-icon" onClick={() => setIsOpen(!isOpen)}>
     <img src={info} alt="info" />
    </button>
    {isOpen && (
     <div ref={infoRef} className="info-div">
-     <h5>Следвайте тези стъпки:</h5>
+     <h6 className="add-info-underline">Следвайте тези стъпки:</h6>
      <ul>
       <ol>
        <li>Запишете заглавие на статия.</li>

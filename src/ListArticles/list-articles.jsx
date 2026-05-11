@@ -96,6 +96,7 @@ const ListArticles = () => {
        <th>Header</th>
        <th>Date</th>
        <th>Time</th>
+       <th>Category</th>
        <th>Edit</th>
        <th>Delete</th>
       </tr>
@@ -107,6 +108,7 @@ const ListArticles = () => {
          <td style={{ position: 'relative', top: '25px' }}>{section.title}</td>
          <td style={{ position: 'relative', top: '25px' }}>{section.create_article_date}</td>
          <td style={{ position: 'relative', top: '25px' }}>{section.create_article_time}</td>
+         <td style={{ position: 'relative', top: '25px' }}>{section.category}</td>
          <td>
           <button onClick={() => editSection(section)} className="custom-btn  btn-5">
            <span>Edit</span>
