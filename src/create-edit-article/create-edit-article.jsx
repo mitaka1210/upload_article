@@ -167,14 +167,7 @@ const SectionUpload = () => {
      </div>
      <div className="text">
       <img src={articleIcon} alt="icon" height="20" className={headerName ? 'disabled-input' : ''} />
-      <select
-       name="category"
-       disabled={headerName}
-       className={headerName ? 'disabled-input margin-10' : 'margin-10'}
-       onChange={handleInputChange}
-       value={form.category}
-       required
-      >
+      <select name="category" disabled={headerName} className={headerName ? 'disabled-input margin-10' : 'margin-10'} onChange={handleInputChange} value={form.category} required>
        <option value="">Избери категория</option>
        <option value="Програмиране">Програмиране</option>
        <option value="Аквариуми">Аквариуми</option>

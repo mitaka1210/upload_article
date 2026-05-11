@@ -1,19 +1,23 @@
 # GitHub Actions CI/CD с Rollback
 
 ## Цел
+
 Да се въведе надежден deploy процес при push към `master`, който:
+
 - валидира кода (build/test),
 - деплойва към production сървъра по SSH,
 - прави health check,
 - при грешка автоматично връща последната стабилна версия.
 
 ## Критични принципи за устойчивост
+
 - Docker image-ите се тагват с commit SHA (например `${GITHUB_SHA}`), а не само с `latest`.
 - Деплой и rollback се изпълняват по конкретен image tag, за да се избягват неочаквани промени.
 - Последният стабилен image tag се пази (например в `.last_stable_image`) само след успешен health check.
 - CI failure, skipped jobs и rollback failure винаги генерират уведомление (без "тихи" сценарии).
 
 ## Какво ще променим
+
 - Поправка и пълно пренаписване на workflow файла в `.github/workflows/deploy.yml` (файлът в момента е невалиден YAML и съдържа само фрагмент за Telegram).
 - Добавяне на ясно разграничени jobs:
   - `ci` (checkout + install + test/build),
@@ -36,6 +40,7 @@ flowchart TD
 ```
 
 ## Детайли по внедряване
+
 - Trigger: `on.push.branches: [master]` + `workflow_dispatch` за ръчен старт.
 - Concurrency guard: само един deploy в даден момент (`concurrency`), за да няма race conditions.
 - SSH deploy стъпки (remote script):
@@ -56,28 +61,34 @@ flowchart TD
   - Telegram success/failure стъпките остават, но логиката отчита и `failure`, `cancelled`, `skipped`.
 
 ## Бележки за git rollback и Detached HEAD
+
 - Ако временно се ползва rollback по commit SHA (`git checkout <sha>`), това води до Detached HEAD.
 - За да не се счупи следващ deploy, workflow трябва изрично да връща репото към `master` в края на rollback процедурата.
 - Препоръчителен дългосрочен подход: rollback по Docker image tag вместо rollback по git checkout.
 
 ## Docker Compose надеждност
+
 - `docker-compose.yml` трябва да използва image с променлива tag (например `${APP_IMAGE_TAG}`), за да превключва версии без rebuild.
 - Добра практика е да има service-level `healthcheck` в compose, а не само външен `curl`.
 - `container_name` е опционален; полезен е за диагностика (`docker logs/exec`), но не е задължителен, ако health check е по URL.
 
 ## Логика за notify при skipped jobs
+
 - `notify` job трябва да е с `if: always()`.
 - Success известие: само ако всички критични jobs са `success`.
 - Failure известие: при `failure`, `cancelled` или `skipped` в `ci`, `deploy` или `healthcheck_and_rollback`.
 
 ## Secrets и конфигурация
+
 Ще се използват следните GitHub Repository Secrets:
+
 - `SSH_HOST`, `SSH_USER`, `SSH_KEY`, `SSH_PORT`
 - `SERVER_APP_PATH` (абсолютен път на проекта на сървъра)
 - `APP_HEALTHCHECK_URL`
 - `TELEGRAM_TO`, `TELEGRAM_TOKEN`
 
 ## Валидация
+
 - Проверка на YAML синтаксис и GitHub Actions структура.
 - Dry-run логика чрез `workflow_dispatch` за валидиране на стъпките.
 - Потвърждение, че rollback се активира при симулиран fail на health check.
@@ -86,5 +97,6 @@ flowchart TD
 - Тест за post-rollback failure: workflow остава failed и изпраща критично известие.
 
 ## Засегнати файлове
+
 - `.github/workflows/deploy.yml`
 - `README.md` (опционално: секция за deployment secrets и runbook)
