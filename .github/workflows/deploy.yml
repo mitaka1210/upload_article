@@ -61,7 +61,7 @@ jobs:
         run: |
           cd /ssd/docker/upload_articles/upload_article
           echo "Waiting for containers to start..."
-          sleep 20
+          sleep 30
 
           SUCCESS=false
           for i in {1..6}; do
