@@ -3,6 +3,7 @@ version: "3.8"
 services:
   # === PROD BACKEND ===
   backend-prod:
+    image: upload-be-prod:${APP_IMAGE_TAG:-latest}
     build:
       context: ./server
       dockerfile: Dockerfile
@@ -16,11 +17,12 @@ services:
     volumes:
     - /app/node_modules
     - ./server/.env.production:/app/.env.production
-    - /ssd/docker/upload_articles/upload_article/upload:/app/upload
+    - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
     restart: always
 
   # === PROD FRONTEND ===
   frontend-prod:
+    image: upload-fe-prod:${APP_IMAGE_TAG:-latest}
     build:
       context: .
       dockerfile: Dockerfile
@@ -36,6 +38,7 @@ services:
     environment:
       - NODE_ENV=production
     volumes:
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
       - /ssd/docker/share_upload_images:/app/upload
     restart: always
 

@@ -40,6 +40,7 @@ const SectionUpload = () => {
   position: '',
   image: '',
   status: false,
+  category: '', // New state for category
  });
  const handleInputChange = (e) => {
   const { name, value } = e.target;
@@ -109,6 +110,7 @@ const SectionUpload = () => {
      content: '',
      position: '',
      image: '',
+     category: '', // Reset category as well
     }));
    } else {
     await dispatch(
@@ -162,6 +164,21 @@ const SectionUpload = () => {
      <div className="text">
       <img src={articleIcon} alt="icon" height="12" className={headerName ? 'disabled-input' : ''} />
       <input name="position" type="number" className={headerName ? 'disabled-input margin-10' : ''} value={form.position} placeholder="Позиция на секцията" onChange={handleInputChange} required />
+     </div>
+     <div className="text">
+      <img src={articleIcon} alt="icon" height="20" className={headerName ? 'disabled-input' : ''} />
+      <select
+       name="category"
+       disabled={headerName}
+       className={headerName ? 'disabled-input margin-10' : 'margin-10'}
+       onChange={handleInputChange}
+       value={form.category}
+       required
+      >
+       <option value="">Избери категория</option>
+       <option value="Програмиране">Програмиране</option>
+       <option value="Аквариуми">Аквариуми</option>
+      </select>
      </div>
      <div>
       <textarea className={headerName ? 'disabled-input text' + ' text-area-form margin-10' : 'text text-area-form margin-10'} name="content" placeholder="Съдържание на секцията" onChange={handleInputChange}></textarea>

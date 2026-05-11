@@ -17,6 +17,7 @@ const ListArticles = () => {
  const [, setDialog] = useState(false);
  const [, setShowConfirmDialog] = useState(false);
  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+ const [articleToDelete, setArticleToDelete] = useState(null);
  // storage
  const role = localStorage.getItem('role');
  useEffect(() => {
@@ -36,39 +37,32 @@ const ListArticles = () => {
  };
 
  //delete article function
- const deleteTodo = async () => {
+ const deleteTodo = async (id) => {
   if (role === 'admin' || role === 'user') {
-   setDialog(true); // Задаваме true, за да покажем диалога
-   setShowDialog(true); // Показва диалога
+   setDialog(true);
+   setShowDialog(true);
   } else {
-   try {
-    setShowConfirmDialog(true); // Показва диалога за потвърждение
-    setShowDeleteDialog(true); // Показва диалога за потвърждение
-    // Първо изчакай `updateSection`
-    // await dispatch(deleteArticle(id)).unwrap();
-    // // След това извикай `fetchArticles`
-    // await dispatch(fetchArticles()).unwrap();
-    // Ако всичко е наред, пренасочи към началната страница
-    // navigate('/home');
-   } catch (error) {
-    console.error('Error:', error);
-   }
+   setArticleToDelete(id);
+   setShowConfirmDialog(true);
+   setShowDeleteDialog(true);
   }
  };
- const openAgain = (data) => {
-  setShowConfirmDialog(false); // Затваря диалога за потвърждение
-  setShowDeleteDialog(false); // Затваря диалога за потвърждение
-  if (data === 'delete') {
-   dispatch(deleteArticle(data))
+ const openAgain = (action) => {
+  setShowConfirmDialog(false);
+  setShowDeleteDialog(false);
+  if (action === 'delete' && articleToDelete) {
+   dispatch(deleteArticle(articleToDelete))
     .unwrap()
     .then(() => {
      dispatch(fetchArticles());
+     setArticleToDelete(null);
     })
     .catch((error) => {
      console.error('Error deleting article:', error);
     });
   } else {
-   setShowDialog(false); // Затваря диалога
+   setArticleToDelete(null);
+   setShowDialog(false);
   }
  };
  const getTodos = () => {
@@ -102,6 +96,7 @@ const ListArticles = () => {
        <th>Header</th>
        <th>Date</th>
        <th>Time</th>
+       <th>Category</th>
        <th>Edit</th>
        <th>Delete</th>
       </tr>
@@ -113,6 +108,7 @@ const ListArticles = () => {
          <td style={{ position: 'relative', top: '25px' }}>{section.title}</td>
          <td style={{ position: 'relative', top: '25px' }}>{section.create_article_date}</td>
          <td style={{ position: 'relative', top: '25px' }}>{section.create_article_time}</td>
+         <td style={{ position: 'relative', top: '25px' }}>{section.category}</td>
          <td>
           <button onClick={() => editSection(section)} className="custom-btn  btn-5">
            <span>Edit</span>

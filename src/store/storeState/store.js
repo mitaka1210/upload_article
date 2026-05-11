@@ -12,6 +12,7 @@ import createAccountSlice from '../create_account/createAccountSlice';
 import adminSlice from '../change_role/adminSlice';
 import { api } from '../getAllUsers/getAllUsersSlice';
 import newsletterSlice from '../news-letter-send/news-letter-slice';
+import toastSlice from '../toast/toastSlice';
 
 const store = configureStore({
  reducer: {
@@ -28,6 +29,7 @@ const store = configureStore({
   roleManager: adminSlice,
   newsletter: newsletterSlice,
   [api.reducerPath]: api.reducer,
+  toast: toastSlice,
  },
  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
 });

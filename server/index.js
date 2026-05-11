@@ -69,15 +69,25 @@ app.use("/api/subscribers", subscribers);
 app.use("/api/broadcast-test", broadcastTest);
 app.use("/db-status", checkDBStatus);
 // Добави преди `app.listen()`
-app.use("/upload", express.static("/app/upload"));
-app.use((err, req, res) => {
+const uploadPath = process.env.NODE_ENV === "production" ? "/app/upload" : "./upload";
+app.use("/upload", express.static(uploadPath));
+app.use((err, req, res, next) => {
   console.log("NODE_ENV:", process.env.NODE_ENV);
   console.error("Error:", err.message);
+
   if (err.message === "Not allowed by CORS") {
-    res.status(403).json({ error: "CORS Error: Origin not allowed" });
-  } else {
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(403).json({ error: "CORS Error: Origin not allowed" });
   }
+
+  if (err.code === "LIMIT_FILE_SIZE") {
+    return res.status(400).json({ error: "Файлът е твърде голям (макс. 5MB)" });
+  }
+
+  if (err.message === "Only images are allowed") {
+    return res.status(400).json({ error: "Позволени са само изображения (jpeg, jpg, png)" });
+  }
+
+  res.status(500).json({ error: "Internal Server Error" });
 });
 
 app.listen(PORT, () => {
