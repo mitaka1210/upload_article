@@ -97,11 +97,11 @@ app.use(
         .status(400)
         .json({ error: "Позволени са само изображения (jpeg, jpg, png)" });
     }
-  if (err.message === "Only images are allowed") {
-    return res
-      .status(400)
-      .json({ error: "Позволени са само изображения (jpeg, jpg, png)" });
-  }
+    if (err.message === "Only images are allowed") {
+      return res
+        .status(400)
+        .json({ error: "Позволени са само изображения (jpeg, jpg, png)" });
+    }
     res.status(500).json({ error: "Internal Server Error" });
   },
 );
