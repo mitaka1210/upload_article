@@ -61,7 +61,7 @@ jobs:
         run: |
           cd /ssd/docker/upload_articles/upload_article
           echo "Waiting for containers to start..."
-          sleep 30
+          sleep 60
 
           SUCCESS=false
           for i in {1..6}; do
@@ -80,7 +80,21 @@ jobs:
             echo "deploy_result=success" >> $GITHUB_OUTPUT
           else
             echo "❌ Health check FAILED after 6 attempts"
-            docker compose logs --tail=50
+            echo "=== Container Status ==="
+            docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+
+            echo "=== Port Availability ==="
+            ss -tlnp | grep -E '3400|3500' || echo "Neither port is listening"
+
+            echo "=== Verbose curl on port 3500 ==="
+            curl -v http://localhost:3500 2>&1 || true
+
+            echo "=== Backend logs (last 80 lines) ==="
+            docker compose logs --tail=80 backend-prod
+
+            echo "=== Frontend logs (last 80 lines) ==="
+            docker compose logs --tail=80 frontend-prod
+
             echo "deploy_result=failed" >> $GITHUB_OUTPUT
             exit 1
           fi
