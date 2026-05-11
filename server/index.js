@@ -71,7 +71,9 @@ app.use("/db-status", checkDBStatus);
 // Добави преди `app.listen()`
 const uploadPath = process.env.NODE_ENV === "production" ? "/app/upload" : "./upload";
 app.use("/upload", express.static(uploadPath));
-app.use((err, req, res, next) => {
+app.use((err, req, res,
+  // eslint-disable-next-line no-unused-vars
+  next) => {
   console.log("NODE_ENV:", process.env.NODE_ENV);
   console.error("Error:", err.message);
 

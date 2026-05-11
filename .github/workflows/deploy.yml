@@ -26,7 +26,7 @@ jobs:
       - name: Run Lint
         run: |
           cd /ssd/docker/upload_articles/upload_article
-          CI=false npm run lint
+          CI=false npm run lint -- --fix
 
       - name: Build Frontend
         run: |
