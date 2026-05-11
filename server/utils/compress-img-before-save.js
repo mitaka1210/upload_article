@@ -2,7 +2,8 @@ import sharp from "sharp";
 import fs from "fs";
 import path from "path";
 
-const DEV_SYNC_PATH = "/Users/mitaka/projects/PersonalProjects/d-dimitrov/public/article_images";
+const DEV_SYNC_PATH =
+  "/Users/mitaka/projects/PersonalProjects/d-dimitrov/public/article_images";
 
 const compressImage = async (filePath) => {
   try {

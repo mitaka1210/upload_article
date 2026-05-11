@@ -13,11 +13,11 @@ services:
     ports:
       - "3400:3400"
     env_file:
-      - ./server/.env.production  # Docker ще зареди променливите автоматично
+      - ./server/.env.production # Docker ще зареди променливите автоматично
     volumes:
-    - /app/node_modules
-    - ./server/.env.production:/app/.env.production
-    - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
+      - /app/node_modules
+      - ./server/.env.production:/app/.env.production
+      - /ssd/docker/mitaka-website/mitaka-website/upload:/app/upload
     restart: always
 
   # === PROD FRONTEND ===

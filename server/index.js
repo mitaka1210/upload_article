@@ -69,26 +69,39 @@ app.use("/api/subscribers", subscribers);
 app.use("/api/broadcast-test", broadcastTest);
 app.use("/db-status", checkDBStatus);
 // Добави преди `app.listen()`
-const uploadPath = process.env.NODE_ENV === "production" ? "/app/upload" : "./upload";
+const uploadPath =
+  process.env.NODE_ENV === "production" ? "/app/upload" : "./upload";
 app.use("/upload", express.static(uploadPath));
-app.use((err, req, res, next) => {
-  console.log("NODE_ENV:", process.env.NODE_ENV);
-  console.error("Error:", err.message);
+app.use(
+  (
+    err,
+    req,
+    res,
+    // eslint-disable-next-line no-unused-vars
+    next,
+  ) => {
+    console.log("NODE_ENV:", process.env.NODE_ENV);
+    console.error("Error:", err.message);
 
-  if (err.message === "Not allowed by CORS") {
-    return res.status(403).json({ error: "CORS Error: Origin not allowed" });
-  }
+    if (err.message === "Not allowed by CORS") {
+      return res.status(403).json({ error: "CORS Error: Origin not allowed" });
+    }
 
-  if (err.code === "LIMIT_FILE_SIZE") {
-    return res.status(400).json({ error: "Файлът е твърде голям (макс. 5MB)" });
-  }
+    if (err.code === "LIMIT_FILE_SIZE") {
+      return res
+        .status(400)
+        .json({ error: "Файлът е твърде голям (макс. 5MB)" });
+    }
 
-  if (err.message === "Only images are allowed") {
-    return res.status(400).json({ error: "Позволени са само изображения (jpeg, jpg, png)" });
-  }
+    if (err.message === "Only images are allowed") {
+      return res
+        .status(400)
+        .json({ error: "Позволени са само изображения (jpeg, jpg, png)" });
+    }
 
-  res.status(500).json({ error: "Internal Server Error" });
-});
+    res.status(500).json({ error: "Internal Server Error" });
+  },
+);
 
 app.listen(PORT, () => {
   console.log("NODE_ENV:", process.env.NODE_ENV);

@@ -64,9 +64,15 @@ const neonDevPool = new Pool({
   ssl: { require: true, rejectUnauthorized: false },
 });
 
-primaryPool.on("error", (err) => console.error("primaryPool idle error:", err.message));
-failoverPool.on("error", (err) => console.error("failoverPool idle error:", err.message));
-neonDevPool.on("error", (err) => console.error("neonDevPool idle error:", err.message));
+primaryPool.on("error", (err) =>
+  console.error("primaryPool idle error:", err.message),
+);
+failoverPool.on("error", (err) =>
+  console.error("failoverPool idle error:", err.message),
+);
+neonDevPool.on("error", (err) =>
+  console.error("neonDevPool idle error:", err.message),
+);
 
 function startHealthCheck() {
   if (healthCheckInterval !== null) return;
@@ -87,7 +93,7 @@ function startHealthCheck() {
         `✅ <b>DB Primary Recovered</b>\n\n` +
           `Environment: ${env}\n` +
           `Primary DB: ${process.env.DB_HOST}:${process.env.DB_PORT}\n` +
-          `Routing has been restored to primary database.`
+          `Routing has been restored to primary database.`,
       );
     } catch (_err) {
       // Primary still down — wait for next interval
@@ -118,7 +124,7 @@ export async function queryWithFailover(sql, params) {
           `Environment: ${env}\n` +
           `Primary DB: ${process.env.DB_HOST}:${process.env.DB_PORT}\n` +
           `Error: ${err.message}\n\n` +
-          `Switched to NeonDB backup.`
+          `Switched to NeonDB backup.`,
       );
     }
 
