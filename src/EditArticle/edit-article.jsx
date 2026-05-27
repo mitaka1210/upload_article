@@ -30,13 +30,14 @@ const EditTodo = () => {
   id: articleId,
   article_id: articleId,
   title: '',
-  image: '',
+  mainImage: '',
   status: false,
   section: [
    {
     position: 1,
     content: '',
     title: '',
+    imageUrl: '',
    },
   ],
  });
@@ -136,15 +137,17 @@ const EditTodo = () => {
   // 3. Подготовка и добавяне на секциите
   const processedSections = formData.section.map((sec, index) => {
    const position = sec.position || index + 1;
+   // Изчистваме временни полета (blob URL и File обект) преди JSON.stringify
+   const { section_image, sectionPreview, ...cleanSec } = sec;
 
    // Ако има избран нов файл за секцията, го добавяме в FormData
-   if (sec.section_image instanceof File) {
-    data.append('section_image', sec.section_image);
+   if (section_image instanceof File) {
+    data.append('section_image', section_image);
     // Маркираме, че тази секция има нов файл, за да знае BE кога да трие стария
-    return { ...sec, position, hasNewImage: true };
+    return { ...cleanSec, position, hasNewImage: true };
    }
 
-   return { ...sec, position, hasNewImage: false };
+   return { ...cleanSec, position, hasNewImage: false };
   });
 
   // Добавяме масива със секции като стринг (BE ще го парсне с JSON.parse)
@@ -236,7 +239,6 @@ const EditTodo = () => {
         checked={showArticle}
         onChange={(e) => {
          const isChecked = e.target.checked;
-         console.log('Checkbox is checked:', isChecked);
          checkBoxValue(isChecked); // Извикайте функцията си с новата стойност
         }}
        />
@@ -308,12 +310,14 @@ const EditTodo = () => {
              <p className="remove-margin-bottom">Качи файл</p>
             </label>
            </div>
-           <div className="input-file download-button-style" onClick={() => handleDownload(`${API_URL}${section.imageUrl}`, formData.images_id)}>
-            <label htmlFor="input-file-edit" className="input-file text-align-center justify-content-center align-items-center">
-             <img src={download} alt="download" style={{ height: '24px', width: '24px' }} />
-             <p className="remove-margin-bottom">Свали файл</p>
-            </label>
-           </div>
+           {section.imageUrl && (
+            <div className="input-file download-button-style" onClick={() => handleDownload(`${API_URL}${section.imageUrl}`, section.imageUrl)}>
+             <label htmlFor="input-file-edit" className="input-file text-align-center justify-content-center align-items-center">
+              <img src={download} alt="download" style={{ height: '24px', width: '24px' }} />
+              <p className="remove-margin-bottom">Свали файл</p>
+             </label>
+            </div>
+           )}
           </div>
           <hr className="hr-edit" />
           <div className="delete_section" onClick={() => deleteSectionFromArticle(section.position)}>
