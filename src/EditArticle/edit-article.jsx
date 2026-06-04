@@ -138,6 +138,7 @@ const EditTodo = () => {
   const processedSections = formData.section.map((sec, index) => {
    const position = sec.position || index + 1;
    // Изчистваме временни полета (blob URL и File обект) преди JSON.stringify
+   // eslint-disable-next-line no-unused-vars
    const { section_image, sectionPreview: _sectionPreview, ...cleanSec } = sec;
 
    // Ако има избран нов файл за секцията, го добавяме в FormData
