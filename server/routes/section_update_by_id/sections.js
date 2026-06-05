@@ -3,6 +3,7 @@ import { queryWithFailover } from "../../config/db.js";
 import upload from "../../middlewares/upload.js";
 import fs from "fs";
 import path from "path";
+import authAdmin from "../../middlewares/authAdmin.js";
 
 const router = express.Router();
 
@@ -19,6 +20,7 @@ const deleteFile = (filePath) => {
 // Променяме на .fields, за да хващаме главна снимка и масив от снимки за секции
 router.post(
   "/:id",
+  authAdmin,
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "section_image", maxCount: 10 },
