@@ -2,12 +2,14 @@ import express from "express";
 import { queryWithFailover } from "../../config/db.js";
 import upload from "../../middlewares/upload.js";
 import compressImage from "../../utils/compress-img-before-save.js";
+import authAdmin from "../../middlewares/authAdmin.js";
 
 const router = express.Router();
 
 // Използваме .fields() за да хванем основната снимка и масив от снимки за секциите
 router.post(
   "/",
+  authAdmin,
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "main_image", maxCount: 10 },

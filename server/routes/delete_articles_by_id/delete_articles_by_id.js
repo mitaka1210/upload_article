@@ -1,9 +1,10 @@
 import express from "express";
 import { queryWithFailover } from "../../config/db.js";
+import authAdmin from "../../middlewares/authAdmin.js";
 
 const router = express.Router();
 // DELETE article by ID
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authAdmin, async (req, res) => {
   const { id } = req.params;
 
   try {
