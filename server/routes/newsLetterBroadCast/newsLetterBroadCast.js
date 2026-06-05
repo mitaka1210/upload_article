@@ -1,10 +1,11 @@
 import express from "express";
 import { sendNewsletter } from "../../utils/mailer.js";
 import { queryWithFailover } from "../../config/db.js";
+import authAdmin from "../../middlewares/authAdmin.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/", authAdmin, async (req, res) => {
   const { to, title, content } = req.body;
 
   const result = await queryWithFailover(

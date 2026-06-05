@@ -1,8 +1,9 @@
 import express from "express";
 const router = express.Router();
 import { queryWithFailover } from "../../config/db.js";
+import authAdmin from "../../middlewares/authAdmin.js";
 
-router.get("/", async (req, res) => {
+router.get("/", authAdmin, async (req, res) => {
   const result = await queryWithFailover(
     "SELECT email FROM newsletter_subscribers",
   );

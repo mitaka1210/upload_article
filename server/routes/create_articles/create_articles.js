@@ -1,10 +1,11 @@
 import express from "express";
 import { queryWithFailover } from "../../config/db.js";
+import authAdmin from "../../middlewares/authAdmin.js";
 
 const router = express.Router();
 
 // POST create article
-router.post("/", async (req, res) => {
+router.post("/", authAdmin, async (req, res) => {
   try {
     const { title, status } = req.body;
     const result = await queryWithFailover(
