@@ -1,6 +1,6 @@
 // Async action за изтриване на секция
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios from '../../api/axiosConfig';
 import { deleteArticle } from '../deleteArticle/deleteArticleSlice';
 //!production
 const url = `${process.env.REACT_APP_API_URL_PROD}`;
